@@ -1,0 +1,2 @@
+1.Flow chart diagram of the whole project work flow should prepared by everyone based on everyone perspective about the requirement diagram
+2.We will prirotize the module devlopement and divide among ourself based on the final concluded flow diagram by next meeting.
