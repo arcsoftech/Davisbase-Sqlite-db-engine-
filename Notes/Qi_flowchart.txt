@@ -1,0 +1,2 @@
+1. Be able to know how to create commands which are able to use across different systems.
+2. 
