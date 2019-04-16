@@ -2,6 +2,10 @@ package com.davidbase.service;
 
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.LeafCell;
+import com.davidbase.model.QueryBase;
+import com.davidbase.model.QueryResult;
+import com.davidbase.model.impl.CreateTable;
+import com.davidbase.model.impl.DavidBaseValidationException;
 
 import java.util.Scanner;
 import java.io.RandomAccessFile;
@@ -192,9 +196,14 @@ public class DavidBaseManager {
     private static void parseCreateTable(String createTableString) {
         System.out.println("STUB: Calling your method to create a table");
         System.out.println("Parsing the string:\"" + createTableString + "\"");
-        if(!commandValidator.isValid(createTableString))
+        try {
+            CreateTable queryObject = commandValidator.isValidCreateTable(createTableString);
+            QueryResult result = commandExecutor.createTable(queryObject);
+        }catch(DavidBaseValidationException e) {
             throw new DavidBaseError("Create table command in not valid.");
-        commandExecutor.createTable(createTableString);
+        }catch(Exception e) {
+            throw new DavidBaseError("Error while executing command.");
+        }
     }
 
 

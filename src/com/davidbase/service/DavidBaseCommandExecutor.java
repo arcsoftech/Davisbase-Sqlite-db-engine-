@@ -1,5 +1,8 @@
 package com.davidbase.service;
 
+import com.davidbase.model.QueryResult;
+import com.davidbase.model.impl.CreateTable;
+
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,10 +16,11 @@ public class DavidBaseCommandExecutor {
 
     /**
      *  Method for creating new tables
-     *  @param createTableString is a String of the user input
+     *  @param query
      */
-    public static boolean createTable(String createTableString) {
+    public static QueryResult createTable(CreateTable query) {
 
+        String createTableString="";
         ArrayList<String> createTableTokens = new ArrayList<String>(Arrays.asList(createTableString.split(" ")));
 
         /* Define table file name */
@@ -46,7 +50,7 @@ public class DavidBaseCommandExecutor {
          *  for each column in the new table
          *  i.e. database catalog meta-data
          */
-        return true;
+        return new QueryResult();
     }
 
 }
