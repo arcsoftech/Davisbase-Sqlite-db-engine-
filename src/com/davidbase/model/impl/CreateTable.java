@@ -1,7 +1,9 @@
 package com.davidbase.model.impl;
 
+import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.QueryBase;
 import com.davidbase.model.QueryResult;
+import com.davidbase.utils.DavidBaseFileHandler;
 
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -22,13 +24,14 @@ public class CreateTable implements QueryBase {
 
     @Override
     public QueryResult execute() {
-        //Run any pre-req for the create table
+        //Run any pre-req for the create
 
-        String createTableString="";
-        ArrayList<String> createTableTokens = new ArrayList<String>(Arrays.asList(createTableString.split(" ")));
-
-        /* Define table file name */
-        String tableFileName = createTableTokens.get(2) ;
+        try {
+            DavidBaseFileHandler.createFile(tableName);
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new DavidBaseError("Error while creating new table");
+        }
 
         /*  Code to insert a row in the davisbase_tables table
          *  i.e. database catalog meta-data
@@ -40,5 +43,37 @@ public class CreateTable implements QueryBase {
          */
 
         return new QueryResult(1);
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<String> columns) {
+        this.columns = columns;
+    }
+
+    public String getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(String primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public List<String> getIndexes() {
+        return indexes;
+    }
+
+    public void setIndexes(List<String> indexes) {
+        this.indexes = indexes;
     }
 }
