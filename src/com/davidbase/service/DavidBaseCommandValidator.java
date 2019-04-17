@@ -1,10 +1,7 @@
 package com.davidbase.service;
 
-import com.davidbase.model.QueryBase;
 import com.davidbase.model.impl.CreateTable;
-import com.davidbase.model.impl.DavidBaseValidationException;
-
-import javax.management.Query;
+import com.davidbase.model.DavidBaseValidationException;
 
 /**
  * This class validates the user commands to avoid errors while execution.

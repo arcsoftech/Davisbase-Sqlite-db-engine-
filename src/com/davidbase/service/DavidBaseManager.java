@@ -1,18 +1,11 @@
 package com.davidbase.service;
 
 import com.davidbase.model.DavidBaseError;
-import com.davidbase.model.LeafCell;
-import com.davidbase.model.QueryBase;
 import com.davidbase.model.QueryResult;
 import com.davidbase.model.impl.CreateTable;
-import com.davidbase.model.impl.DavidBaseValidationException;
+import com.davidbase.model.DavidBaseValidationException;
 
 import java.util.Scanner;
-import java.io.RandomAccessFile;
-import java.io.File;
-import java.io.FileReader;
-import java.util.Scanner;
-import java.util.SortedMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.lang.System.out;
@@ -198,7 +191,8 @@ public class DavidBaseManager {
         System.out.println("Parsing the string:\"" + createTableString + "\"");
         try {
             CreateTable queryObject = commandValidator.isValidCreateTable(createTableString);
-            QueryResult result = commandExecutor.createTable(queryObject);
+            QueryResult result = commandExecutor.executeQuery(queryObject);
+            System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {
             throw new DavidBaseError("Create table command in not valid.");
         }catch(Exception e) {

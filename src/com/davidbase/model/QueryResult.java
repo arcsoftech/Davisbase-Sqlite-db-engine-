@@ -3,6 +3,11 @@ package com.davidbase.model;
 public class QueryResult {
     int rowsAffected;
     String errorMessage;
+    //Map<Integer,>
+
+    public QueryResult(int rowsInRes){
+        this.rowsAffected=rowsInRes;
+    }
 
     public int getRowsAffected() {
         return rowsAffected;

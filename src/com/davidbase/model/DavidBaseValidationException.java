@@ -1,4 +1,4 @@
-package com.davidbase.model.impl;
+package com.davidbase.model;
 
 import com.davidbase.model.DavidBaseError;
 

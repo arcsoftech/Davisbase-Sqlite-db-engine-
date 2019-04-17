@@ -10,4 +10,7 @@ public class DavidBaseConstants {
     * Page size for alll files is 512 bytes by default.
     */
     public static final long pageSize = 512;
+
+    public static final String fileDir = "src/data/";
+    public static final String fileExt = ".tbl";
 }
