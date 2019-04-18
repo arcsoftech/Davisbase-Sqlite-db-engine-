@@ -10,6 +10,9 @@ import java.util.List;
 
 import static com.davidbase.DavidBaseConstants.*;
 
+/**
+ * File utility to read/write data from .tbl files
+ */
 public class DavidBaseFileHandler {
 
     public static boolean createFile(String tableFileName){
@@ -51,26 +54,11 @@ public class DavidBaseFileHandler {
 
                 switch(pageCount){
                     case 0: // this is the first page to be inserted
-                            // insert internal_node with pointer to the leaf with data
-                            //Prepare the internal node
-                            Page<NonLeafCell> internalNode = new Page();
-                            PageHeader header = new PageHeader();
-                            List<NonLeafCell> cells = new ArrayList<>();
-                            header.setPage_type(PageType.table_leaf);
-                            header.setNum_cells((byte)1);
-                            header.setData_cell_offset((new short[]{0}));
-                            header.setData_offset((short)0);
-                            header.setNext_page_pointer(rightMostLeaf);
-                            internalNode.setPageheader(header);
-
-                            //prepare the data cells
-                            cells.add(new NonLeafCell(pageNumber, record.getRowID()));
-                            internalNode.setCells(cells);
-                            write(tablefile,internalNode,pageNumber);
+                            // insert leaf node with data
 
                             // Prepare the leaf node
                             Page<LeafCell> dataNode = new Page();
-                            header = new PageHeader();
+                            PageHeader header = new PageHeader();
                             List<LeafCell> dataCells = new ArrayList<>();
                             header.setPage_type(PageType.table_leaf);
                             header.setNum_cells((byte)1);
@@ -84,7 +72,8 @@ public class DavidBaseFileHandler {
                             CellPayload payload = new CellPayload((byte)record.getColumns().size(),record.getSizeOfCol(),record.getColeVal());
                             dataCells.add(new LeafCell(cellHeader, payload));
                             dataNode.setCells(dataCells);
-                            write(tablefile,dataNode,pageNumber+1);
+                            write(tablefile,dataNode,pageNumber);
+
                             break;
                     default: // for all other cases.
                             //cases:
