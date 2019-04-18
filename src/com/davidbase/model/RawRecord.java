@@ -1,5 +1,7 @@
 package com.davidbase.model;
 
+import com.davidbase.DataType;
+
 import java.util.List;
 
 /**
@@ -7,24 +9,43 @@ import java.util.List;
  */
 public class RawRecord {
 
-    List<String> columns;
-    List<String> columnValues;
+    List<String> column;
+    List<DataType> columnType;
+    List<Object> columnValue;
     int rowID;
+    byte[] sizeOfCol;
+    short totSize;
+    byte[] coleVal;
+
+    public RawRecord() {
+        this.rowID = -1;
+        this.totSize = 0;
+    }
+
+    public RawRecord(List<String> column, List<DataType> columnType, List<Object> columnValue, int rowID) {
+        this.column = column;
+        this.columnType = columnType;
+        this.columnValue = columnValue;
+        this.rowID = rowID;
+        setSize();
+        setValues();
+    }
 
     public List<String> getColumns() {
-        return columns;
+        return column;
     }
 
-    public void setColumns(List<String> columns) {
-        this.columns = columns;
+    public void setColumns(List<String> column) {
+        this.column = column;
+        setSize();
     }
 
-    public List<String> getColumnValues() {
-        return columnValues;
+    public List<Object> getColumnValues() {
+        return columnValue;
     }
 
-    public void setColumnValues(List<String> columnValues) {
-        this.columnValues = columnValues;
+    public void setColumnValues(List<Object> columnValue) {
+        this.columnValue = columnValue;
     }
 
     public int getRowID() {
@@ -33,5 +54,34 @@ public class RawRecord {
 
     public void setRowID(int rowID) {
         this.rowID = rowID;
+    }
+
+    public byte[] getSizeOfCol() {
+        return sizeOfCol;
+    }
+
+    public short getTotSize() {
+        return totSize;
+    }
+
+    public byte[] getColeVal() {
+        return coleVal;
+    }
+
+    public void setSize() {
+        for(int i=0;i<columnValue.size();i++){
+            if(columnType.get(i)==DataType.TEXT)
+                this.sizeOfCol[i]= (byte)( columnType.get(i).getSize()*
+                        (columnValue.get(i)!=null? String.valueOf(columnValue.get(i)).length():0));
+            else
+                this.sizeOfCol[i]=columnType.get(i).getSize();
+            this.totSize+=this.sizeOfCol[i];
+        }
+    }
+
+    private void setValues() {
+        for(int i=0;i<columnValue.size();i++){
+            this.coleVal[i]=Byte.valueOf(String.valueOf(columnValue.get(i)));
+        }
     }
 }
