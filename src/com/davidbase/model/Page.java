@@ -2,10 +2,10 @@ package com.davidbase.model;
 
 import java.util.List;
 
-public class Page {
+public class Page<T> {
 
     private PageHeader pageheader;
-    private List<Cell> cells;
+    private List<T> cells;
 
     public PageHeader getPageheader() {
         return pageheader;
@@ -15,11 +15,11 @@ public class Page {
         this.pageheader = pageheader;
     }
 
-    public List<Cell> getCells() {
+    public List<T> getCells() {
         return cells;
     }
 
-    public void setCells(List<Cell> cells) {
+    public void setCells(List<T> cells) {
         this.cells = cells;
     }
 }

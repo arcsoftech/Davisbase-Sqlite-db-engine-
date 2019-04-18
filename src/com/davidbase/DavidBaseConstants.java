@@ -13,4 +13,5 @@ public class DavidBaseConstants {
 
     public static final String fileDir = "src/data/";
     public static final String fileExt = ".tbl";
+    public static final int rightMostLeaf = 0xFFFFFFFF;
 }
