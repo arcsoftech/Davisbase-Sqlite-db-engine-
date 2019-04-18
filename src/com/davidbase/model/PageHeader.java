@@ -12,7 +12,7 @@ public class PageHeader {
         • A value of 10 (0x0a) means the page is a leaf index b-tree page.
         • A value of 13 (0x0d) means the page is a leaf table b-tree page.
     Any other value for the b-tree page type is an error*/
-    private byte page_type;
+    private PageType page_type;
 
     //The one-byte two’s complement signed integer at offset 1 gives the number of cells
     //on the page
@@ -34,4 +34,44 @@ public class PageHeader {
     maintained in key-sorted order—i.e. rowid order for a table file and index order for
     an index file.*/
     private short[] data_cell_offset;
+
+    public PageType getPage_type() {
+        return page_type;
+    }
+
+    public void setPage_type(PageType page_type) {
+        this.page_type = page_type;
+    }
+
+    public byte getNum_cells() {
+        return num_cells;
+    }
+
+    public void setNum_cells(byte num_cells) {
+        this.num_cells = num_cells;
+    }
+
+    public short getData_offset() {
+        return data_offset;
+    }
+
+    public void setData_offset(short data_offset) {
+        this.data_offset = data_offset;
+    }
+
+    public int getNext_page_pointer() {
+        return next_page_pointer;
+    }
+
+    public void setNext_page_pointer(int next_page_pointer) {
+        this.next_page_pointer = next_page_pointer;
+    }
+
+    public short[] getData_cell_offset() {
+        return data_cell_offset;
+    }
+
+    public void setData_cell_offset(short[] data_cell_offset) {
+        this.data_cell_offset = data_cell_offset;
+    }
 }

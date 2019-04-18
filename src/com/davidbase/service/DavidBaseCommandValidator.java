@@ -24,6 +24,8 @@ public class DavidBaseCommandValidator {
      */
     public CreateTable isValidCreateTable(String userCommand) throws DavidBaseValidationException {
         // checks for tables and columns etc, and returns a valid CreateTable object else throw exception
-        return new CreateTable();
+        CreateTable ctable = new CreateTable();
+        ctable.setTableName("TEST1");
+        return ctable;
     }
 }
