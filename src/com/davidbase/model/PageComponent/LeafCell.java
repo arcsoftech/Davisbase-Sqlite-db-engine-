@@ -1,4 +1,4 @@
-package com.davidbase.model;
+package com.davidbase.model.PageComponent;
 
 /**
  * This class represents a an Leaf cell in B tree

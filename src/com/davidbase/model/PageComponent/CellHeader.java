@@ -1,4 +1,4 @@
-package com.davidbase.model;
+package com.davidbase.model.PageComponent;
 
 /**
  * This class represent a Data Cell Header

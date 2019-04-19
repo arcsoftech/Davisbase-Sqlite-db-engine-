@@ -1,4 +1,4 @@
-package com.davidbase.model;
+package com.davidbase.model.PageComponent;
 
 public enum PageType {
     index_node(0x02),table_node(0x05),index_leaf(0x0a),table_leaf(0x0d);
