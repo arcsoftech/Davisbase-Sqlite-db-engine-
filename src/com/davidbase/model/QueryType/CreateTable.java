@@ -44,11 +44,7 @@ public class CreateTable implements QueryBase {
 
         return new QueryResult(1);
     }
-@Override
-public boolean Validate()
-{
-    return true;
-}
+
     public String getTableName() {
         return tableName;
     }

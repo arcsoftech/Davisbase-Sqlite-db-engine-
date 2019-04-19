@@ -20,11 +20,7 @@ public class InsertInto implements QueryBase {
         DavidBaseFileHandler.writeToFile(tableName, recordsToFile );
         return new QueryResult(recordsToFile.size());
     }
-    @Override
-    public boolean Validate()
-    {
-        return true;
-    }
+ 
     private List<RawRecord> prepareRecord(){
         List<RawRecord> recordsToFile = new ArrayList<>();
         return recordsToFile;

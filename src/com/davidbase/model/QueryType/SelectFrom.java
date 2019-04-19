@@ -26,9 +26,4 @@ public class SelectFrom implements QueryBase {
         }
         return null;
     }
-    @Override
-public boolean Validate()
-{
-    return true;
-}
 }
