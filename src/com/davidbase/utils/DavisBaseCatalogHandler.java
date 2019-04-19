@@ -1,7 +1,7 @@
 package com.davidbase.utils;
 
 import com.davidbase.utils.DataType;
-import com.davidbase.utils.DavidBaseConstants;
+import com.davidbase.utils.DavisBaseConstants;
 import com.davidbase.model.RawRecord;
 
 import java.util.HashMap;
@@ -9,16 +9,16 @@ import java.util.List;
 
 /**
  * Class to read/write the Database catalog files.
- * Since the Catalog files are also treated as system tables they will be read/wrtten using DavidBaseFileHandler *
+ * Since the Catalog files are also treated as system tables they will be read/wrtten using DavisBaseFileHandler *
  */
-public class DavidBaseCatalogHandler {
+public class DavisBaseCatalogHandler {
 
     public boolean databaseExists(String databaseName){
         return true;
     }
 
     public static String getDatabasePath(String databaseName) {
-        return DavidBaseConstants.defaultDataDirectory + "/" + databaseName;
+        return DavisBaseConstants.defaultDataDirectory + "/" + databaseName;
     }
 
     public boolean tableExists(String databaseName, String tableName) {
@@ -51,7 +51,7 @@ public class DavidBaseCatalogHandler {
 
     /**
      * can create multiple copies of the this function as you need (overloading)
-     * delegate call to DavidBaseFileHandler.findRecord
+     * delegate call to DavisBaseFileHandler.findRecord
      * @param databaseName
      * @param tableName
      * @param conditionList
@@ -64,7 +64,7 @@ public class DavidBaseCatalogHandler {
 
     /**
      * can create multiple copies of the this function as you need (overloading)
-     * delegate call to DavidBaseFileHandler.findRecord
+     * delegate call to DavisBaseFileHandler.findRecord
      * @param databaseName
      * @param tableName
      * @param record

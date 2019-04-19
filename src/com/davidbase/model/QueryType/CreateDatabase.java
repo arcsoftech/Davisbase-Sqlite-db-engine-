@@ -1,6 +1,6 @@
 package com.davidbase.model.QueryType;
 
-import com.davidbase.utils.DavidBaseCatalogHandler;
+import com.davidbase.utils.DavisBaseCatalogHandler;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 
@@ -20,7 +20,7 @@ public class CreateDatabase implements QueryBase {
 
     @Override
     public QueryResult Execute() {
-        File database = new File(DavidBaseCatalogHandler.getDatabasePath(this.databaseName));
+        File database = new File(DavisBaseCatalogHandler.getDatabasePath(this.databaseName));
         boolean isCreated = database.mkdir();
 
         if(!isCreated){

@@ -3,14 +3,14 @@ package com.davidbase.model.QueryType;
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
-import com.davidbase.utils.DavidBaseFileHandler;
+import com.davidbase.utils.DavisBaseFileHandler;
 
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.davidbase.utils.DavidBaseConstants.pageSize;
+import static com.davidbase.utils.DavisBaseConstants.pageSize;
 
 /**
  * Class represents a Create Table query
@@ -27,7 +27,7 @@ public class CreateTable implements QueryBase {
         //Run any pre-req for the create
 
         try {
-            DavidBaseFileHandler.createFile(tableName);
+            DavisBaseFileHandler.createFile(tableName);
         }catch(Exception e){
             e.printStackTrace();
             throw new DavidBaseError("Error while creating new table");

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="19502405-7545-43c5-ace0-8e9bb9681d07" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/com/davidbase/DavidBaseConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/davidbase/DavidBaseConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/davidbase/DavisBaseConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/davidbase/DavisBaseConstants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/davidbase/model/QueryResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/davidbase/model/QueryResult.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/davidbase/model/QueryType/CreateTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/davidbase/model/QueryType/CreateTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/davidbase/model/QueryType/DavidBaseValidationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/davidbase/model/DavidBaseValidationException.java" afterDir="false" />
@@ -42,7 +42,7 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/davidbase/DavidBaseConstants.java">
+        <entry file="file://$PROJECT_DIR$/src/com/davidbase/DavisBaseConstants.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="238">
               <caret line="14" column="38" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="38" />
@@ -72,7 +72,7 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/davidbase/utils/DavidBaseFileHandler.java">
+        <entry file="file://$PROJECT_DIR$/src/com/davidbase/utils/DavisBaseFileHandler.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="578">
               <caret line="34" column="17" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
@@ -183,8 +183,8 @@
         <option value="$PROJECT_DIR$/src/com/davidbase/service/DavidBaseCommandExecutor.java" />
         <option value="$PROJECT_DIR$/src/com/davidbase/service/DavidBaseManager.java" />
         <option value="$PROJECT_DIR$/src/com/davidbase/model/QueryResult.java" />
-        <option value="$PROJECT_DIR$/src/com/davidbase/DavidBaseConstants.java" />
-        <option value="$PROJECT_DIR$/src/com/davidbase/utils/DavidBaseFileHandler.java" />
+        <option value="$PROJECT_DIR$/src/com/davidbase/DavisBaseConstants.java" />
+        <option value="$PROJECT_DIR$/src/com/davidbase/utils/DavisBaseFileHandler.java" />
         <option value="$PROJECT_DIR$/src/com/davidbase/model/QueryType/CreateTable.java" />
       </list>
     </option>
@@ -488,7 +488,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/davidbase/utils/DavidBaseFileHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/com/davidbase/utils/DavisBaseFileHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
           <caret line="34" column="17" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
@@ -506,7 +506,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/davidbase/DavidBaseConstants.java">
+    <entry file="file://$PROJECT_DIR$/src/com/davidbase/DavisBaseConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="38" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="38" />

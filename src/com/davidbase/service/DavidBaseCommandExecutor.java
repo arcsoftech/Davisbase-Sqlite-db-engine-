@@ -8,7 +8,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.davidbase.utils.DavidBaseConstants.pageSize;
+import static com.davidbase.utils.DavisBaseConstants.pageSize;
 
 /**
  * This class executes the user commands, deals with reading/writing to catalog and table files.

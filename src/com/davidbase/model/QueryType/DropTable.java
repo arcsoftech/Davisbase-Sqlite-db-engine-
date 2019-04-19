@@ -1,6 +1,6 @@
 package com.davidbase.model.QueryType;
 
-import com.davidbase.utils.DavidBaseConstants;
+import com.davidbase.utils.DavisBaseConstants;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 

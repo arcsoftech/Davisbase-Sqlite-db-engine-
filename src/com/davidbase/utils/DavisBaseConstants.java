@@ -1,10 +1,10 @@
 package com.davidbase.utils;
 
-public class DavidBaseConstants {
+public class DavisBaseConstants {
 
     public static final String prompt = "davisql> ";
-    public static final String version = "v1.0b(example)";
-    public static final String copyright = "©2016 Chris Irwin Davis";
+    public static final String version = "v1.0";
+    public static final String copyright = "©2019 Chris Irwin Davis";
 
     public static final String defaultDataDirectory = "data";
     public static final String defaultCatalogDatabaseName = "catalog";
