@@ -1,8 +1,8 @@
 package com.davidbase.model.QueryType;
 
 import com.davidbase.utils.DavidBaseCatalogHandler;
-import com.davidbase.model.QueryBase;
-import com.davidbase.model.QueryResult;
+import com.davidbase.model.QueryType.QueryBase;
+import com.davidbase.model.QueryType.QueryResult;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package com.davidbase.model.PageComponent;
+package com.davidbase.model.QueryType;
 
 public interface QueryBase {
     QueryResult Execute();

@@ -1,4 +1,4 @@
-package com.davidbase.model.PageComponent;
+package com.davidbase.model.QueryType;
 
 public class QueryResult {
     int rowsAffected;
