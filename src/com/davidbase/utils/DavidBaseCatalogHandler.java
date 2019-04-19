@@ -17,7 +17,7 @@ public class DavidBaseCatalogHandler {
     }
 
     public boolean tableExists(String databaseName, String tableName) {
-        return true;
+        return false;
     }
 
     public List<String> fetchAllTableColumns(String databaseName, String tableName){

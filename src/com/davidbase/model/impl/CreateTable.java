@@ -30,7 +30,7 @@ public class CreateTable implements QueryBase {
             DavidBaseFileHandler.createFile(tableName);
         }catch(Exception e){
             e.printStackTrace();
-            throw new DavidBaseError("Error while creating new table");
+            //throw new DavidBaseError("Error while creating new table");
         }
 
         /*  Code to insert a row in the davisbase_tables table

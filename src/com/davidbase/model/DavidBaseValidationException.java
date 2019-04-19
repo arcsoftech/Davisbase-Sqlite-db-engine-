@@ -4,7 +4,7 @@ import com.davidbase.model.DavidBaseError;
 
 public class DavidBaseValidationException extends Exception {
 
-    DavidBaseValidationException(String msg){
+    public DavidBaseValidationException(String msg){
         super(msg);
     }
 }
