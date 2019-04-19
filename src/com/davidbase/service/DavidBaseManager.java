@@ -2,7 +2,7 @@ package com.davidbase.service;
 
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.QueryResult;
-import com.davidbase.model.impl.CreateTable;
+import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.DavidBaseValidationException;
 
 import java.util.Scanner;

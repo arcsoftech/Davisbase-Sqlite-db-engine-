@@ -1,4 +1,4 @@
-package com.davidbase.model.impl;
+package com.davidbase.model.QueryType;
 
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.QueryBase;
@@ -23,7 +23,7 @@ public class CreateTable implements QueryBase {
     private List<String> indexes;
 
     @Override
-    public QueryResult execute() {
+    public QueryResult Execute() {
         //Run any pre-req for the create
 
         try {
@@ -44,7 +44,11 @@ public class CreateTable implements QueryBase {
 
         return new QueryResult(1);
     }
-
+@Override
+public boolean Validate()
+{
+    return true;
+}
     public String getTableName() {
         return tableName;
     }

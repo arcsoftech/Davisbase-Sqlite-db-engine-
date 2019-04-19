@@ -1,6 +1,6 @@
 package com.davidbase.service;
 
-import com.davidbase.model.impl.CreateTable;
+import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.DavidBaseValidationException;
 
 /**

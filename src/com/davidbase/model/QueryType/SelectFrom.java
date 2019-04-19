@@ -1,4 +1,4 @@
-package com.davidbase.model.impl;
+package com.davidbase.model.QueryType;
 
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.QueryBase;
@@ -17,7 +17,7 @@ public class SelectFrom implements QueryBase {
     private List<String> columns;
 
     @Override
-    public QueryResult execute() {
+    public QueryResult Execute() {
         try {
             DavidBaseFileHandler.readFromFile(tableName);
         }catch(Exception e){
@@ -26,4 +26,9 @@ public class SelectFrom implements QueryBase {
         }
         return null;
     }
+    @Override
+public boolean Validate()
+{
+    return true;
+}
 }

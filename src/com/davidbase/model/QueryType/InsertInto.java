@@ -1,4 +1,4 @@
-package com.davidbase.model.impl;
+package com.davidbase.model.QueryType;
 
 import com.davidbase.model.QueryBase;
 import com.davidbase.model.QueryResult;
@@ -14,14 +14,17 @@ public class InsertInto implements QueryBase {
     private List<Object> columnValues;
 
     @Override
-    public QueryResult execute() {
-
+    public QueryResult Execute() {
         // map passed values to records ready to be inserted into file
         List<RawRecord> recordsToFile = prepareRecord();
         DavidBaseFileHandler.writeToFile(tableName, recordsToFile );
         return new QueryResult(recordsToFile.size());
     }
-
+    @Override
+    public boolean Validate()
+    {
+        return true;
+    }
     private List<RawRecord> prepareRecord(){
         List<RawRecord> recordsToFile = new ArrayList<>();
         return recordsToFile;

@@ -1,5 +1,6 @@
 package com.davidbase.model;
 
 public interface QueryBase {
-    QueryResult execute();
+    QueryResult Execute();
+    boolean Validate();
 }
