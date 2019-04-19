@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.lang.System.out;
-import static com.davidbase.DavidBaseConstants.*;
+import static com.davidbase.utils.DavidBaseConstants.*;
 
 /**
  * This class acts as the Central Manager for DavidBase database.

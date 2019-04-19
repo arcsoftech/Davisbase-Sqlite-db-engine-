@@ -1,14 +1,14 @@
-package query.ddl;
+package com.davidbase.model.QueryType;
 
-import common.DatabaseHelper;
-import common.Utils;
+import com.davidbase.utils.DavidBaseCatalogHandler;
 import com.davidbase.model.QueryBase;
 import com.davidbase.model.QueryResult;
 
 import java.io.File;
 
+
 /**
- * Created by parag on 15/4/17.
+ * Class represents a Create database query
  */
 
 public class CreateDatabase implements QueryBase {
@@ -20,7 +20,7 @@ public class CreateDatabase implements QueryBase {
 
     @Override
     public QueryResult Execute() {
-        File database = new File(Utils.getDatabasePath(this.databaseName));
+        File database = new File(DavidBaseCatalogHandler.getDatabasePath(this.databaseName));
         boolean isCreated = database.mkdir();
 
         if(!isCreated){

@@ -1,4 +1,4 @@
-package com.davidbase;
+package com.davidbase.utils;
 
 public enum DataType {
     NULL_TINYINT("NULL",1,0x00),

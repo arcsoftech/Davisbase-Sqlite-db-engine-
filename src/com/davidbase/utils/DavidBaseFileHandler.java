@@ -8,7 +8,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.davidbase.DavidBaseConstants.*;
+import static com.davidbase.utils.DavidBaseConstants.*;
 
 /**
  * File utility to read/write data from .tbl files

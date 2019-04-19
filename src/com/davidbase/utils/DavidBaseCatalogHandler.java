@@ -1,6 +1,7 @@
 package com.davidbase.utils;
 
-import com.davidbase.DataType;
+import com.davidbase.utils.DataType;
+import com.davidbase.utils.DavidBaseConstants;
 import com.davidbase.model.RawRecord;
 
 import java.util.HashMap;
@@ -14,6 +15,10 @@ public class DavidBaseCatalogHandler {
 
     public boolean databaseExists(String databaseName){
         return true;
+    }
+
+    public static String getDatabasePath(String databaseName) {
+        return DavidBaseConstants.defaultDataDirectory + "/" + databaseName;
     }
 
     public boolean tableExists(String databaseName, String tableName) {
