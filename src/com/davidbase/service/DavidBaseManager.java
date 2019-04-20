@@ -4,6 +4,8 @@ import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.QueryResult;
 import com.davidbase.model.impl.CreateTable;
 import com.davidbase.model.DavidBaseValidationException;
+import static com.davidbase.utils.DavisBaseConstants.*;
+
 
 import java.util.Scanner;
 import java.util.ArrayList;
