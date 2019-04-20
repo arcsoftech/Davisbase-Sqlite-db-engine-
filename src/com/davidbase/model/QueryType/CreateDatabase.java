@@ -14,6 +14,8 @@ import java.io.File;
 public class CreateDatabase implements QueryBase {
     public String databaseName;
 
+    
+
     public CreateDatabase(String databaseName){
         this.databaseName = databaseName;
     }
@@ -31,4 +33,5 @@ public class CreateDatabase implements QueryBase {
         QueryResult result = new QueryResult(1);
         return result;
     }
+
 }

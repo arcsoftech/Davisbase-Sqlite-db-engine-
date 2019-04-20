@@ -1,16 +1,15 @@
 package com.davidbase.service;
 
 import com.davidbase.model.DavidBaseError;
+import com.davidbase.model.QueryResult;
+import com.davidbase.model.impl.CreateTable;
 import com.davidbase.model.DavidBaseValidationException;
-import com.davidbase.model.QueryType.CreateTable;
-import com.davidbase.model.QueryType.QueryResult;
 
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
-
-import static com.davidbase.utils.DavisBaseConstants.*;
 import static java.lang.System.out;
+import static com.davidbase.DavidBaseConstants.*;
 
 /**
  * This class acts as the Central Manager for DavidBase database.
@@ -192,7 +191,6 @@ public class DavidBaseManager {
         System.out.println("Parsing the string:\"" + createTableString + "\"");
         try {
             CreateTable queryObject = commandValidator.isValidCreateTable(createTableString);
-            QueryResult result = commandExecutor.executeQuery(queryObject);
             System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {
             throw new DavidBaseError("Create table command in not valid.");

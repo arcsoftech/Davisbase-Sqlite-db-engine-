@@ -12,7 +12,7 @@ import java.util.List;
 public class DavisBaseCatalogHandler {
 
     public boolean databaseExists(String databaseName){
-        return true;
+        return false;
     }
 
     public static String getDatabasePath(String databaseName) {

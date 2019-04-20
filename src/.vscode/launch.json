@@ -8,8 +8,19 @@
             "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
-            "mainClass": "${file}",
-            "console": "externalTerminal"
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-DavisBasePrompt",
+            "request": "launch",
+            "mainClass": "DavisBasePrompt"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-DavidBaseManager",
+            "request": "launch",
+            "mainClass": "com.davidbase.service.DavidBaseManager"
         },
         {
             "type": "java",
@@ -17,12 +28,6 @@
             "request": "launch",
             "mainClass": "com.davidbase.service.Test",
             "console": "externalTerminal"
-        },
-        {
-            "type": "java",
-            "name": "Debug (Launch)-DavidBaseManager",
-            "request": "launch",
-            "mainClass": "com.davidbase.service.DavidBaseManager"
         }
     ]
 }

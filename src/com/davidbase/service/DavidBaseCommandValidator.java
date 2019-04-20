@@ -2,7 +2,8 @@ package com.davidbase.service;
 
 import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.DavidBaseValidationException;
-import com.davidbase.utils.DavidBaseCatalogHandler;
+import com.davidbase.utils.DavisBaseCatalogHandler;
+import com.davidbase.model.QueryType.CreateDatabase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -37,7 +38,7 @@ public class DavidBaseCommandValidator {
             throw new DavidBaseValidationException("You are not creating table, command is not recognizable");
         }
         //check if the table has been existed. do not know if need to check column?
-        DavidBaseCatalogHandler catalog_handler= new DavidBaseCatalogHandler();
+        DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         boolean isExist=catalog_handler.tableExists("databaseName", commandTokens.get(2)); //??figure out database name
         
         //parse and put all columns to a list
@@ -83,4 +84,43 @@ public class DavidBaseCommandValidator {
         }
         
     }
+
+    public CreateDatabase isValidDatabase(String userCommand)throws DavidBaseValidationException{
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        if(commandTokens.size()>3){
+            throw new DavidBaseValidationException("Failed to create Database");
+        }
+
+        DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
+        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2)); //??figure out database name
+        if (isExist!=false){
+            throw new DavidBaseValidationException("The database has been already Existed");
+        }  
+        else{
+            CreateDatabase db=new CreateDatabase(commandTokens.get(2));
+            return db;
+        }
+        
+    }
+
+    public boolean isValidShowDB(String userCommand)throws DavidBaseValidationException{
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        if(commandTokens.size()>3){
+            throw new DavidBaseValidationException("Failed to show databases");
+        }
+
+        return true;        
+        
+    }
+
+    public boolean isValidShowTable(String userCommand)throws DavidBaseValidationException{
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        if(commandTokens.size()>3){
+            throw new DavidBaseValidationException("Failed to show tables");
+        }
+
+        return true;        
+        
+    }
+
 }
