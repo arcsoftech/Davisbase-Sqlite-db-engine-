@@ -7,10 +7,18 @@ public class Page<T> {
     private PageHeader pageheader;
     private List<T> cells;
     private byte numberOfCells;
+    private PageType pagePage;
     
 
     public PageHeader getPageheader() {
         return pageheader;
+    }
+    
+ 
+    
+    public static <T> Page<T> createNewEmptyPage(T object) {
+    	
+    	return null;
     }
 
     public void setPageheader(PageHeader pageheader) {
