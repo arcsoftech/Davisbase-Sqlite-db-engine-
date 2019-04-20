@@ -6,6 +6,8 @@ public class Page<T> {
 
     private PageHeader pageheader;
     private List<T> cells;
+    private byte numberOfCells;
+    
 
     public PageHeader getPageheader() {
         return pageheader;
@@ -25,6 +27,14 @@ public class Page<T> {
     
     public static int getHeaderFixedLength() {
         return Byte.BYTES + Byte.BYTES + Short.BYTES + Integer.BYTES;
+    }
+    
+    public void setNumberOfCells(byte numberOfCells) {
+        this.numberOfCells = numberOfCells;
+    }
+    
+    public byte getNumberOfCells() {
+        return numberOfCells;
     }
     
     

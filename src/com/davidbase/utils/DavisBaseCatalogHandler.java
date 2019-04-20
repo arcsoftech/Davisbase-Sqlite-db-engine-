@@ -26,28 +26,19 @@ public class DavisBaseCatalogHandler {
     public static final byte TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID = 5;
 
 
-    public static final byte COLUMNS_TABLE_SCHEMA_ROWID = 0;
-    public static final byte COLUMNS_TABLE_SCHEMA_DATABASE_NAME = 1;
-    public static final byte COLUMNS_TABLE_SCHEMA_TABLE_NAME = 2;
-    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_NAME = 3;
-    public static final byte COLUMNS_TABLE_SCHEMA_DATA_TYPE = 4;
-    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_KEY = 5;
-    public static final byte COLUMNS_TABLE_SCHEMA_ORDINAL_POSITION = 6;
-    public static final byte COLUMNS_TABLE_SCHEMA_IS_NULLABLE = 7;
-
-    public static final String PRIMARY_KEY_IDENTIFIER = "PRI";
+  
     
-    public static void InitializeDatabase() {
-        File baseDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME);
-        if(!baseDir.exists()) {
-            File catalogDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME);
-            if(!catalogDir.exists()) {
-                if(catalogDir.mkdirs()) {
-                    new DavisBaseCatalogHandler().createCatalogDatabase();
-                }
-            }
-        }
-    }
+//    public static void InitializeDatabase() {
+//        File baseDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME);
+//        if(!baseDir.exists()) {
+//            File catalogDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME);
+//            if(!catalogDir.exists()) {
+//                if(catalogDir.mkdirs()) {
+//                    new DavisBaseCatalogHandler().createCatalogDatabase();
+//                }
+//            }
+//        }
+//    }
     
     
 
@@ -221,11 +212,19 @@ public class DavisBaseCatalogHandler {
                    
                 	DataType_Int startingColumnIndex = (DataType_Int) lastRecord.getColumnValueList().get(CatalogDatabaseHelper.TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID);
                     returnValue = startingColumnIndex.getValue();
-                    record.getColumnValueList().add(new DataType_Int(returnValue));
-                    record.getColumnValueList().add(new DataType_Int(returnValue + columnCount));
+                    
+                    record.getColumnType().add(DataType.INT);
+                    record.getColumnValues().add(returnValue);
+                    
+                    record.getColumnType().add(DataType.INT);
+                    record.getColumnValues().add(returnValue + columnCount);
+                    
+//                    record.getColumnValueList().add(new DataType_Int(returnValue));
+//                    record.getColumnValueList().add(new DataType_Int(returnValue + columnCount));
                 }
-                record.populateSize();
-                manager.writeRecord(DatabaseConstants.DEFAULT_CATALOG_DATABASENAME, DatabaseConstants.SYSTEM_TABLES_TABLENAME, record);
+                
+                record.setSize();
+                this.writeRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, record);
                 return returnValue;
             } else {
                 Utils.printMessage(String.format("Table '%s.%s' already exists.", databaseName, tableName));
@@ -246,7 +245,7 @@ public class DavisBaseCatalogHandler {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 Page<RawRecord> page = getRightmostLeafPage(file);
                 if (page.getNumberOfCells() > 0) {
-                    randomAccessFile.seek((Page.PAGE_SIZE * page.getPageNumber()) + Page.getHeaderFixedLength() + ((page.getNumberOfCells() - 1) * Short.BYTES));
+                    randomAccessFile.seek((DavisBaseConstants.PAGE_SIZE * page.getPageNumber()) + Page.getHeaderFixedLength() + ((page.getNumberOfCells() - 1) * Short.BYTES));
                     short address = randomAccessFile.readShort();
                     DataRecord record = readDataRecord(randomAccessFile, page.getPageNumber(), address);
                     if (record != null)
