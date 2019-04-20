@@ -35,6 +35,8 @@ public class PageHeader {
     an index file.*/
     private short[] data_cell_offset;
 
+    private int page_number;
+
     public PageType getPage_type() {
         return page_type;
     }
@@ -73,5 +75,13 @@ public class PageHeader {
 
     public void setData_cell_offset(short[] data_cell_offset) {
         this.data_cell_offset = data_cell_offset;
+    }
+
+    public int getPage_number() {
+        return page_number;
+    }
+
+    public void setPage_number(int page_number) {
+        this.page_number = page_number;
     }
 }

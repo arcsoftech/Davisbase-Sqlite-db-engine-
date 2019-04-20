@@ -1,7 +1,5 @@
 package com.davidbase.model;
 
-import com.davidbase.model.DavidBaseError;
-
 public class DavidBaseValidationException extends Exception {
 
     String error_msg;

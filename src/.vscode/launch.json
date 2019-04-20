@@ -4,7 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
             "type": "java",
             "name": "Debug (Launch) - Current File",
@@ -13,15 +12,10 @@
         },
         {
             "type": "java",
-            "name": "Debug (Launch)-DavisBasePrompt",
-            "request": "launch",
-            "mainClass": "DavisBasePrompt"
-        },
-        {
-            "type": "java",
             "name": "Debug (Launch)-DavidBaseManager",
             "request": "launch",
-            "mainClass": "com.davidbase.service.DavidBaseManager"
+            "mainClass": "com.davidbase.service.DavidBaseManager",
+            "console": "externalTerminal"
         },
         {
             "type": "java",
