@@ -223,7 +223,7 @@ public class DavidBaseManager {
     private static void parseCreateDatabase(String createDataBaseString) {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
-            System.out.println(queryObject.databaseName);
+            //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
