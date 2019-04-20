@@ -6,6 +6,7 @@ package com.davidbase.model.PageComponent;
 public class CellPayload {
 
     //1-byte TINYINT that indicates the number of columns n.
+    @Deprecated
     private byte num_columns;
 
     //n-bytes which are Serial Type Codes, one for each of n columns

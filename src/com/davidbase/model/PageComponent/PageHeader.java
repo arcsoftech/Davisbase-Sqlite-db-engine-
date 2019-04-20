@@ -37,6 +37,7 @@ public class PageHeader {
 
     private int page_number;
 
+
     public PageType getPage_type() {
         return page_type;
     }

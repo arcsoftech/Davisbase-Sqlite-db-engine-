@@ -70,4 +70,12 @@ public class Condition {
     public void setValue(Object value) {
         this.value = value;
     }
+
+    public DataType getValType() {
+        return valType;
+    }
+
+    public void setValType(DataType valType) {
+        this.valType = valType;
+    }
 }

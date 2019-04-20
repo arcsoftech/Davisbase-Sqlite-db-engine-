@@ -94,6 +94,10 @@ public class RawRecord {
         return columnType;
     }
 
+    public void setColumnType(List<DataType> columnType) {
+        this.columnType = columnType;
+    }
+
     public void setSize() {
         for(int i=0;i<columnValue.size();i++){
             if(columnType.get(i)==DataType.TEXT)

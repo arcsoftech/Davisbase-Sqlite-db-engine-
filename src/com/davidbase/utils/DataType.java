@@ -1,6 +1,5 @@
 package com.davidbase.utils;
 
-import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.DavidBaseValidationException;
 
 public enum DataType {
@@ -14,9 +13,9 @@ public enum DataType {
     BIGINT("BIGINT",8,0x07),
     REAL("REAL",4,0x08),
     DOUBLE("DOUBLE",8,0x09),
-    DATETIME("DATETIME",8,0x0A),
-    DATE("DATE",8,0x0B),
-    TEXT("TEXT",1,0x0C);
+    DATETIME("DOUBLE",8,0x0A),
+    DATE("DOUBLE",8,0x0B),
+    TEXT("DOUBLE",1,0x0C);
 
     private byte size;
     private byte serialCode;
