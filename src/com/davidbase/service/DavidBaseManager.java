@@ -160,6 +160,8 @@ public class DavidBaseManager {
         switch (commandTokens.get(0)) {
             case "select":
                 System.out.println("CASE: SELECT");
+                selectFrom(userCommand);
+                
                 //parseQuery(userCommand);
                 break;
             case "show":
@@ -188,6 +190,10 @@ public class DavidBaseManager {
                     parseCreateDatabase(userCommand);
                 }
                 break;
+            case "insert":
+            	System.out.println("CASE: INSERT");
+            	insertInto(userCommand);
+            	break;
             case "update":
                 System.out.println("CASE: UPDATE");
                 //parseUpdate(userCommand);
@@ -230,9 +236,9 @@ public class DavidBaseManager {
     private static void parseCreateDatabase(String createDataBaseString) {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
-            //currentDB=queryObject.databaseName;
+            currentDB=queryObject.databaseName;
 
-            //System.out.println(currentDB);
+            System.out.println(currentDB);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
@@ -287,6 +293,27 @@ public class DavidBaseManager {
         }
 
 
+    }
+    public static void selectFrom(String selectFromString)
+    {
+    	System.out.println("STUB: This is the selectFrom method");
+    	try {
+            boolean isTrue = commandValidator.isValidSelectFrom(selectFromString);
+            //System.out.println(queryObject.databaseName);
+        }catch(DavidBaseValidationException e) {
+            System.out.println(e.getErrorMsg());
+        }
+    	
+    }
+    public static void insertInto(String insertIntoString)
+    {
+    	try {
+            InsertInto queryObject = commandValidator.isValidInsertInto(insertIntoString,currentDB);
+            //System.out.println(queryObject.databaseName);
+            //System.out.println(queryObject.tableName);
+        }catch(DavidBaseValidationException e) {
+            System.out.println(e.getErrorMsg());
+        }
     }
 
     /**

@@ -170,15 +170,23 @@ public class DavidBaseCommandValidator {
         
     }
 
-    public void isValidInsertInto(String userCommand)throws DavidBaseValidationException{
-              
+    public InsertInto isValidInsertInto(String userCommand,String currentDB)throws DavidBaseValidationException{
+             //dummy objects
+       // InsertInto cd=new InsertInto();
+        //return cd;
         
     }
 
 
-    public void isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
-              
-        
+    public boolean isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
+    	 ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+         int size=commandTokens.size();
+         //check if the second key word is "table"
+         String userCommandlower=userCommand.toLowerCase();
+         if(!userCommandlower.contains("from"))
+        	 throw new DavidBaseValidationException("Incorrect SELECT statement");
+        	//check if table exists ---- Qi
+        return true;
     }
 
 
