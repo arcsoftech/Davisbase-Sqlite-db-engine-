@@ -16,6 +16,8 @@ public class RawRecord {
     byte[] sizeOfCol;
     short totSize;
     byte[] coleVal;
+    int page;
+    int offset;
 
     public RawRecord() {
         this.rowID = -1;
@@ -64,8 +66,28 @@ public class RawRecord {
         return totSize;
     }
 
+    public void setTotSize(short totSize) {
+        this.totSize = totSize;
+    }
+
     public byte[] getColeVal() {
         return coleVal;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     public void setSize() {

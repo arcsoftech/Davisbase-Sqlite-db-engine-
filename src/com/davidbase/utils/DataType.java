@@ -1,5 +1,8 @@
 package com.davidbase.utils;
 
+import com.davidbase.model.DavidBaseError;
+import com.davidbase.model.DavidBaseValidationException;
+
 public enum DataType {
     NULL_TINYINT("NULL",1,0x00),
     NULL_SMALLINT("NULL",2,0x01),
@@ -41,5 +44,25 @@ public enum DataType {
 
     public String getDataTypeName() {
         return dataTypeName;
+    }
+
+    public static DataType getTypeFromSerialCode(byte serialCode) throws DavidBaseValidationException {
+
+        switch (serialCode){
+            case 0x00: return NULL_TINYINT;
+            case 0x01: return NULL_SMALLINT;
+            case 0x02: return NULL_INT;
+            case 0x03: return NULL_DOUBLE_DATE;
+            case 0x04: return TINYINT;
+            case 0x05: return SMALLINT;
+            case 0x06: return INT;
+            case 0x07: return BIGINT;
+            case 0x08: return REAL;
+            case 0x09: return DOUBLE;
+            case 0x0A: return DATETIME;
+            case 0x0B: return DATE;
+            case 0x0C: return TEXT;
+        }
+        throw new DavidBaseValidationException("Unrecognized serial code");
     }
 }
