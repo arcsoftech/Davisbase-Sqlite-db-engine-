@@ -170,15 +170,69 @@ public class DavidBaseCommandValidator {
         
     }
 
-    public void isValidInsertInto(String userCommand)throws DavidBaseValidationException{
-              
+    public InsertInto isValidInsertInto(String userCommand, String currentDB)throws DavidBaseValidationException{
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        // DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
+        // boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
+        // if (isExist==false){
+        //     throw new DavidBaseValidationException("The table does not Exist");
+        // } 
+
+        int first_open_bracket_index = userCommand.toLowerCase().indexOf("(");
+        int last_close_bracket_index = userCommand.toLowerCase().lastIndexOf(")");
+
+        String string_inside_brackets=userCommand.substring(first_open_bracket_index + 1, last_close_bracket_index).trim();
+        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("values")));
+        //System.out.println(columns_substrings.get(0));
+        //System.out.println(columns_substrings.get(1));
+
+        List<String> columns=new ArrayList<String>();
+        List<String> values=new ArrayList<String>();
+
+        String columns_string=columns_substrings.get(0).replaceAll("[)]","");
+        String values_string=columns_substrings.get(1).replaceAll("[(]","");
+        columns_string=columns_string.trim();
+        values_string=values_string.trim();
+
+        ArrayList<String> columns_list = new ArrayList<String>(Arrays.asList(columns_string.split(",")));
+        ArrayList<String> values_list = new ArrayList<String>(Arrays.asList(values_string.split(",")));
+        
+        for(int i=0; i<columns_list.size();i++){
+            columns.add(columns_list.get(i).trim());
+        }
+
+        for(int i=0; i<values_list.size();i++){
+            values.add(values_list.get(i).trim());
+        }
+
+        InsertInto queryObject=new InsertInto(commandTokens.get(2),columns, values);
+        return queryObject;
+        // for(int i=0; i<columns.size();i++){
+        //     System.out.println(columns.get(i));
+        // }
+
+        // for(int i=0; i<values.size();i++){
+        //     System.out.println(values.get(i));
+        // }
+        
+
+
+
+
+
         
     }
 
 
-    public void isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
-              
-        
+    public boolean isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
+    	 ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+         int size=commandTokens.size();
+         //check if the second key word is "table"
+         String userCommandlower=userCommand.toLowerCase();
+         if(!userCommandlower.contains("from"))
+        	 throw new DavidBaseValidationException("Incorrect SELECT statement");
+        	//check if table exists ---- Qi
+        return true;
     }
 
 

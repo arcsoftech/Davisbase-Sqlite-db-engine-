@@ -89,6 +89,10 @@ public class RawRecord {
     public void setOffset(int offset) {
         this.offset = offset;
     }
+    
+    public List<DataType> getColumnType() {
+        return columnType;
+    }
 
     public void setSize() {
         for(int i=0;i<columnValue.size();i++){
