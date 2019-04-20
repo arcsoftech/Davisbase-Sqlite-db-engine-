@@ -90,11 +90,15 @@ public class Test{
         System.out.println("createTable");
         try {
             CreateTable queryObject = commandValidator.isValidCreateTable(createTableString);
-            System.out.println(queryObject.getTableName());
+            System.out.println(queryObject.getPrimaryKey());
+            //List<String> columns=queryObject.getColumns();
+            // for(int i=0; i<columns.size();i++){
+            //     System.out.println(columns.get(i));
+            // }
             //QueryResult result = commandExecutor.executeQuery(queryObject);
             //System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {
-            System.out.println("DavidBaseValidationException!!!!!");
+            System.out.println(e.getErrorMsg());
             //throw new DavidBaseError("Create table command in not valid.");
         //}catch(Exception e) {
             //throw new DavidBaseError("Error while executing command.");
