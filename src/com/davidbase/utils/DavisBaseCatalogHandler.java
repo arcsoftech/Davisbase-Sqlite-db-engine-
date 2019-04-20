@@ -19,10 +19,6 @@ public class DavisBaseCatalogHandler {
         return DavisBaseConstants.defaultDataDirectory + "/" + databaseName;
     }
 
-    public static String getDatabasePath(String databaseName) {
-        return DavisBaseConstants.defaultDataDirectory + "/" + databaseName;
-    }
-
     public boolean tableExists(String databaseName, String tableName) {
         return false;
     }
