@@ -1,8 +1,6 @@
 package com.davidbase.utils;
 
-import com.davidbase.utils.DataType;
-import com.davidbase.utils.DavisBaseConstants;
-import com.davidbase.model.RawRecord;
+import com.davidbase.model.PageComponent.RawRecord;
 
 import java.util.HashMap;
 import java.util.List;

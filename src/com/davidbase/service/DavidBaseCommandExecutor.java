@@ -1,14 +1,7 @@
 package com.davidbase.service;
 
-import com.davidbase.model.QueryBase;
-import com.davidbase.model.QueryResult;
-import com.davidbase.model.QueryType.CreateTable;
-
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static com.davidbase.utils.DavisBaseConstants.pageSize;
+import com.davidbase.model.QueryType.QueryBase;
+import com.davidbase.model.QueryType.QueryResult;
 
 /**
  * This class executes the user commands, deals with reading/writing to catalog and table files.
