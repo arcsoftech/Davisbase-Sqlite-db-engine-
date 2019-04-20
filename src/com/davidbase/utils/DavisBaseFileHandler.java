@@ -4,7 +4,6 @@ import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.PageComponent.*;
 import com.davidbase.model.QueryType.*;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -63,7 +62,6 @@ public class DavisBaseFileHandler {
                             Page<LeafCell> dataNode = new Page();
                             PageHeader header = new PageHeader();
                             List<LeafCell> dataCells = new ArrayList<>();
-                            header.setPage_number(0);
                             header.setPage_type(PageType.table_leaf);
                             header.setNum_cells((byte)1);
                             header.setData_cell_offset((new short[]{0}));
@@ -121,7 +119,6 @@ public class DavisBaseFileHandler {
             } else {
                 cells = new ArrayList<LeafCell>();
             }
-            header.setPage_number(pageNum);
             header.setPage_type(PageType.getType(pageType));
             header.setNum_cells(randomAccessFile.readByte());
             header.setData_offset(randomAccessFile.readShort());
@@ -192,215 +189,5 @@ public class DavisBaseFileHandler {
         }
     }
 
-    public List<RawRecord> findRecord(String databaseName, String tableName, Condition condition, boolean getOne) {
-        return findRecord(databaseName, tableName, condition,null, getOne);
-    }
 
-    public List<RawRecord> findRecord(String databaseName, String tableName, Condition condition, List<Byte> selectionColumnIndexList, boolean getOne) {
-        List<Condition> conditionList = new ArrayList<>();
-        if(condition != null)
-            conditionList.add(condition);
-        return findRecord(databaseName, tableName, conditionList, selectionColumnIndexList, getOne);
-    }
-
-    public List<RawRecord> findRecord(String databaseName, String tableName, List<Condition> conditionList, boolean getOne)  {
-        return findRecord(databaseName, tableName, conditionList, null, getOne);
-    }
-
-    public List<RawRecord> findRecord(String databaseName, String tableName, List<Condition> conditionList, List<Byte> selectionColumnIndexList, boolean getOne) {
-        try {
-            File file = new File(fileDir+databaseName + "/" + tableName + fileExt);
-            if (file.exists()) {
-                RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-                if (conditionList != null) {
-                    Page page = getPage(file);
-                    RawRecord record;
-                    List<RawRecord> matchRecords = new ArrayList<>();
-                    boolean isMatch = false;
-                    byte columnIndex;
-                    short condition;
-                    Object value;
-                    while (page != null) {
-                        for (Object offset : page.getPageheader().getData_cell_offset()) {
-                            isMatch = true;
-                            record = readDataRecord(randomAccessFile, page.getPageheader().getPage_number(), (short) offset);
-                            for(int i = 0; i < conditionList.size(); i++) {
-                                isMatch = false;
-                                columnIndex = conditionList.get(i).getIndex();
-                                value = conditionList.get(i).getValue();
-                                condition = conditionList.get(i).getConditionType();
-                                if (record != null && record.getColumnValues().size() > columnIndex) {
-                                    Object object = record.getColumnValues().get(columnIndex);
-                                    try {
-                                        isMatch = compare(object, value, condition);
-                                    }
-                                    catch (Exception e) {
-                                        randomAccessFile.close();
-                                        throw new DavidBaseError("Error while executing query.");
-                                    }
-                                    if(!isMatch) break;
-                                }
-                            }
-
-                            if(isMatch) {
-                                RawRecord matchedRecord = record;
-                                if(selectionColumnIndexList != null) {
-                                    matchedRecord = new RawRecord();
-                                    matchedRecord.setRowID(record.getRowID());
-                                    matchedRecord.setPage(record.getPage());
-                                    matchedRecord.setOffset(record.getOffset());
-                                    for (Byte index : selectionColumnIndexList) {
-                                        matchedRecord.getColumnValues().add(record.getColumnValues().get(index));
-                                    }
-                                }
-                                matchRecords.add(matchedRecord);
-                                if(getOne) {
-                                    randomAccessFile.close();
-                                    return matchRecords;
-                                }
-                            }
-                        }
-                        if (page.getPageheader().getNext_page_pointer() == rightMostLeaf)
-                            break;
-                        page = readSinglePage(randomAccessFile, page.getPageheader().getNext_page_pointer());
-                    }
-                    randomAccessFile.close();
-                    return matchRecords;
-                }
-            } else {
-                throw new DavidBaseError("Table doesn't exist, " +databaseName+tableName);
-           }
-        }
-        catch (Exception e) {
-            throw new DavidBaseError("Error while executing query.");
-        }
-        return null;
-    }
-
-    private RawRecord readDataRecord(RandomAccessFile randomAccessFile, int pageNumber, short offset) {
-        {
-            try {
-                if (pageNumber >= 0 && offset >= 0) {
-                    RawRecord record = new RawRecord();
-                    record.setPage(pageNumber);
-                    record.setOffset(offset);
-                    randomAccessFile.seek((pageSize * pageNumber) + offset);
-                    record.setTotSize(randomAccessFile.readShort());
-                    record.setRowID(randomAccessFile.readInt());
-                    byte numberOfColumns = randomAccessFile.readByte();
-                    byte[] serialTypeCodes = new byte[numberOfColumns];
-                    for (byte i = 0; i < numberOfColumns; i++) {
-                        serialTypeCodes[i] = randomAccessFile.readByte();
-                    }
-                    Object object;
-                    for (byte i = 0; i < numberOfColumns; i++) {
-                        switch (DataType.getTypeFromSerialCode(serialTypeCodes[i])) {
-                            //case DataType_TinyInt.nullSerialCode is overridden with DataType_Text
-
-                            case NULL_TINYINT:
-                                object = null;
-                                break;
-
-                            case NULL_SMALLINT:
-                                randomAccessFile.readShort();
-                                object = null;
-                                break;
-
-                            case NULL_INT:
-                                randomAccessFile.readFloat();
-                                object = null;
-                                break;
-
-                            case NULL_DOUBLE_DATE:
-                                randomAccessFile.readDouble();
-                                object = null;
-                                break;
-
-                            case TINYINT:
-                                object = randomAccessFile.readByte();
-                                break;
-
-                            case SMALLINT:
-                                object = randomAccessFile.readShort();
-                                break;
-
-                            case INT:
-                                object = randomAccessFile.readInt();
-                                break;
-
-                            case BIGINT:
-                                object = randomAccessFile.readLong();
-                                break;
-
-                            case REAL:
-                                object = randomAccessFile.readFloat();
-                                break;
-
-                            case DOUBLE:
-                                object = randomAccessFile.readDouble();
-                                break;
-
-                            case DATETIME:
-                                object = randomAccessFile.readLong();
-                                break;
-
-                            case DATE:
-                                object = randomAccessFile.readLong();
-                                break;
-
-                            case TEXT:
-                                object = "";
-                                break;
-
-                            default:
-                                if (serialTypeCodes[i] > DataType.TEXT.getSerialCode()) {
-                                    byte length = (byte) (serialTypeCodes[i] - DataType.TEXT.getSerialCode());
-                                    char[] text = new char[length];
-                                    for (byte k = 0; k < length; k++) {
-                                        text[k] = (char) randomAccessFile.readByte();
-                                    }
-                                    object = new String(text);
-                                } else
-                                    object = null;
-                                break;
-                        }
-                        record.getColumnValues().add(object);
-                    }
-                    return record;
-                }
-            }
-            catch (Exception e) {
-                throw new DavidBaseError("Error while executing query.");
-            }
-            return null;
-        }
-    }
-
-    private Page getPage(File file) {{
-        try {
-            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-            Page page = readSinglePage(randomAccessFile, 0);
-            while (page.getPageheader().getPage_type() == PageType.table_node) {
-                if (page.getPageheader().getNum_cells() == 0)
-                    return null;
-                randomAccessFile.seek((pageSize* page.getPageheader().getPage_number()) + ((short) page.getPageheader().getData_offset()));
-                page = readSinglePage(randomAccessFile, randomAccessFile.readInt());
-            }
-            randomAccessFile.close();
-            return page;
-        } catch (Exception e) {
-            throw new DavidBaseError("Error while executing query.");
-        }
-    }
-    }
-
-    private boolean compare(Object object1, Object object2, short condition) {
-        boolean isMatch = false;
-        if(object1 == null)
-            isMatch = false;
-        else
-            switch (object1.getClass().toString()) {
-            }
-        return isMatch;
-    }
 }

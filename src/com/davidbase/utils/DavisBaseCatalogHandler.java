@@ -26,6 +26,7 @@ public class DavisBaseCatalogHandler {
     public static final byte TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID = 5;
 
 
+<<<<<<< HEAD
   
     
 //    public static void InitializeDatabase() {
@@ -39,6 +40,34 @@ public class DavisBaseCatalogHandler {
 //            }
 //        }
 //    }
+||||||| merged common ancestors
+    public static final byte COLUMNS_TABLE_SCHEMA_ROWID = 0;
+    public static final byte COLUMNS_TABLE_SCHEMA_DATABASE_NAME = 1;
+    public static final byte COLUMNS_TABLE_SCHEMA_TABLE_NAME = 2;
+    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_NAME = 3;
+    public static final byte COLUMNS_TABLE_SCHEMA_DATA_TYPE = 4;
+    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_KEY = 5;
+    public static final byte COLUMNS_TABLE_SCHEMA_ORDINAL_POSITION = 6;
+    public static final byte COLUMNS_TABLE_SCHEMA_IS_NULLABLE = 7;
+
+    public static final String PRIMARY_KEY_IDENTIFIER = "PRI";
+    
+    public static void InitializeDatabase() {
+        File baseDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME);
+        if(!baseDir.exists()) {
+            File catalogDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME);
+            if(!catalogDir.exists()) {
+                if(catalogDir.mkdirs()) {
+                    new DavisBaseCatalogHandler().createCatalogDatabase();
+                }
+            }
+        }
+    }
+=======
+    public boolean databaseExists(String databaseName){
+        return false;
+    }
+>>>>>>> 995f522f010afee4c1b34b26479978f3a8a8f96a
     
     
 
@@ -321,7 +350,7 @@ public class DavisBaseCatalogHandler {
     }
 
     public boolean tableExists(String databaseName, String tableName) {
-        return true;
+        return false;
     }
 
     public List<String> fetchAllTableColumns(String databaseName, String tableName){
