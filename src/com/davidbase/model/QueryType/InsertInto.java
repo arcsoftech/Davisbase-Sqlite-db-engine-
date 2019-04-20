@@ -11,7 +11,15 @@ import java.util.List;
 public class InsertInto implements QueryBase {
     private String tableName;
     private List<String> columns;
-    private List<Object> columnValues;
+    private List<String> columnValues;
+
+
+    public InsertInto(String tableName, List<String> columns, List<String> columnsValues){
+        this.tableName=tableName;
+        this.columns=columns;
+        this.columnValues=columnsValues;
+
+    }
 
     @Override
     public QueryResult Execute() {
