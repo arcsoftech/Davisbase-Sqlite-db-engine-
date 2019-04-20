@@ -14,13 +14,15 @@
             "type": "java",
             "name": "Debug (Launch)-DavidBaseManager",
             "request": "launch",
-            "mainClass": "com.davidbase.service.DavidBaseManager"
+            "mainClass": "com.davidbase.service.DavidBaseManager",
+            "console": "externalTerminal"
         },
         {
             "type": "java",
-            "name": "Debug (Launch)-DavidBaseManager",
+            "name": "Debug (Launch)-Test",
             "request": "launch",
-            "mainClass": "com.davidbase.service.DavidBaseManager"
+            "mainClass": "com.davidbase.service.Test",
+            "console": "externalTerminal"
         }
     ]
 }
