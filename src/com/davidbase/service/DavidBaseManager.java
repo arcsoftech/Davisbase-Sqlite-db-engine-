@@ -36,6 +36,8 @@ public class DavidBaseManager {
      *  Each time the semicolon (;) delimiter is entered, the userCommand
      *  String is re-populated.
      */
+
+    static String currentDB=" ";
     static Scanner scanner = new Scanner(System.in).useDelimiter(";");
 
     static DavidBaseCommandValidator commandValidator = new DavidBaseCommandValidator();
@@ -170,7 +172,12 @@ public class DavidBaseManager {
                 break;
             case "drop":
                 System.out.println("CASE: DROP");
-                //dropTable(userCommand);
+                if (commandTokens.get(1).compareToIgnoreCase("table")==0){
+                    dropTable(userCommand);
+                }
+                else{
+                    dropDB(userCommand);
+                }
                 break;
             case "create":
                 System.out.println("CASE: CREATE");
@@ -205,7 +212,7 @@ public class DavidBaseManager {
     private static void parseCreateTable(String createTableString) {
         System.out.println("createTable");
         try {
-            CreateTable queryObject = commandValidator.isValidCreateTable(createTableString);
+            CreateTable queryObject = commandValidator.isValidCreateTable(createTableString,currentDB);
             // List<String> columns=queryObject.getColumns();
             //  for(int i=0; i<columns.size();i++){
             //      System.out.println(columns.get(i));
@@ -223,7 +230,9 @@ public class DavidBaseManager {
     private static void parseCreateDatabase(String createDataBaseString) {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
-            //System.out.println(queryObject.databaseName);
+            //currentDB=queryObject.databaseName;
+
+            //System.out.println(currentDB);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
@@ -247,6 +256,20 @@ public class DavidBaseManager {
         }
     }
 
+    public static void dropDB(String dropDBString) {
+        System.out.println("STUB: This is the dropTable method.");
+        //System.out.println("\tParsing the string:\"" + dropTableString + "\"");
+        try {
+            DropDatabase queryObject = commandValidator.isValidDropDatabase(dropDBString);
+            System.out.println(queryObject.databaseName);
+        }catch(DavidBaseValidationException e) {
+            System.out.println(e.getErrorMsg());
+        }
+
+
+    }
+
+
 
     /**
      *  Stub method for dropping tables
@@ -254,7 +277,16 @@ public class DavidBaseManager {
      */
     public static void dropTable(String dropTableString) {
         System.out.println("STUB: This is the dropTable method.");
-        System.out.println("\tParsing the string:\"" + dropTableString + "\"");
+        //System.out.println("\tParsing the string:\"" + dropTableString + "\"");
+        try {
+            DropTable queryObject = commandValidator.isValidDropTable(dropTableString,currentDB);
+            System.out.println(queryObject.databaseName);
+            System.out.println(queryObject.tableName);
+        }catch(DavidBaseValidationException e) {
+            System.out.println(e.getErrorMsg());
+        }
+
+
     }
 
     /**

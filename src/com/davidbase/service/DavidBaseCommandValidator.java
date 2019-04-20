@@ -1,13 +1,20 @@
 package com.davidbase.service;
 
-import com.davidbase.model.QueryType.CreateTable;
-import com.davidbase.model.DavidBaseValidationException;
-import com.davidbase.utils.DavisBaseCatalogHandler;
-import com.davidbase.model.QueryType.CreateDatabase;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.*;
-//import java.util.DavidBaseCatalogHandler;
+
+import com.davidbase.model.DavidBaseValidationException;
+import com.davidbase.model.QueryType.CreateDatabase;
+import com.davidbase.model.QueryType.CreateTable;
+import com.davidbase.model.QueryType.DropDatabase;
+import com.davidbase.model.QueryType.DropTable;
+import com.davidbase.model.QueryType.InsertInto;
+import com.davidbase.model.QueryType.QueryBase;
+import com.davidbase.model.QueryType.QueryResult;
+import com.davidbase.model.QueryType.SelectFrom;
+
+
 import com.davidbase.utils.DavisBaseCatalogHandler;
  
 /**
@@ -29,7 +36,7 @@ public class DavidBaseCommandValidator {
      * @param userCommand
      * @return
      */
-    public CreateTable isValidCreateTable(String userCommand) throws DavidBaseValidationException {
+    public CreateTable isValidCreateTable(String userCommand, String current_DB) throws DavidBaseValidationException {
         //parse command
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
         
@@ -39,7 +46,7 @@ public class DavidBaseCommandValidator {
         }
         //check if the table has been existed. do not know if need to check column?
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        boolean isExist=catalog_handler.tableExists("databaseName", commandTokens.get(2)); //??figure out database name
+        boolean isExist=catalog_handler.tableExists(current_DB, commandTokens.get(2)); //??figure out database name
         
         //parse and put all columns to a list
         List<String> columns_list=new ArrayList<String>();
@@ -109,6 +116,7 @@ public class DavidBaseCommandValidator {
             throw new DavidBaseValidationException("Failed to show databases");
         }
 
+        //ShowTable showTable=new ShowTable();
         return true;        
         
     }
@@ -122,5 +130,57 @@ public class DavidBaseCommandValidator {
         return true;        
         
     }
+
+    public DropDatabase isValidDropDatabase(String userCommand)throws DavidBaseValidationException{
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        if(commandTokens.size()>3){
+            throw new DavidBaseValidationException("Failed to drop database");
+        }
+        
+        DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
+        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2)); 
+
+        if (isExist==false){
+            throw new DavidBaseValidationException("The database does not Exist");
+        }  
+        else{
+            DropDatabase dropDB= new DropDatabase(commandTokens.get(2));
+            return dropDB;
+        }
+
+        
+    }
+
+    public DropTable isValidDropTable(String userCommand, String current_DB)throws DavidBaseValidationException{
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        if(commandTokens.size()>3){
+            throw new DavidBaseValidationException("Failed to drop tables");
+        }
+        
+        DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
+        boolean isExist=catalog_handler.tableExists(current_DB, commandTokens.get(2)); 
+
+        if (isExist==false){
+            throw new DavidBaseValidationException("The table does not Exist");
+        }  
+        else{
+            DropTable dropTable= new DropTable(current_DB, commandTokens.get(2));
+            return dropTable;
+        }      
+        
+    }
+
+    public void isValidInsertInto(String userCommand)throws DavidBaseValidationException{
+              
+        
+    }
+
+
+    public void isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
+              
+        
+    }
+
+
 
 }
