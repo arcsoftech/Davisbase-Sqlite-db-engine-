@@ -22,4 +22,10 @@ public class Page<T> {
     public void setCells(List<T> cells) {
         this.cells = cells;
     }
+    
+    public static int getHeaderFixedLength() {
+        return Byte.BYTES + Byte.BYTES + Short.BYTES + Integer.BYTES;
+    }
+    
+    
 }

@@ -1,6 +1,10 @@
 package com.davidbase.model.QueryType;
 
 
+import com.davidbase.utils.DataType;
+
+
+
 public class Condition {
 
     public static final short EQUALS = 0;
@@ -15,27 +19,31 @@ public class Condition {
 
     private Object value;
 
-    public static Condition CreateCondition(byte index, short conditionType, Object value) {
-        Condition condition = new Condition(index, conditionType, value);
+    private DataType valType;
+
+    public static Condition CreateCondition(byte index, short conditionType, DataType valType, Object value) {
+        Condition condition = new Condition(index, conditionType, valType, value);
         return condition;
     }
 
-    public static Condition CreateCondition(int index, short conditionType, Object value) {
-        Condition condition = new Condition(index, conditionType, value);
+    public static Condition CreateCondition(int index, short conditionType, DataType valType, Object value) {
+        Condition condition = new Condition(index, conditionType, valType, value);
         return condition;
     }
 
     public Condition() {}
 
-    private Condition(byte index, short conditionType, Object value) {
+    private Condition(byte index, short conditionType, DataType valType, Object value) {
         this.index = index;
         this.conditionType = conditionType;
+        this.valType=valType;
         this.value = value;
     }
 
-    private Condition(int index, short conditionType, Object value) {
+    private Condition(int index, short conditionType, DataType valType,Object value) {
         this.index = (byte) index;
         this.conditionType = conditionType;
+        this.valType = valType;
         this.value = value;
     }
 

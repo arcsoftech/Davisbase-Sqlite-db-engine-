@@ -21,9 +21,9 @@ import com.davidbase.utils.DavisBaseConstants;
 public class DavisBasePrompt {
 
 	/* This can be changed to whatever you like */
-	static String prompt = DavisBaseConstants.prompt;
-	static String version = DavisBaseConstants.version;
-	static String copyright = DavisBaseConstants.copyright;
+	static String prompt = DavisBaseConstants.PROMPT;
+	static String version = DavisBaseConstants.VERSION;
+	static String copyright = DavisBaseConstants.COPYRIGHT;
 	static boolean isExit = false;
 	/*
 	 * Page size for alll files is 512 bytes by default.
