@@ -57,7 +57,7 @@ public class DavidBaseManager {
         String userCommand = "";
 
         while(!isExit) {
-            System.out.print(prompt);
+            System.out.print(PROMPT);
             /* toLowerCase() renders command case insensitive */
             userCommand = scanner.next().replace("\n", " ").replace("\r", "").trim().toLowerCase();
             // userCommand = userCommand.replace("\n", "").replace("\r", "");
@@ -131,11 +131,11 @@ public class DavidBaseManager {
 
     /** return the DavisBase version */
     public static String getVersion() {
-        return version;
+        return VERSION;
     }
 
     public static String getCopyright() {
-        return copyright;
+        return COPYRIGHT;
     }
 
     public static void displayVersion() {
@@ -190,10 +190,8 @@ public class DavidBaseManager {
                     parseCreateDatabase(userCommand);
                 }
                 break;
-            case "insert":
-            	System.out.println("CASE: INSERT");
-            	insertInto(userCommand);
-            	break;
+           
+       
             case "update":
                 System.out.println("CASE: UPDATE");
                 //parseUpdate(userCommand);

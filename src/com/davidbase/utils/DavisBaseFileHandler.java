@@ -24,7 +24,7 @@ public class DavisBaseFileHandler {
              *  Note that this doesn't create the table file in the correct directory structure
              */
             RandomAccessFile tableFile = new RandomAccessFile(fileDir+tableFileName+fileExt, "rw");
-            tableFile.setLength(pageSize);
+            tableFile.setLength(PAGE_SIZE);
             tableFile.seek(0);
             tableFile.writeInt(63);
         }
@@ -49,7 +49,7 @@ public class DavisBaseFileHandler {
             int pageNumber =0;
             //iterate over each record to be inserted
             for(RawRecord record: records){
-                int pageCount = (int) (tablefile.length() / pageSize);
+                int pageCount = (int) (tablefile.length() / PAGE_SIZE);
                 Page page;
                 if(pageCount>0)
                     page = findPage(tablefile,record.getRowID(), pageNumber);
@@ -66,7 +66,7 @@ public class DavisBaseFileHandler {
                             header.setNum_cells((byte)1);
                             header.setData_cell_offset((new short[]{0}));
                             header.setData_offset((short)0);
-                            header.setNext_page_pointer(rightMostLeaf);
+                            header.setNext_page_pointer(RIGHT_MOST_LEAF);
                             dataNode.setPageheader(header);
 
                             //prepare the data cells
@@ -112,7 +112,7 @@ public class DavisBaseFileHandler {
             Page page = new Page();
             PageHeader header = new PageHeader();
             List cells;
-            randomAccessFile.seek(pageSize * pageNum);
+            randomAccessFile.seek(PAGE_SIZE * pageNum);
             byte pageType = randomAccessFile.readByte();
             if (pageType == PageType.table_node.getVal()) {
                 cells = new ArrayList<NonLeafCell>();
@@ -141,7 +141,7 @@ public class DavisBaseFileHandler {
 
             // writing the page header first
             PageHeader header = page.getPageheader();
-            long pageLocation = pageNumber* pageSize;
+            long pageLocation = pageNumber* PAGE_SIZE;
             tableFile.seek(pageLocation);
             tableFile.writeByte(header.getPage_type().getVal());
             tableFile.writeByte(header.getNum_cells());

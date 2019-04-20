@@ -1,3 +1,5 @@
+package com.davidbase.utils;
+
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.PageComponent.RawRecord;
 import com.davidbase.model.PageComponent.*;
@@ -64,7 +66,7 @@ public class DavisBaseCatalogHandler {
         catch (InternalException e) {
             throw new DavidBaseError("Error");
         }
-        return false;
+        //return false;
     }
     
 
@@ -120,10 +122,10 @@ public class DavisBaseCatalogHandler {
             }
             return true;
         }
-        catch (InternalException e) {
+        catch (Exception e) {
             throw new DavidBaseError("Error");
         }
-        return false;
+       // return false;
     }
     
     
@@ -202,13 +204,13 @@ public class DavisBaseCatalogHandler {
             } else {
 //                Utils.printMessage(String.format("Table '%s.%s' already exists.", databaseName, tableName));
                 throw new DavidBaseError("Error");
-                return -1;
+                //return -1;
             }
         }
         catch (InternalException e) {
 //            Utils.printMessage(e.getMessage());
             throw new DavidBaseError("Error");
-            return -1;
+           // return -1;
         }
     }
     
@@ -266,7 +268,7 @@ public class DavisBaseCatalogHandler {
          return  databaseDir.exists();     
     }
     
-    public  String getDatabasePath(String databaseName) {
+    public static String getDatabasePath(String databaseName) {
         return DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + databaseName;
     }
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.davidbase.utils.DavisBaseConstants.pageSize;
+import static com.davidbase.utils.DavisBaseConstants.PAGE_SIZE;
 
 /**
  * Class represents a Create Table query
