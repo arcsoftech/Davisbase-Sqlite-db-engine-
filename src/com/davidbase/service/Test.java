@@ -1,6 +1,6 @@
 package com.davidbase.service;
 
-import static com.davidbase.utils.DavisBaseConstants;
+import static com.davidbase.utils.DavisBaseConstants.*;
 import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.utils.DavisBaseCatalogHandler;
 import com.davidbase.model.DavidBaseValidationException;
@@ -28,7 +28,7 @@ public class Test{
         String userCommand = "";
 
         while(!isExit) {
-            System.out.print("prompt");
+            System.out.print(prompt);
             /* toLowerCase() renders command case insensitive */
             userCommand = scanner.next().replace("\n", " ").replace("\r", "").trim().toLowerCase();
             // userCommand = userCommand.replace("\n", "").replace("\r", "");
@@ -103,7 +103,7 @@ public class Test{
     private static void parseCreateTable(String createTableString) {
         System.out.println("createTable");
         try {
-            //CreateTable queryObject = commandValidator.isValidCreateTable(createTableString);
+            CreateTable queryObject = commandValidator.isValidCreateTable(createTableString);
             //List<String> columns=queryObject.getColumns();
             // for(int i=0; i<columns.size();i++){
             //     System.out.println(columns.get(i));
@@ -120,7 +120,7 @@ public class Test{
 
     private static void parseCreateDatabase(String createDataBaseString) {
         try {
-            //CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
+            CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -129,7 +129,7 @@ public class Test{
 
     private static void parseShowDatabase(String showDB) {
         try {
-            //boolean isTrue = commandValidator.isValidShowDB(showDB);
+            boolean isTrue = commandValidator.isValidShowDB(showDB);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -138,7 +138,7 @@ public class Test{
 
     private static void parseShowTable(String showTable) {
         try {
-            //boolean isTrue = commandValidator.isValidShowTable(showTable);
+            boolean isTrue = commandValidator.isValidShowTable(showTable);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
