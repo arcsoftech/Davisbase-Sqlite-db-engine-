@@ -1,4 +1,4 @@
-package com.davidbase.model;
+package com.davidbase.model.QueryType;
 
 public class QueryResult {
     int rowsAffected;

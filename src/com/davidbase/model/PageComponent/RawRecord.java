@@ -1,6 +1,6 @@
-package com.davidbase.model;
+package com.davidbase.model.PageComponent;
 
-import com.davidbase.DataType;
+import com.davidbase.utils.DataType;
 
 import java.util.List;
 

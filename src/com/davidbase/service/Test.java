@@ -1,7 +1,7 @@
 package com.davidbase.service;
 
-import static com.davidbase.DavidBaseConstants.*;
-import com.davidbase.model.impl.CreateTable;
+import static com.davidbase.utils.DavidBaseConstants.*;
+import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.utils.DavidBaseCatalogHandler;
 import com.davidbase.model.DavidBaseValidationException;
 import java.util.Scanner;
@@ -27,7 +27,7 @@ public class Test{
         String userCommand = "";
 
         while(!isExit) {
-            System.out.print(prompt);
+            System.out.print("prompt");
             /* toLowerCase() renders command case insensitive */
             userCommand = scanner.next().replace("\n", " ").replace("\r", "").trim().toLowerCase();
             // userCommand = userCommand.replace("\n", "").replace("\r", "");

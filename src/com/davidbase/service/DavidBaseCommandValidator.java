@@ -1,8 +1,8 @@
 package com.davidbase.service;
 
-import com.davidbase.model.impl.CreateTable;
+import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.DavidBaseValidationException;
-import com.davidbase.model.DavidBaseCatalogHandler;
+import com.davidbase.utils.DavidBaseCatalogHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;

@@ -1,9 +1,9 @@
-package com.davidbase.model.impl;
+package com.davidbase.model.QueryType;
 
 import com.davidbase.model.DavidBaseError;
-import com.davidbase.model.QueryBase;
-import com.davidbase.model.QueryResult;
-import com.davidbase.utils.DavidBaseFileHandler;
+import com.davidbase.model.QueryType.QueryBase;
+import com.davidbase.model.QueryType.QueryResult;
+import com.davidbase.utils.DavisBaseFileHandler;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ public class SelectFrom implements QueryBase {
     private List<String> columns;
 
     @Override
-    public QueryResult execute() {
+    public QueryResult Execute() {
         try {
-            DavidBaseFileHandler.readFromFile(tableName);
+            DavisBaseFileHandler.readFromFile(tableName);
         }catch(Exception e){
             e.printStackTrace();
             throw new DavidBaseError("Error while creating new table");

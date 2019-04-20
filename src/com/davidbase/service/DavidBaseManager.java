@@ -1,15 +1,16 @@
 package com.davidbase.service;
 
 import com.davidbase.model.DavidBaseError;
-import com.davidbase.model.QueryResult;
-import com.davidbase.model.impl.CreateTable;
 import com.davidbase.model.DavidBaseValidationException;
+import com.davidbase.model.QueryType.CreateTable;
+import com.davidbase.model.QueryType.QueryResult;
 
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
+
+import static com.davidbase.utils.DavisBaseConstants.*;
 import static java.lang.System.out;
-import static com.davidbase.DavidBaseConstants.*;
 
 /**
  * This class acts as the Central Manager for DavidBase database.

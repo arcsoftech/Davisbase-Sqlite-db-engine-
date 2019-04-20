@@ -1,9 +1,9 @@
-package com.davidbase.model.impl;
+package com.davidbase.model.QueryType;
 
-import com.davidbase.model.QueryBase;
-import com.davidbase.model.QueryResult;
-import com.davidbase.model.RawRecord;
-import com.davidbase.utils.DavidBaseFileHandler;
+import com.davidbase.model.QueryType.QueryBase;
+import com.davidbase.model.QueryType.QueryResult;
+import com.davidbase.model.PageComponent.RawRecord;
+import com.davidbase.utils.DavisBaseFileHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +14,13 @@ public class InsertInto implements QueryBase {
     private List<Object> columnValues;
 
     @Override
-    public QueryResult execute() {
-
+    public QueryResult Execute() {
         // map passed values to records ready to be inserted into file
         List<RawRecord> recordsToFile = prepareRecord();
-        DavidBaseFileHandler.writeToFile(tableName, recordsToFile );
+        DavisBaseFileHandler.writeToFile(tableName, recordsToFile );
         return new QueryResult(recordsToFile.size());
     }
-
+ 
     private List<RawRecord> prepareRecord(){
         List<RawRecord> recordsToFile = new ArrayList<>();
         return recordsToFile;

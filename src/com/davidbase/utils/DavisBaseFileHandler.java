@@ -1,6 +1,8 @@
 package com.davidbase.utils;
 
-import com.davidbase.model.*;
+import com.davidbase.model.DavidBaseError;
+import com.davidbase.model.PageComponent.*;
+import com.davidbase.model.QueryType.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,12 +10,12 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.davidbase.DavidBaseConstants.*;
+import static com.davidbase.utils.DavisBaseConstants.*;
 
 /**
  * File utility to read/write data from .tbl files
  */
-public class DavidBaseFileHandler {
+public class DavisBaseFileHandler {
 
     public static boolean createFile(String tableFileName){
         /*  Code to create a .tbl file to contain table data */
