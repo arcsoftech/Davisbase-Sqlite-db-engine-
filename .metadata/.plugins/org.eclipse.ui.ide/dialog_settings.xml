@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+		<item value="/Users/neelpatel/Desktop/CSUTD/1stsem/DB/Final Project/Davisbase-Sqlite-db-engine-/src"/>
+		<item value="/Users/neelpatel/Desktop/CSUTD/1stsem/DB/Final Project/Davisbase-Sqlite-db-engine-"/>
+	</list>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="425" key="DIALOG_X_ORIGIN"/>
+		<item value="141" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

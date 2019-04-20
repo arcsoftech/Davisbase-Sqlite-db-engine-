@@ -1,0 +1,25 @@
+package com.davidbase.utils;
+
+public interface DavisBaseContants {
+
+	
+		 String PROMPT = "davissql> ";
+		 String VERSION = "v1.0";
+		 String COPYRIGHT = "©2019 Chris Irwin Davis";
+
+		 String DEFAULT_FILE_EXTENSION = ".tbl";
+		 String DEFAULT_DATA_DIRNAME = "data";
+		 String DEFAULT_CATALOG_DATABASENAME = "catalog";
+		 String SYSTEM_TABLES_TABLENAME = "davisbase_tables";
+	     String SYSTEM_COLUMNS_TABLENAME = "davisbase_columns";
+	    /*
+	    * Page size for alll  is 512 bytes by default.
+	    */
+	    public static final long pageSize = 512;
+
+	    public static final String fileDir = "src/data/";
+	    public static final String fileExt = ".tbl";
+	    public static final int rightMostLeaf = 0xFFFFFFFF;
+
+
+}

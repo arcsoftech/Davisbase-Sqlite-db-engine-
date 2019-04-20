@@ -219,6 +219,10 @@ public class DavidBaseManager {
         }
     }
 
+    
+    
+    
+    
     private static void parseCreateTable(String createTableString) {
         System.out.println("createTable");
         try {
@@ -248,6 +252,17 @@ public class DavidBaseManager {
         }
     }
 
+    private static void parseUseDatabase(String useDataBaseString) {
+        try {
+            CreateDatabase queryObject = commandValidator.isValidDatabase(useDataBaseString);
+            //currentDB=queryObject.databaseName;
+
+            //System.out.println(currentDB);
+        }catch(DavidBaseValidationException e) {
+            System.out.println(e.getErrorMsg());
+        }
+    }
+    
     private static void parseShowDatabase(String showDB) {
         try {
             boolean isTrue = commandValidator.isValidShowDB(showDB);
