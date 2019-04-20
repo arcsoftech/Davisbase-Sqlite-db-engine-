@@ -6,7 +6,6 @@ public class Page<T> {
 
     private PageHeader pageheader;
     private List<T> cells;
-    private List<T> pageRecords;
 
     public PageHeader getPageheader() {
         return pageheader;
@@ -28,12 +27,5 @@ public class Page<T> {
         return Byte.BYTES + Byte.BYTES + Short.BYTES + Integer.BYTES;
     }
     
-
-    public List<T> getPageRecords() {
-        return pageRecords;
-    }
-
-    public void setPageRecords(List<T> pageRecords) {
-        this.pageRecords = pageRecords;
-    }
+    
 }
