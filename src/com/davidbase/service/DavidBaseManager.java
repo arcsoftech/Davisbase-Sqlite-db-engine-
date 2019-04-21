@@ -230,7 +230,7 @@ public class DavidBaseManager {
             //  for(int i=0; i<columns.size();i++){
             //      System.out.println(columns.get(i));
             //  }
-            //QueryResult result = commandExecutor.executeQuery(queryObject);
+            QueryResult result = commandExecutor.executeQuery(queryObject);
             //System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());

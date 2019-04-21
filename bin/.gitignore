@@ -1,3 +1,2 @@
-/bin/
-/com/
-/.DS_Store
+.*
+!.gitignore
