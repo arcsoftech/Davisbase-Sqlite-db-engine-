@@ -18,7 +18,12 @@ import java.util.ArrayList;
  * Since the Catalog files are also treated as system tables they will be read/written using DavisBaseFileHandler *
  */
 public class DavisBaseCatalogHandler {
-	
+
+    private DavisBaseFileHandler filehandler;
+
+	public DavisBaseCatalogHandler(){
+	    filehandler = new DavisBaseFileHandler();
+    }
 	  
 	public static void InitializeDatabase() {
 	        File baseDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME);
@@ -244,23 +249,16 @@ public class DavisBaseCatalogHandler {
                 Page<RawRecord> page = Page.createNewEmptyPage(new RawRecord());
                 randomAccessFile = new RandomAccessFile(file, "rw");
                 randomAccessFile.setLength(DavisBaseConstants.PAGE_SIZE);
-                boolean isTableCreated = writePageHeader(randomAccessFile, page);
+                boolean isTableCreated = filehandler.writeFirstPageHeader(randomAccessFile, page);
                 randomAccessFile.close();
                 return isTableCreated;
             }
             return false;
-        } catch (InternalException e) {
-            throw e;
         }
         catch (Exception e) {
-            throw new InternalException(InternalException.GENERIC_EXCEPTION);
+            throw new DavidBaseError(e);
         }
     }
-
-    private boolean writePageHeader(RandomAccessFile randomAccessFile, Page page) throws InternalException {
-    	return true;
-    }
-    
     
     
     public boolean databaseExists(String databaseName){ 
