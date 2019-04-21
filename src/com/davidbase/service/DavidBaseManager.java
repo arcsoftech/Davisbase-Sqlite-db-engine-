@@ -225,6 +225,7 @@ public class DavidBaseManager {
         System.out.println("createTable");
         try {
             CreateTable queryObject = commandValidator.isValidCreateTable(createTableString,currentDB);
+            //System.out.println(queryObject);
             // List<String> columns=queryObject.getColumns();
             //  for(int i=0; i<columns.size();i++){
             //      System.out.println(columns.get(i));

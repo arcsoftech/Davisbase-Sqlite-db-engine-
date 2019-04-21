@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 /**
  * Class to read/write the Database catalog files.
- * Since the Catalog files are also treated as system tables they will be read/wrtten using DavisBaseFileHandler *
+ * Since the Catalog files are also treated as system tables they will be read/written using DavisBaseFileHandler *
  */
 public class DavisBaseCatalogHandler {
 	
@@ -221,7 +221,7 @@ public class DavisBaseCatalogHandler {
     }
     
     
-    private Page getRightmostLeafPage(File file) throws InternalException {
+    private Page getRightmostLeafPage(File file) throws Exception {
        	
         return null;
     }
