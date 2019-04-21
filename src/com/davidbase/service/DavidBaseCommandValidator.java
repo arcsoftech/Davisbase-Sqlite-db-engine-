@@ -226,7 +226,7 @@ public class DavidBaseCommandValidator {
 
     public boolean isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
     	 ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
-         int size=commandTokens.size();
+        int size=commandTokens.size();
          //check if the second key word is "table"
          String userCommandlower=userCommand.toLowerCase();
          if(!userCommandlower.contains("from"))
