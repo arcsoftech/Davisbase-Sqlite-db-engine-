@@ -496,4 +496,20 @@ public class DavisBaseFileHandler {
         }
         return false;
     }
+
+    public boolean writeFirstPageHeader(RandomAccessFile randomAccessFile, Page page) {
+        try {
+            randomAccessFile.seek(page.getPageheader().getPage_number() * PAGE_SIZE);
+            randomAccessFile.writeByte(page.getPageheader().getPage_type().getVal());
+            randomAccessFile.writeByte(page.getNumberOfCells());
+            randomAccessFile.writeShort(page.getPageheader().getData_offset());
+            randomAccessFile.writeInt(page.getPageheader().getNext_page_pointer());
+            for (Object offset : page.getPageheader().getData_cell_offset()) {
+                randomAccessFile.writeShort((short) offset);
+            }
+            return true;
+        } catch (Exception e) {
+            throw new DavidBaseError(e);
+        }
+    }
 }
