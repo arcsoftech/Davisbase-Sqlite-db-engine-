@@ -11,6 +11,9 @@ public class CellHeader {
     // A 4-byte INT which is the integer key, a.k.a. "rowid"
     private int row_id;
 
+    public CellHeader() {
+    }
+
     public CellHeader(short payload_size, int row_id) {
         this.payload_size = payload_size;
         this.row_id = row_id;
@@ -30,5 +33,9 @@ public class CellHeader {
 
     public void setRow_id(int row_id) {
         this.row_id = row_id;
+    }
+
+    public static short getSize(){
+        return (short)(Short.BYTES + Integer.BYTES);
     }
 }

@@ -1,5 +1,6 @@
 package com.davidbase.model.QueryType;
 
+import com.davidbase.model.PageComponent.LeafCell;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.PageComponent.RawRecord;
@@ -9,12 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InsertInto implements QueryBase {
+    private String databaseName;
     private String tableName;
     private List<String> columns;
     private List<String> columnValues;
 
 
-    public InsertInto(String tableName, List<String> columns, List<String> columnsValues){
+    public InsertInto(String databaseName,String tableName, List<String> columns, List<String> columnsValues){
+        this.databaseName=databaseName;
         this.tableName=tableName;
         this.columns=columns;
         this.columnValues=columnsValues;
@@ -24,13 +27,13 @@ public class InsertInto implements QueryBase {
     @Override
     public QueryResult Execute() {
         // map passed values to records ready to be inserted into file
-        List<RawRecord> recordsToFile = prepareRecord();
-        DavisBaseFileHandler.writeToFile(tableName, recordsToFile );
-        return new QueryResult(recordsToFile.size());
+        LeafCell recordsToFile = prepareRecord();
+        new DavisBaseFileHandler().writeLeafCell(databaseName,tableName, recordsToFile );
+        return new QueryResult(1);
     }
  
-    private List<RawRecord> prepareRecord(){
-        List<RawRecord> recordsToFile = new ArrayList<>();
+    private LeafCell prepareRecord(){
+        LeafCell recordsToFile = new LeafCell();
         return recordsToFile;
     }
 
