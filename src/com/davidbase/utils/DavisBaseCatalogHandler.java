@@ -43,7 +43,6 @@ public class DavisBaseCatalogHandler {
 
     public boolean createCatalogDatabase() {
         try {
-//            IOManager manager = new IOManager();
             this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME + DavisBaseConstants.DEFAULT_FILE_EXTENSION);
             this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME + DavisBaseConstants.DEFAULT_FILE_EXTENSION);
             int startingRowId = this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 6);

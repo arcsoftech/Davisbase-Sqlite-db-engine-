@@ -18,6 +18,8 @@ public class Page<T> {
         pageHeader.setPage_type(PageType.table_leaf);
         pageHeader.setNext_page_pointer(RIGHT_MOST_LEAF);
         page.setNumberOfCells((byte)0x00);
+        short[] offsets = new short[2];
+        pageHeader.setData_cell_offset(offsets);
         page.setPageheader(pageHeader);
         return page;
     }
