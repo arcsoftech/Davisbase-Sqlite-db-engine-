@@ -43,8 +43,8 @@ public class DavisBaseCatalogHandler {
 
     public boolean createCatalogDatabase() {
         try {
-            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME + DavisBaseConstants.DEFAULT_FILE_EXTENSION);
-            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME + DavisBaseConstants.DEFAULT_FILE_EXTENSION);
+            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME);
+            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME);
             int startingRowId = this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 6);
             startingRowId *= this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 8);
             if (startingRowId >= 0) {
