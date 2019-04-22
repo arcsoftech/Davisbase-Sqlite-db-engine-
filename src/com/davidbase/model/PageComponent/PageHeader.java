@@ -37,6 +37,9 @@ public class PageHeader {
 
     private int page_number;
 
+    public PageHeader(int pageNum){
+        this.page_number=pageNum;
+    }
 
     public PageType getPage_type() {
         return page_type;

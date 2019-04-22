@@ -1,6 +1,9 @@
 package com.davidbase.model.PageComponent;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.davidbase.utils.DavisBaseConstants.RIGHT_MOST_LEAF;
 
 public class Page<T> {
 
@@ -9,16 +12,19 @@ public class Page<T> {
     private byte numberOfCells;
     private PageType pagePage;
     
+    public static <T> Page<T> createNewEmptyPage() {
+        Page<T> page = new Page<>();
+        PageHeader pageHeader = new PageHeader(0);
+        pageHeader.setPage_type(PageType.table_leaf);
+        pageHeader.setNext_page_pointer(RIGHT_MOST_LEAF);
+        page.setNumberOfCells((byte)0x00);
+        page.setPageheader(pageHeader);
+        return page;
+    }
+
 
     public PageHeader getPageheader() {
         return pageheader;
-    }
-    
- 
-    
-    public static <T> Page<T> createNewEmptyPage(T object) {
-    	
-    	return null;
     }
 
     public void setPageheader(PageHeader pageheader) {

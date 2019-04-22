@@ -24,7 +24,7 @@ public class DavisBaseFileHandler {
             /*  Create RandomAccessFile tableFile in read-write mode.
              *  Note that this doesn't create the table file in the correct directory structure
              */
-            RandomAccessFile tableFile = new RandomAccessFile(fileDir+tableFileName+fileExt, "rw");
+            RandomAccessFile tableFile = new RandomAccessFile(FILE_DIR+tableFileName+FILE_EXT, "rw");
             tableFile.setLength(PAGE_SIZE);
             tableFile.seek(0);
             tableFile.writeInt(63);
@@ -46,7 +46,7 @@ public class DavisBaseFileHandler {
 
     public static boolean writeToFile(String tableFileName, List<RawRecord> records){
         try {
-            RandomAccessFile tablefile = new RandomAccessFile(fileDir+tableFileName+fileExt, "rw");
+            RandomAccessFile tablefile = new RandomAccessFile(FILE_DIR+tableFileName+FILE_EXT, "rw");
             int pageNumber =0;
             //iterate over each record to be inserted
             for(RawRecord record: records){
@@ -61,7 +61,7 @@ public class DavisBaseFileHandler {
 
                         // Prepare the leaf node
                         Page<LeafCell> dataNode = new Page();
-                        PageHeader header = new PageHeader();
+                        PageHeader header = new PageHeader(0);
                         List<LeafCell> dataCells = new ArrayList<>();
                         header.setPage_number(0);
                         header.setPage_type(PageType.table_leaf);
@@ -71,7 +71,7 @@ public class DavisBaseFileHandler {
                         header.setNext_page_pointer(RIGHT_MOST_LEAF);
                         dataNode.setPageheader(header);
 
-                        //prepare the data cells
+                        //prepare the data cellos
                         CellHeader cellHeader = new CellHeader(record.getTotSize(),record.getRowID());
                         CellPayload payload = new CellPayload((byte)record.getColumns().size(),record.getSizeOfCol(),record.getColeVal());
                         dataCells.add(new LeafCell(cellHeader, payload));
@@ -112,7 +112,7 @@ public class DavisBaseFileHandler {
     private static Page readSinglePage(RandomAccessFile randomAccessFile, int pageNum) {
         try {
             Page page = new Page();
-            PageHeader header = new PageHeader();
+            PageHeader header = new PageHeader(0);
             List cells;
             randomAccessFile.seek(PAGE_SIZE * pageNum);
             byte pageType = randomAccessFile.readByte();
@@ -209,7 +209,7 @@ public class DavisBaseFileHandler {
 
     public List<RawRecord> findRecord(String databaseName, String tableName, List<Condition> conditionList, List<Byte> selectionColumnIndexList, boolean getOne) {
         try {
-            File file = new File(fileDir+databaseName + "/" + tableName + fileExt);
+            File file = new File(FILE_DIR+databaseName + "/" + tableName + FILE_EXT);
             if (file.exists()) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 if (conditionList != null) {

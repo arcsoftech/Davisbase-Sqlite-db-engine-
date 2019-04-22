@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import static com.davidbase.utils.DavisBaseConstants.FILE_EXT;
+
 
 /**
  * Class to read/write the Database catalog files.
@@ -68,7 +70,7 @@ public class DavisBaseCatalogHandler {
             }
             return true;
         }
-        catch (InternalException e) {
+        catch (Exception e) {
             throw new DavidBaseError("Error");
         }
         //return false;
@@ -234,19 +236,19 @@ public class DavisBaseCatalogHandler {
 
    
     
-    public boolean createTable(String databaseName, String tableName) throws InternalException {
+    public boolean createTable(String databaseName, String tableName){
         try {
             File dirFile = new File(this.getDatabasePath(databaseName));
             if (!dirFile.exists()) {
                 dirFile.mkdir();
             }
-            File file = new File(this.getDatabasePath(databaseName) + "/" + tableName);
+            File file = new File(this.getDatabasePath(databaseName) + "/" + tableName+FILE_EXT);
             if (file.exists()) {
                 return false;
             }
             if (file.createNewFile()) {
                 RandomAccessFile randomAccessFile;
-                Page<RawRecord> page = Page.createNewEmptyPage(new RawRecord());
+                Page<LeafCell> page = Page.createNewEmptyPage();
                 randomAccessFile = new RandomAccessFile(file, "rw");
                 randomAccessFile.setLength(DavisBaseConstants.PAGE_SIZE);
                 boolean isTableCreated = filehandler.writeFirstPageHeader(randomAccessFile, page);
@@ -321,5 +323,10 @@ public class DavisBaseCatalogHandler {
      */
     public boolean writeRecord(String databaseName, String tableName, RawRecord record){
         return true;
+    }
+
+    public static void main(String[] args){
+        DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
+        ctlg.createTable("db1","test2");
     }
 }
