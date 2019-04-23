@@ -7,6 +7,7 @@ import com.davidbase.model.QueryType.*;
 
 import exceptions.InternalException;
 import java.util.HashMap;
+import com.davidbase.model.PageComponent.InternalColumn;
 import java.util.List;
 import java.io.File;
 import java.io.RandomAccessFile;

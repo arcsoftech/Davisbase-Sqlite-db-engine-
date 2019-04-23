@@ -3,6 +3,8 @@ package com.davidbase.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import com.davidbase.utils.DataType;
 
 import com.davidbase.model.DavidBaseValidationException;
 import com.davidbase.model.QueryType.CreateDatabase;
@@ -204,6 +206,11 @@ public class DavidBaseCommandValidator {
         for(int i=0; i<values_list.size();i++){
             values.add(values_list.get(i).trim());
         }
+
+        // Map<String,DataType> mapColumnTypeForTable = catalog_handler.fetchAllTableColumnDataTypes(null,tableName);
+        // for(String colName : columns){
+        //     colTypes.add(mapColumnTypeForTable.get(colName));
+        // }
 
         InsertInto queryObject=new InsertInto(commandTokens.get(2),columns, values);
         return queryObject;
