@@ -89,12 +89,14 @@ public class CellPayload {
 
     public void fillSizeArray() {
         for(int i=0;i<colTypes.size();i++){
-            if(colTypes.get(i)==DataType.TEXT)
-                this.data_type[i]= (byte)( colTypes.get(i).getSize()*
-                        (colValues.get(i)!=null? String.valueOf(colValues.get(i)).length():0));
-            else
-                this.data_type[i]=colTypes.get(i).getSize();
-            this.payloadSize+=this.data_type[i];
+            if(colTypes.get(i)==DataType.TEXT) {
+                this.data_type[i] = (byte) colTypes.get(i).getSerialCode();
+                this.payloadSize+= (colValues.get(i) != null ? String.valueOf(colValues.get(i)).length() : 0);
+            }
+            else {
+                this.data_type[i] = colTypes.get(i).getSerialCode();
+                this.payloadSize+= this.colTypes.get(i).getSize();
+            }
         }
     }
 
