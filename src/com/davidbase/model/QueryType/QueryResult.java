@@ -17,7 +17,7 @@ public class QueryResult {
     public int getRowsAffected() {
         return rowsAffected;
     }
-
+    
     public void setRowsAffected(int rowsAffected) {
         this.rowsAffected = rowsAffected;
     }
