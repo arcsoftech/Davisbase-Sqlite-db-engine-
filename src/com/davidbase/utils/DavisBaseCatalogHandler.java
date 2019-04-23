@@ -219,7 +219,7 @@ public class DavisBaseCatalogHandler {
 
     public Page<LeafCell> getLastRecordAndPage(String databaseName, String tableName){
         try {
-            File file = new File(this.getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
+            File file = new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
             if (file.exists()) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 Page<LeafCell> page = getRightmostLeafPage(file);
@@ -253,11 +253,11 @@ public class DavisBaseCatalogHandler {
     
     public boolean createTable(String databaseName, String tableName){
         try {
-            File dirFile = new File(this.getDatabasePath(databaseName));
+            File dirFile = new File(getDatabasePath(databaseName));
             if (!dirFile.exists()) {
                 dirFile.mkdir();
             }
-            File file = new File(this.getDatabasePath(databaseName) + "/" + tableName+FILE_EXT);
+            File file = new File(getDatabasePath(databaseName) + "/" + tableName+FILE_EXT);
             if (file.exists()) {
                 return false;
             }
