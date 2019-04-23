@@ -19,7 +19,7 @@ public class SelectFrom implements QueryBase {
     @Override
     public QueryResult Execute() {
         try {
-            DavisBaseFileHandler.readFromFile(tableName);
+            new DavisBaseFileHandler().readFromFile(tableName);
         }catch(Exception e){
             e.printStackTrace();
             throw new DavidBaseError("Error while creating new table");

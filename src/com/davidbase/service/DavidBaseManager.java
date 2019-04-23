@@ -256,6 +256,7 @@ public class DavidBaseManager {
     private static void parseUseDatabase(String useDataBaseString) {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(useDataBaseString);
+            setCurrentDB(queryObject.databaseName);
             //currentDB=queryObject.databaseName;
 
             //System.out.println(currentDB);
@@ -374,4 +375,11 @@ public class DavidBaseManager {
         }
     }
 
+    public static String getCurrentDB() {
+        return currentDB;
+    }
+
+    public static void setCurrentDB(String currentDB) {
+        DavidBaseManager.currentDB = currentDB;
+    }
 }
