@@ -21,6 +21,7 @@ public class CreateTable implements QueryBase {
     private List<String> columns;
     private String primaryKey;
     private List<String> indexes;
+    private int rows;
 
     @Override
     public QueryResult Execute() {
@@ -76,4 +77,8 @@ public class CreateTable implements QueryBase {
     public void setIndexes(List<String> indexes) {
         this.indexes = indexes;
     }
+    public int getRows() {
+        return rows;
+    }
+    
 }
