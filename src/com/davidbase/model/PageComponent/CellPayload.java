@@ -10,14 +10,14 @@ import java.util.List;
  */
 public class CellPayload {
 
-    //1-byte TINYINT that indicates the number of columns n.
+    // 1-byte TINYINT that indicates the number of columns n.
     @Deprecated
     private byte num_columns;
 
-    //n-bytes which are Serial Type Codes, one for each of n columns
+    // n-bytes which are Serial Type Codes, one for each of n columns
     private byte[] data_type;
 
-    //binary column data. Unlike SQLite, NULL values occupy 1, 2, 4, or 8 bytes
+    // binary column data. Unlike SQLite, NULL values occupy 1, 2, 4, or 8 bytes
     private byte[] data;
 
     // not serializable
@@ -79,7 +79,7 @@ public class CellPayload {
         this.colTypes = colTypes;
     }
 
-    public void generateByteData(){
+    public void generateByteData() {
         this.data_type = new byte[colTypes.size()];
         fillSizeArray();
 
@@ -88,30 +88,43 @@ public class CellPayload {
     }
 
     public void fillSizeArray() {
-        for(int i=0;i<colTypes.size();i++){
-            if(colTypes.get(i)==DataType.TEXT) {
+        for (int i = 0; i < colTypes.size(); i++) {
+            if (colTypes.get(i) == DataType.TEXT) {
                 this.data_type[i] = (byte) colTypes.get(i).getSerialCode();
-                this.payloadSize+= (colValues.get(i) != null ? String.valueOf(colValues.get(i)).length() : 0);
-            }
-            else {
+                this.payloadSize += (colValues.get(i) != null ? String.valueOf(colValues.get(i)).length() : 0);
+            } else {
                 this.data_type[i] = colTypes.get(i).getSerialCode();
-                this.payloadSize+= this.colTypes.get(i).getSize();
+                this.payloadSize += this.colTypes.get(i).getSize();
             }
         }
     }
-
+    private static byte[] intToBytes(final int data) {
+        return new byte[] {
+            (byte)((data >> 24) & 0xff),
+            (byte)((data >> 16) & 0xff),
+            (byte)((data >> 8) & 0xff),
+            (byte)((data >> 0) & 0xff),
+        };
+    }
     private void fillDataArray() {
-        int i=0;
-        int k=0;
-        for(DataType type : colTypes)
-            switch(type){
-                case TEXT:  for(byte valueInBytes: String.valueOf(colValues.get(k++)).getBytes())
-                    this.data[i++]=valueInBytes;
-                    break;
-                case INT:   this.data[i++] = Integer.valueOf(String.valueOf(colValues.get(k++))).byteValue();
-                    break;
-                default:
-                    throw new DavidBaseError("Unable to write data type");
+        int i = 0;
+        int k = 0;
+        for (DataType type : colTypes)
+            switch (type) {
+            case TEXT:
+                for (byte valueInBytes : String.valueOf(colValues.get(k++)).getBytes())
+                {
+                    this.data[i++] = valueInBytes;
+                }
+                break;
+            case INT:
+            for ( byte valueInBytes: intToBytes(Integer.valueOf(String.valueOf(colValues.get(k++)))))
+            {
+                this.data[i++] = valueInBytes;
+            }
+                break;
+            default:
+                throw new DavidBaseError("Unable to write data type");
             }
     }
 
@@ -123,4 +136,3 @@ public class CellPayload {
         this.payloadSize = payloadSize;
     }
 }
-
