@@ -46,18 +46,18 @@ public class DavisBaseCatalogHandler {
         try {
             this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME);
             this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME);
-            int startingRowId = this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 6);
-            startingRowId *= this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 8);
+            int startingRowId = this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 2);
+           // startingRowId *= this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 6);
             if (startingRowId >= 0) {
                 List<InternalColumn> columns = new ArrayList<>();
-                columns.add(new InternalColumn("rowid", DataType.INT, false, false));
-                columns.add(new InternalColumn("database_name", DataType.TEXT, false, false));
-                columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
-                columns.add(new InternalColumn("record_count", DataType.INT, false, false));
-                columns.add(new InternalColumn("col_tbl_st_rowid", DataType.INT, false, false));
-                columns.add(new InternalColumn("nxt_avl_col_tbl_rowid", DataType.INT, false, false));
-                this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 1, columns);
-                columns.clear();
+                // columns.add(new InternalColumn("rowid", DataType.INT, false, false));
+                // columns.add(new InternalColumn("database_name", DataType.TEXT, false, false));
+                // columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
+                // columns.add(new InternalColumn("record_count", DataType.INT, false, false));
+                // columns.add(new InternalColumn("col_tbl_st_rowid", DataType.INT, false, false));
+                // columns.add(new InternalColumn("nxt_avl_col_tbl_rowid", DataType.INT, false, false));
+                // this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 1, columns);
+                // columns.clear();
                 columns.add(new InternalColumn("rowid", DataType.INT, false, false));
                 columns.add(new InternalColumn("database_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
@@ -96,41 +96,49 @@ public class DavisBaseCatalogHandler {
             if (columns != null && columns.size() == 0) return false;
             int i = 0;
             for (; i < columns.size(); i++) {
-                RawRecord record = new RawRecord();
-                record.setRowID(startingRowId++);
-                
-               record.getColumnType().add(DataType.INT);
-               record.getColumnValues().add(record.getRowID());
+                LeafCell record = new LeafCell();
+                record.getHeader().setRow_id(startingRowId++);
+
+                List<Object> colVal = new ArrayList<>();
+                List<DataType> colValTypes = new ArrayList<>();
+
+                colValTypes.add(DataType.INT);
+                colVal.add(startingRowId);
                
-               record.getColumnType().add(DataType.TEXT);
-               record.getColumnValues().add(databaseName);
+                colValTypes.add(DataType.TEXT);
+                colVal.add(tableName);
+
+                colValTypes.add(DataType.TEXT);
+                colVal.add(columns.get(i).getDataType());
+
+                colValTypes.add(DataType.TEXT);
+                colVal.add(columns.get(i).getName());
+
+                colValTypes.add(DataType.TEXT);
+                colVal.add(columns.get(i).getDataType());
+
+                colValTypes.add(DataType.TEXT);
+                colVal.add(columns.get(i).getStringIsPrimary());
+
+                colValTypes.add(DataType.INT);
+                colVal.add(i + 1);
+
+                colValTypes.add(DataType.TEXT);
+                colVal.add(columns.get(i).getStringIsNullable());
                
-               record.getColumnType().add(DataType.TEXT);
-               record.getColumnValues().add(tableName);
                
-               record.getColumnType().add(DataType.TEXT);
-               record.getColumnValues().add(columns.get(i).getName());
-               
-               record.getColumnType().add(DataType.TEXT);
-               record.getColumnValues().add(columns.get(i).getDataType());
-               
-               record.getColumnType().add(DataType.TEXT);
-               record.getColumnValues().add(columns.get(i).getStringIsPrimary());
-               
-               record.getColumnType().add(DataType.INT);
-               record.getColumnValues().add(i + 1);
-               
-               record.getColumnType().add(DataType.TEXT);
-               record.getColumnValues().add(columns.get(i).getStringIsNullable());
-               
-                record.setSize();
-                if (!filehandler.writeLeafCell(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, null)) {
+                record.getPayload().setColTypes(colValTypes);
+                record.getPayload().setColValues(colVal);
+                record.initializeLeafForWrite();
+                record.getPayload().setColTypes(colValTypes);
+                if (!filehandler.writeLeafCell(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, record)) {
                     break;
                 }
             }
             return true;
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new DavidBaseError("Error");
         }
        // return false;
@@ -223,8 +231,8 @@ public class DavisBaseCatalogHandler {
             if (file.exists()) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 Page<LeafCell> page = filehandler.getRightmostLeafPage(file);
-                if (page.getNumberOfCells() > 0) {
-                    randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number()) + Page.getHeaderFixedLength() + ((page.getNumberOfCells() - 1) * Short.BYTES));
+                if (page.getPageheader().getNum_cells() > 0) {
+                    randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number()) + Page.getHeaderFixedLength() + ((page.getPageheader().getNum_cells() - 1) * Short.BYTES));
                     short address = randomAccessFile.readShort();
                     LeafCell dataCell = filehandler.readLeaf(randomAccessFile, page.getPageheader().getPage_number(), address);
                     if (dataCell != null)

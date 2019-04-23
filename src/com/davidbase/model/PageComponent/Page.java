@@ -9,7 +9,7 @@ public class Page<T> {
 
     private PageHeader pageheader;
     private List<T> cells;
-    private byte numberOfCells;
+   // private byte numberOfCells;
     private PageType pagePage;
     
     public static <T> Page<T> createNewEmptyPage() {
@@ -17,7 +17,7 @@ public class Page<T> {
         PageHeader pageHeader = new PageHeader(0);
         pageHeader.setPage_type(PageType.table_leaf);
         pageHeader.setNext_page_pointer(RIGHT_MOST_LEAF);
-        page.setNumberOfCells((byte)0x00);
+        pageHeader.setNum_cells((byte)0x00);
         short[] offsets = new short[2];
         pageHeader.setData_cell_offset(offsets);
         page.setPageheader(pageHeader);
@@ -45,13 +45,13 @@ public class Page<T> {
         return Byte.BYTES + Byte.BYTES + Short.BYTES + Integer.BYTES;
     }
     
-    public void setNumberOfCells(byte numberOfCells) {
-        this.numberOfCells = numberOfCells;
-    }
+    // public void setNumberOfCells(byte numberOfCells) {
+    //     this.numberOfCells = numberOfCells;
+    // }
     
-    public byte getNumberOfCells() {
-        return numberOfCells;
-    }
+    // public byte getNumberOfCells() {
+    //     return numberOfCells;
+    // }
     
     
 }

@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.davidbase.utils.DavisBaseConstants.*;
@@ -59,30 +60,44 @@ public class DavisBaseFileHandler {
             int pageNumber =0;
             //iterate over each record to be inserted
             int pageCount = (int) (tablefile.length() / PAGE_SIZE);
-            Page page;
-            if(pageCount>0)
-                page = findPage(tablefile,leafCell.getHeader().getRow_id(), pageNumber);
+            Page page=findPage(tablefile,leafCell.getHeader().getRow_id(), pageNumber);
 
             switch(pageCount){
                 case 1: // this is the first page to be inserted
                     // insert leaf node with data
 
                     // Prepare the leaf node
-                    Page<LeafCell> dataNode = new Page();
+                    Page<LeafCell> dataNode = new Page<LeafCell>();
                     PageHeader header = new PageHeader(0);
                     List<LeafCell> dataCells = new ArrayList<>();
-                    header.setPage_number(0);
-                    header.setPage_type(PageType.table_leaf);
-                    header.setNum_cells((byte)1);
-                    int offset = ((short)PAGE_SIZE)-(leafCell.getPayload().getData().length+CellHeader.getSize());
-                    header.setData_offset((short)offset);
-                    header.setData_cell_offset((new short[]{(short)offset}));
+
+                    if(page.getPageheader().getNum_cells()<=0){
+                        header.setPage_number(0);
+                        
+                        header.setNum_cells((byte)1);
+                        int offset = ((short)PAGE_SIZE)-(leafCell.getPayload().getData().length+CellHeader.getSize());
+                        header.setData_offset((short)offset);
+                        header.setData_cell_offset((new short[]{(short)offset}));
+
+                    }else{
+                        header.setNum_cells((byte)(page.getPageheader().getNum_cells()+1));
+                        int offset = page.getPageheader().getData_offset()-leafCell.getPayload().getData().length+CellHeader.getSize();
+                        header.setData_offset((short)offset);
+                        int length = page.getPageheader().getData_cell_offset().length+1;
+                        short[] newOffsets = Arrays.copyOf(page.getPageheader().getData_cell_offset(), length);
+                        newOffsets[length-1]=(short)offset;
+                        header.setData_cell_offset(newOffsets);
+                    }
+
+                    header.setPage_type(PageType.table_leaf);                    
                     header.setNext_page_pointer(RIGHT_MOST_LEAF);
+
                     dataNode.setPageheader(header);
                     dataCells.add(leafCell);
                     dataNode.setCells(dataCells);
-                    write(tablefile,dataNode,pageNumber);
-
+                    
+                    writeLeafCell(tablefile,dataCells,header.getData_offset());
+                    writePageHeader(tablefile,dataNode,pageNumber);
                     break;
                 default: // for all other cases.
                     //cases:
@@ -144,7 +159,7 @@ public class DavisBaseFileHandler {
         }
     }
 
-    private static boolean write(RandomAccessFile tableFile, Page page, int pageNumber) {
+    private static boolean writePageHeader(RandomAccessFile tableFile, Page page, int pageNumber) {
         try {
 
             // writing the page header first
@@ -157,23 +172,15 @@ public class DavisBaseFileHandler {
             tableFile.writeInt(header.getNext_page_pointer());
             for (Object offset : header.getData_cell_offset()) {
                 tableFile.writeShort((short) offset);
-            }
-
-            //writing the page cells
-            tableFile.seek(header.getData_offset());
-            switch(header.getPage_type()){
-                case table_leaf: writeLeafCell(tableFile,page.getCells());
-                    break;
-                case table_node: writeNonLeafCell(tableFile,page.getCells());
-                    break;
-            }
+            }            
             return true;
         } catch (Exception e) {
             throw new DavidBaseError("Error while writing page header to file.");
         }
     }
 
-    private static void writeLeafCell(RandomAccessFile tableFile, List<LeafCell> cells) throws IOException {
+    private static void writeLeafCell(RandomAccessFile tableFile, List<LeafCell> cells, short offset) throws IOException {
+        tableFile.seek(offset);
         for(LeafCell cell : cells){
             // write header
             tableFile.writeShort(cell.getHeader().getPayload_size());
@@ -190,7 +197,8 @@ public class DavisBaseFileHandler {
         }
     }
 
-    private static void writeNonLeafCell(RandomAccessFile tableFile, List<NonLeafCell> cells) throws IOException {
+    private static void writeNonLeafCell(RandomAccessFile tableFile, List<NonLeafCell> cells, short offset) throws IOException {
+        tableFile.seek(offset);
         for(NonLeafCell cell : cells){
             tableFile.writeInt(cell.getPage_number());
             tableFile.writeInt(cell.getKey_delim());
@@ -513,7 +521,7 @@ public class DavisBaseFileHandler {
         try {
             randomAccessFile.seek(page.getPageheader().getPage_number() * PAGE_SIZE);
             randomAccessFile.writeByte(page.getPageheader().getPage_type().getVal());
-            randomAccessFile.writeByte(page.getNumberOfCells());
+            randomAccessFile.writeByte(page.getPageheader().getNum_cells());
             randomAccessFile.writeShort(page.getPageheader().getData_offset());
             randomAccessFile.writeInt(page.getPageheader().getNext_page_pointer());
             for (Object offset : page.getPageheader().getData_cell_offset()) {
