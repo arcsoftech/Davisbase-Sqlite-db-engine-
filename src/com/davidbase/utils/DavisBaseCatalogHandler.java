@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import static com.davidbase.utils.DavisBaseConstants.FILE_EXT;
+import static com.davidbase.utils.DavisBaseConstants.PAGE_SIZE;
+
 
 /**
  * Class to read/write the Database catalog files.
@@ -41,9 +44,8 @@ public class DavisBaseCatalogHandler {
 
     public boolean createCatalogDatabase() {
         try {
-//            IOManager manager = new IOManager();
-            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME + DavisBaseConstants.DEFAULT_FILE_EXTENSION);
-            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME + DavisBaseConstants.DEFAULT_FILE_EXTENSION);
+            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME);
+            this.createTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME);
             int startingRowId = this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 6);
             startingRowId *= this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 8);
             if (startingRowId >= 0) {
@@ -68,7 +70,8 @@ public class DavisBaseCatalogHandler {
             }
             return true;
         }
-        catch (InternalException e) {
+        catch (Exception e) {
+            e.printStackTrace();
             throw new DavidBaseError("Error");
         }
         //return false;
@@ -121,7 +124,7 @@ public class DavisBaseCatalogHandler {
                record.getColumnValues().add(columns.get(i).getStringIsNullable());
                
                 record.setSize();
-                if (!this.writeRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, record)) {
+                if (!filehandler.writeLeafCell(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, null)) {
                     break;
                 }
             }
@@ -146,83 +149,97 @@ public class DavisBaseCatalogHandler {
          *      5       col_tbl_st_rowid                        INT
          *      6       nxt_avl_col_tbl_rowid                   INT
          */
-//            IOManager manager = new IOManager();
             List<Condition> conditions = new ArrayList<>();
             conditions.add(Condition.CreateCondition(DavisBaseConstants.TABLES_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT, tableName));
             conditions.add(Condition.CreateCondition(DavisBaseConstants.TABLES_TABLE_SCHEMA_DATABASE_NAME, Condition.EQUALS, DataType.TEXT,databaseName));
-            List<RawRecord> result = this.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, conditions, true);
+            List<LeafCell> result = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, conditions, true);
             if (result != null && result.size() == 0) {
                 int returnValue = 1;
-                Page<RawRecord> page = this.getLastRecordAndPage(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME);
+                Page<LeafCell> page = this.getLastRecordAndPage(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME);
                 //Check if record exists
-               RawRecord lastRecord = null;
+                LeafCell lastRecord = null;
                 if (page.getCells().size() > 0) {
                     lastRecord = page.getCells().get(0);
                 }
-                RawRecord record = new RawRecord();
+                LeafCell newLeaf = new LeafCell();
                 if (lastRecord == null) {
-                    record.setRowID(1);
+                    newLeaf.getHeader().setRow_id(1);
                 } else {
-                    record.setRowID(lastRecord.getRowID() + 1);
+                    newLeaf.getHeader().setRow_id(lastRecord.getHeader().getRow_id() + 1);
                 }
-                
-                
-                record.getColumnType().add(DataType.INT);
-                record.getColumnValues().add(record.getRowID());
-                
-                record.getColumnType().add(DataType.TEXT);
-                record.getColumnValues().add(databaseName);
-                
-                record.getColumnType().add(DataType.TEXT);
-                record.getColumnValues().add(tableName);
-                
-                record.getColumnType().add(DataType.INT);
-                record.getColumnValues().add(0);
+
+                List<DataType> colTypes = new ArrayList<>();
+                colTypes.add(DataType.INT);
+                colTypes.add(DataType.TEXT);
+                colTypes.add(DataType.TEXT);
+                colTypes.add(DataType.INT);
+
+                List<Object> colValues = new ArrayList<>();
+                colValues.add(newLeaf.getHeader().getRow_id());
+                colValues.add(databaseName);
+                colValues.add(tableName);
+                colValues.add(0);
 ;
                 if (lastRecord == null) {
-                	
-                	record.getColumnType().add(DataType.INT);
-                    record.getColumnValues().add(1);
-                    
-                    record.getColumnType().add(DataType.INT);
-                    record.getColumnValues().add(columnCount + 1);
+
+                    colTypes.add(DataType.INT);
+                    colValues.add(1);
+
+                    colTypes.add(DataType.INT);
+                    colValues.add(columnCount + 1);
 
                 } else {
                    
-                	int startingColumnIndex = (Integer)lastRecord.getColumnValues().get(DavisBaseConstants.TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID);
+                	int startingColumnIndex = (Integer)lastRecord.getPayload().getColValues().get(DavisBaseConstants.TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID);
                    
                 	returnValue = startingColumnIndex;
-                    
-                    record.getColumnType().add(DataType.INT);
-                    record.getColumnValues().add(returnValue);
-                    
-                    record.getColumnType().add(DataType.INT);
-                    record.getColumnValues().add(returnValue + columnCount);
+
+                    colTypes.add(DataType.INT);
+                    colValues.add(returnValue);
+
+                    colTypes.add(DataType.INT);
+                    colValues.add(returnValue + columnCount);
                     
 //                    record.getColumnValueList().add(new DataType_Int(returnValue));
 //                    record.getColumnValueList().add(new DataType_Int(returnValue + columnCount));
                 }
-                
-                record.setSize();
-                this.writeRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, record);
+                newLeaf.initializeLeafForWrite();
+                filehandler.writeLeafCell(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, newLeaf);
                 return returnValue;
             } else {
-//                Utils.printMessage(String.format("Table '%s.%s' already exists.", databaseName, tableName));
-                throw new DavidBaseError("Error");
-                //return -1;
+                throw new DavidBaseError("Error: Table already exists");
             }
         }
-        catch (InternalException e) {
-//            Utils.printMessage(e.getMessage());
+        catch (Exception e) {
+            e.printStackTrace();
             throw new DavidBaseError("Error");
-           // return -1;
         }
     }
     
 
-    public Page<RawRecord> getLastRecordAndPage(String databaseName, String tableName) throws InternalException {
-        
-    return null;
+    public Page<LeafCell> getLastRecordAndPage(String databaseName, String tableName){
+        try {
+            File file = new File(this.getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
+            if (file.exists()) {
+                RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+                Page<LeafCell> page = getRightmostLeafPage(file);
+                if (page.getNumberOfCells() > 0) {
+                    randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number()) + Page.getHeaderFixedLength() + ((page.getNumberOfCells() - 1) * Short.BYTES));
+                    short address = randomAccessFile.readShort();
+                    LeafCell dataCell = filehandler.readLeaf(randomAccessFile, page.getPageheader().getPage_number(), address);
+                    if (dataCell != null)
+                        page.getCells().add(dataCell);
+                }
+                randomAccessFile.close();
+                return page;
+            } else {
+                throw new DavidBaseError("Table doesn't exist."+ databaseName +  " " + tableName);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new DavidBaseError(e.getMessage());
+        }
     }
     
     
@@ -234,21 +251,21 @@ public class DavisBaseCatalogHandler {
 
    
     
-    public boolean createTable(String databaseName, String tableName) throws InternalException {
+    public boolean createTable(String databaseName, String tableName){
         try {
             File dirFile = new File(this.getDatabasePath(databaseName));
             if (!dirFile.exists()) {
                 dirFile.mkdir();
             }
-            File file = new File(this.getDatabasePath(databaseName) + "/" + tableName);
+            File file = new File(this.getDatabasePath(databaseName) + "/" + tableName+FILE_EXT);
             if (file.exists()) {
                 return false;
             }
             if (file.createNewFile()) {
                 RandomAccessFile randomAccessFile;
-                Page<RawRecord> page = Page.createNewEmptyPage(new RawRecord());
+                Page<LeafCell> page = Page.createNewEmptyPage();
                 randomAccessFile = new RandomAccessFile(file, "rw");
-                randomAccessFile.setLength(DavisBaseConstants.PAGE_SIZE);
+                randomAccessFile.setLength(PAGE_SIZE);
                 boolean isTableCreated = filehandler.writeFirstPageHeader(randomAccessFile, page);
                 randomAccessFile.close();
                 return isTableCreated;
@@ -261,13 +278,12 @@ public class DavisBaseCatalogHandler {
     }
     
     
-    public boolean databaseExists(String databaseName){ 
-    	File databaseDir = new File(this.getDatabasePath(databaseName));
-         return  databaseDir.exists();     
+    public static boolean databaseExists(String databaseName){
+    	return DavisBaseFileHandler.databaseExists(databaseName);
     }
     
     public static String getDatabasePath(String databaseName) {
-        return DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + databaseName;
+        return DavisBaseFileHandler.getDatabasePath(databaseName);
     }
 
     public boolean tableExists(String databaseName, String tableName) {
@@ -298,28 +314,9 @@ public class DavisBaseCatalogHandler {
         return true;
     }
 
-    /**
-     * can create multiple copies of the this function as you need (overloading)
-     * delegate call to DavisBaseFileHandler.findRecord
-     * @param databaseName
-     * @param tableName
-     * @param conditionList
-     * @param getOne
-     * @return
-     */
-    public List<RawRecord> findRecord(String databaseName, String tableName, List<Condition> conditionList, boolean getOne)  {
-        return null;
-    }
 
-    /**
-     * can create multiple copies of the this function as you need (overloading)
-     * delegate call to DavisBaseFileHandler.findRecord
-     * @param databaseName
-     * @param tableName
-     * @param record
-     * @return
-     */
-    public boolean writeRecord(String databaseName, String tableName, RawRecord record){
-        return true;
+    public static void main(String[] args){
+        DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
+        ctlg.createTable("db1","test2");
     }
 }

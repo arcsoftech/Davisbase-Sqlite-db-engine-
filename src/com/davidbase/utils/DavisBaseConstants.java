@@ -34,8 +34,8 @@ public interface DavisBaseConstants {
 	    */
 	    public static final long PAGE_SIZE = 512;
 
-	    public static final String fileDir = "src/data/";
-	    public static final String fileExt = ".tbl";
+	    public static final String FILE_DIR = "src/data/";
+	    public static final String FILE_EXT = ".tbl";
 	    public static final byte RIGHT_MOST_LEAF = 0xFFFFFFFF;
 	   
 	    public static final byte LEAF_TABLE_PAGE = 0x0D;

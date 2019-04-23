@@ -64,4 +64,20 @@ public enum DataType {
         }
         throw new DavidBaseValidationException("Unrecognized serial code");
     }
+
+    public static DataType getTypeFromText(String typeText) throws DavidBaseValidationException {
+
+        switch (typeText){
+            case "TINYINT": return TINYINT;
+            case "SMALLINT": return SMALLINT;
+            case "INT": return INT;
+            case "BIGINT": return BIGINT;
+            case "REAL": return REAL;
+            case "DOUBLE": return DOUBLE;
+            case "DATETIME": return DATETIME;
+            case "DATE": return DATE;
+            case "TEXT": return TEXT;
+        }
+        throw new DavidBaseValidationException("Unrecognized data type");
+    }
 }

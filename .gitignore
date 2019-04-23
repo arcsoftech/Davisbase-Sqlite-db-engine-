@@ -1,4 +1,4 @@
-*.class
-.vscode/*
-/.metadata/\
-.classpath
+.*
+!.gitignore
+bin/*
+data/*

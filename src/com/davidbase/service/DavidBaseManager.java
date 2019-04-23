@@ -4,6 +4,7 @@ import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.DavidBaseValidationException;
 import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.QueryType.QueryResult;
+import com.davidbase.utils.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,7 @@ public class DavidBaseManager {
     public static void main(String[] args) {
 
         /* Display the welcome screen */
+        DavisBaseCatalogHandler.InitializeDatabase();
         splashScreen();
 
         /* Variable to collect user input from the prompt */
@@ -244,7 +246,7 @@ public class DavidBaseManager {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
             currentDB=queryObject.databaseName;
-
+            DavidBaseCommandExecutor.executeQuery(queryObject);
             System.out.println(currentDB);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -254,6 +256,7 @@ public class DavidBaseManager {
     private static void parseUseDatabase(String useDataBaseString) {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(useDataBaseString);
+            setCurrentDB(queryObject.databaseName);
             //currentDB=queryObject.databaseName;
 
             //System.out.println(currentDB);
@@ -372,4 +375,11 @@ public class DavidBaseManager {
         }
     }
 
+    public static String getCurrentDB() {
+        return currentDB;
+    }
+
+    public static void setCurrentDB(String currentDB) {
+        DavidBaseManager.currentDB = currentDB;
+    }
 }

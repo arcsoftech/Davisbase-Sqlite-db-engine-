@@ -205,7 +205,7 @@ public class DavidBaseCommandValidator {
             values.add(values_list.get(i).trim());
         }
 
-        InsertInto queryObject=new InsertInto(commandTokens.get(2),columns, values);
+        InsertInto queryObject=new InsertInto(DavidBaseManager.getCurrentDB(),commandTokens.get(2),columns, values);
         return queryObject;
         // for(int i=0; i<columns.size();i++){
         //     System.out.println(columns.get(i));

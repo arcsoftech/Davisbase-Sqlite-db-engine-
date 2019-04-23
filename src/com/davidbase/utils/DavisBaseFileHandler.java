@@ -18,13 +18,22 @@ import static com.davidbase.utils.DavisBaseConstants.*;
  */
 public class DavisBaseFileHandler {
 
+    public static boolean databaseExists(String databaseName){
+        File databaseDir = new File(getDatabasePath(databaseName));
+        return  databaseDir.exists();
+    }
+
+    public static String getDatabasePath(String databaseName) {
+        return DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + databaseName;
+    }
+
     public static boolean createFile(String tableFileName){
         /*  Code to create a .tbl file to contain table data */
         try {
             /*  Create RandomAccessFile tableFile in read-write mode.
              *  Note that this doesn't create the table file in the correct directory structure
              */
-            RandomAccessFile tableFile = new RandomAccessFile(fileDir+tableFileName+fileExt, "rw");
+            RandomAccessFile tableFile = new RandomAccessFile(FILE_DIR+tableFileName+FILE_EXT, "rw");
             tableFile.setLength(PAGE_SIZE);
             tableFile.seek(0);
             tableFile.writeInt(63);
@@ -36,24 +45,23 @@ public class DavisBaseFileHandler {
         return true;
     }
 
-    public static boolean deleteFile(String tableFileName){
+    public boolean deleteFile(String tableFileName){
         return true;
     }
 
-    public static boolean readFromFile(String tableFileName){
+    public boolean readFromFile(String tableFileName){
         return true;
     }
 
-    public static boolean writeToFile(String tableFileName, List<RawRecord> records){
+    public boolean writeLeafCell(String databaseName, String tableName, LeafCell leafCell) {
         try {
-            RandomAccessFile tablefile = new RandomAccessFile(fileDir+tableFileName+fileExt, "rw");
+            RandomAccessFile tablefile = new RandomAccessFile(new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT),"rw");
             int pageNumber =0;
             //iterate over each record to be inserted
-            for(RawRecord record: records){
                 int pageCount = (int) (tablefile.length() / PAGE_SIZE);
                 Page page;
                 if(pageCount>0)
-                    page = findPage(tablefile,record.getRowID(), pageNumber);
+                    page = findPage(tablefile,leafCell.getHeader().getRow_id(), pageNumber);
 
                 switch(pageCount){
                     case 0: // this is the first page to be inserted
@@ -61,7 +69,7 @@ public class DavisBaseFileHandler {
 
                         // Prepare the leaf node
                         Page<LeafCell> dataNode = new Page();
-                        PageHeader header = new PageHeader();
+                        PageHeader header = new PageHeader(0);
                         List<LeafCell> dataCells = new ArrayList<>();
                         header.setPage_number(0);
                         header.setPage_type(PageType.table_leaf);
@@ -70,11 +78,7 @@ public class DavisBaseFileHandler {
                         header.setData_offset((short)0);
                         header.setNext_page_pointer(RIGHT_MOST_LEAF);
                         dataNode.setPageheader(header);
-
-                        //prepare the data cells
-                        CellHeader cellHeader = new CellHeader(record.getTotSize(),record.getRowID());
-                        CellPayload payload = new CellPayload((byte)record.getColumns().size(),record.getSizeOfCol(),record.getColeVal());
-                        dataCells.add(new LeafCell(cellHeader, payload));
+                        dataCells.add(leafCell);
                         dataNode.setCells(dataCells);
                         write(tablefile,dataNode,pageNumber);
 
@@ -87,7 +91,7 @@ public class DavisBaseFileHandler {
                 }
 
                 //check for page overflow
-            }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -112,7 +116,7 @@ public class DavisBaseFileHandler {
     private static Page readSinglePage(RandomAccessFile randomAccessFile, int pageNum) {
         try {
             Page page = new Page();
-            PageHeader header = new PageHeader();
+            PageHeader header = new PageHeader(0);
             List cells;
             randomAccessFile.seek(PAGE_SIZE * pageNum);
             byte pageType = randomAccessFile.readByte();
@@ -192,30 +196,30 @@ public class DavisBaseFileHandler {
         }
     }
 
-    public List<RawRecord> findRecord(String databaseName, String tableName, Condition condition, boolean getOne) {
+    public List<LeafCell> findRecord(String databaseName, String tableName, Condition condition, boolean getOne) {
         return findRecord(databaseName, tableName, condition,null, getOne);
     }
 
-    public List<RawRecord> findRecord(String databaseName, String tableName, Condition condition, List<Byte> selectionColumnIndexList, boolean getOne) {
+    public List<LeafCell> findRecord(String databaseName, String tableName, Condition condition, List<Byte> selectionColumnIndexList, boolean getOne) {
         List<Condition> conditionList = new ArrayList<>();
         if(condition != null)
             conditionList.add(condition);
         return findRecord(databaseName, tableName, conditionList, selectionColumnIndexList, getOne);
     }
 
-    public List<RawRecord> findRecord(String databaseName, String tableName, List<Condition> conditionList, boolean getOne)  {
+    public List<LeafCell> findRecord(String databaseName, String tableName, List<Condition> conditionList, boolean getOne)  {
         return findRecord(databaseName, tableName, conditionList, null, getOne);
     }
 
-    public List<RawRecord> findRecord(String databaseName, String tableName, List<Condition> conditionList, List<Byte> selectionColumnIndexList, boolean getOne) {
+    public List<LeafCell> findRecord(String databaseName, String tableName, List<Condition> conditionList, List<Byte> selectionColumnIndexList, boolean getOne) {
         try {
-            File file = new File(fileDir+databaseName + "/" + tableName + fileExt);
+            File file = new File(FILE_DIR+databaseName + "/" + tableName + FILE_EXT);
             if (file.exists()) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 if (conditionList != null) {
                     Page page = getPage(file);
-                    RawRecord record;
-                    List<RawRecord> matchRecords = new ArrayList<>();
+                    LeafCell leafCell;
+                    List<LeafCell> matchingLeafCells = new ArrayList<>();
                     boolean isMatch = false;
                     byte columnIndex;
                     short condition;
@@ -224,16 +228,16 @@ public class DavisBaseFileHandler {
                     while (page != null) {
                         for (Object offset : page.getPageheader().getData_cell_offset()) {
                             isMatch = true;
-                            record = readDataRecord(randomAccessFile, page.getPageheader().getPage_number(), (short) offset);
+                            leafCell = readLeaf(randomAccessFile, page.getPageheader().getPage_number(), (short) offset);
                             for(int i = 0; i < conditionList.size(); i++) {
                                 isMatch = false;
                                 columnIndex = conditionList.get(i).getIndex();
                                 conditionValue = conditionList.get(i).getValue();
                                 condition = conditionList.get(i).getConditionType();
                                 conditionValueType = conditionList.get(i).getValType();
-                                if (record != null && record.getColumnValues().size() > columnIndex) {
-                                    Object colValue = record.getColumnValues().get(columnIndex);
-                                    DataType colType = record.getColumnType().get(columnIndex);
+                                if (leafCell != null && leafCell.getPayload().getColValues().size() > columnIndex) {
+                                    Object colValue = leafCell.getPayload().getColValues().get(columnIndex);
+                                    DataType colType = DataType.getTypeFromSerialCode(leafCell.getPayload().getData_type()[columnIndex]);
                                     try {
                                         isMatch = compare(colValue, conditionValue, condition, colType,conditionValueType);
                                     }
@@ -246,20 +250,20 @@ public class DavisBaseFileHandler {
                             }
 
                             if(isMatch) {
-                                RawRecord matchedRecord = record;
+                                LeafCell matchedLeaf = leafCell;
                                 if(selectionColumnIndexList != null) {
-                                    matchedRecord = new RawRecord();
-                                    matchedRecord.setRowID(record.getRowID());
-                                    matchedRecord.setPage(record.getPage());
-                                    matchedRecord.setOffset(record.getOffset());
+                                    matchedLeaf = new LeafCell();
+                                    matchedLeaf.getHeader().setRow_id(leafCell.getHeader().getRow_id());
+                                    matchedLeaf.setPageNumber(leafCell.getPageNumber());
+                                    matchedLeaf.setOffset(leafCell.getOffset());
                                     for (Byte index : selectionColumnIndexList) {
-                                        matchedRecord.getColumnValues().add(record.getColumnValues().get(index));
+                                        matchedLeaf.getPayload().getColValues().add(leafCell.getPayload().getColValues().get(index));
                                     }
                                 }
-                                matchRecords.add(matchedRecord);
+                                matchingLeafCells.add(matchedLeaf);
                                 if(getOne) {
                                     randomAccessFile.close();
-                                    return matchRecords;
+                                    return matchingLeafCells;
                                 }
                             }
                         }
@@ -268,34 +272,33 @@ public class DavisBaseFileHandler {
                         page = readSinglePage(randomAccessFile, page.getPageheader().getNext_page_pointer());
                     }
                     randomAccessFile.close();
-                    return matchRecords;
+                    return matchingLeafCells;
                 }
             } else {
                 throw new DavidBaseError("Table does not exist, " +databaseName+tableName);
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new DavidBaseError("Error while executing query.");
         }
         return null;
     }
 
-    private RawRecord readDataRecord(RandomAccessFile randomAccessFile, int pageNumber, short offset) {
+    public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset) {
         {
             try {
                 if (pageNumber >= 0 && offset >= 0) {
-                    RawRecord record = new RawRecord();
-                    record.setPage(pageNumber);
-                    record.setOffset(offset);
                     randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
-                    record.setTotSize(randomAccessFile.readShort());
-                    record.setRowID(randomAccessFile.readInt());
+                    short payloadSize = randomAccessFile.readShort();
+                    int rowId = randomAccessFile.readInt();
+                    CellHeader cellheader = new CellHeader(payloadSize,rowId);
                     byte numberOfColumns = randomAccessFile.readByte();
                     byte[] serialTypeCodes = new byte[numberOfColumns];
-                    List<DataType> colType = new ArrayList<>();
                     for (byte i = 0; i < numberOfColumns; i++) {
                         serialTypeCodes[i] = randomAccessFile.readByte();
                     }
+                    List<Object> values = new ArrayList<>();
                     Object object;
                     for (byte i = 0; i < numberOfColumns; i++) {
                         switch (DataType.getTypeFromSerialCode(serialTypeCodes[i])) {
@@ -303,70 +306,57 @@ public class DavisBaseFileHandler {
 
                             case NULL_TINYINT:
                                 object = null;
-                                colType.add(DataType.NULL_TINYINT);
                                 break;
 
                             case NULL_SMALLINT:
                                 randomAccessFile.readShort();
                                 object = null;
-                                colType.add(DataType.NULL_SMALLINT);
                                 break;
 
                             case NULL_INT:
                                 randomAccessFile.readFloat();
                                 object = null;
-                                colType.add(DataType.NULL_INT);
                                 break;
 
                             case NULL_DOUBLE_DATE:
                                 randomAccessFile.readDouble();
                                 object = null;
-                                colType.add(DataType.NULL_DOUBLE_DATE);
                                 break;
 
                             case TINYINT:
                                 object = (Byte)randomAccessFile.readByte();
-                                colType.add(DataType.TINYINT);
                                 break;
 
                             case SMALLINT:
                                 object = randomAccessFile.readShort();
-                                colType.add(DataType.SMALLINT);
                                 break;
 
                             case INT:
                                 object = randomAccessFile.readInt();
-                                colType.add(DataType.INT);
                                 break;
 
                             case BIGINT:
                                 object = randomAccessFile.readLong();
-                                colType.add(DataType.BIGINT);
                                 break;
 
                             case REAL:
                                 object = randomAccessFile.readFloat();
-                                colType.add(DataType.REAL);
                                 break;
 
                             case DOUBLE:
                                 object = randomAccessFile.readDouble();
-                                colType.add(DataType.DOUBLE);
                                 break;
 
                             case DATETIME:
                                 object = randomAccessFile.readLong();
-                                colType.add(DataType.DATETIME);
                                 break;
 
                             case DATE:
                                 object = randomAccessFile.readLong();
-                                colType.add(DataType.DATE);
                                 break;
 
                             case TEXT:
                                 object = "";
-                                colType.add(DataType.TEXT);
                                 break;
 
                             default:
@@ -381,10 +371,14 @@ public class DavisBaseFileHandler {
                                     object = null;
                                 break;
                         }
-                        record.getColumnValues().add(object);
+                        values.add(object);
                     }
-                    record.setColumnType(colType);
-                    return record;
+                    CellPayload payload = new CellPayload(numberOfColumns,serialTypeCodes);
+                    payload.setColValues(values);
+                    LeafCell leafCell = new LeafCell(cellheader,payload);
+                    leafCell.setPageNumber(pageNumber);
+                    leafCell.setOffset(offset);
+                    return leafCell;
                 }
             }
             catch (Exception e) {
@@ -392,6 +386,23 @@ public class DavisBaseFileHandler {
             }
             return null;
         }
+    }
+
+    private Page getPage(RandomAccessFile randomAccessFile, LeafCell dataCell, int pageNumber) {{
+        try {
+            Page page = readSinglePage(randomAccessFile, 0);
+            while (page.getPageheader().getPage_type() == PageType.table_node) {
+                if (page.getPageheader().getNum_cells() == 0)
+                    return null;
+                randomAccessFile.seek((PAGE_SIZE* page.getPageheader().getPage_number()) + ((short) page.getPageheader().getData_offset()));
+                page = readSinglePage(randomAccessFile, randomAccessFile.readInt());
+            }
+            randomAccessFile.close();
+            return page;
+        } catch (Exception e) {
+            throw new DavidBaseError("Error while executing query.");
+        }
+    }
     }
 
     private Page getPage(File file) {{
@@ -511,5 +522,15 @@ public class DavisBaseFileHandler {
         } catch (Exception e) {
             throw new DavidBaseError(e);
         }
+    }
+
+
+    private boolean checkSpaceRequirements(Page page, LeafCell leafCell) {
+        if (page != null && leafCell != null) {
+            short endingAddress = page.getPageheader().getData_offset();
+            short startingAddress = (short) (Page.getHeaderFixedLength() + (page.getPageheader().getData_cell_offset().length * Short.BYTES));
+            return (leafCell.getHeader().getPayload_size() + CellHeader.getSize() + Short.BYTES) <= (endingAddress - startingAddress);
+        }
+        return false;
     }
 }
