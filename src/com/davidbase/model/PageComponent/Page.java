@@ -9,8 +9,11 @@ public class Page<T> {
 
     private PageHeader pageheader;
     private List<T> cells;
-   // private byte numberOfCells;
-    private PageType pagePage;
+
+    public Page(){
+        pageheader=new PageHeader();
+        cells=new ArrayList<>();
+    }
     
     public static <T> Page<T> createNewEmptyPage() {
         Page<T> page = new Page<>();
@@ -41,17 +44,70 @@ public class Page<T> {
         this.cells = cells;
     }
     
-    public static int getHeaderFixedLength() {
-        return Byte.BYTES + Byte.BYTES + Short.BYTES + Integer.BYTES;
+    public static short getHeaderFixedLength() {
+        return (short)(Byte.BYTES + Byte.BYTES + Short.BYTES + Integer.BYTES);
+    }
+
+    public short getHeaderLength() {
+        return pageheader.getSize();
     }
     
-    // public void setNumberOfCells(byte numberOfCells) {
-    //     this.numberOfCells = numberOfCells;
-    // }
+     public void setNumberOfCells(byte numberOfCells) {
+         pageheader.setNum_cells(numberOfCells);
+     }
     
-    // public byte getNumberOfCells() {
-    //     return numberOfCells;
-    // }
-    
-    
+     public byte getNumberOfCells() {
+         return pageheader.getNum_cells();
+     }
+
+    public PageType getPage_type() {
+        return pageheader.getPage_type();
+    }
+
+    public void setPage_type(PageType page_type) {
+        pageheader.setPage_type(page_type);
+    }
+
+    public byte getNum_cells() {
+        return pageheader.getNum_cells();
+    }
+
+    public void setNum_cells(byte num_cells) {
+        pageheader.setNum_cells(num_cells);
+    }
+
+    public short getData_offset() {
+        return pageheader.getData_offset();
+    }
+
+    public void setData_offset(short data_offset) {
+        pageheader.setData_offset(data_offset);
+    }
+
+    public int getNext_page_pointer() {
+        return pageheader.getNext_page_pointer();
+    }
+
+    public void setNext_page_pointer(int next_page_pointer) {
+        pageheader.setNext_page_pointer(next_page_pointer);
+    }
+
+    public short[] getData_cell_offset() {
+        return pageheader.getData_cell_offset();
+    }
+
+    public void setData_cell_offset(short[] data_cell_offset) {
+        pageheader.setData_cell_offset(data_cell_offset);
+    }
+
+    public int getPage_number() {
+        return pageheader.getPage_number();
+    }
+
+    public void setPage_number(int page_number) {
+        pageheader.setPage_number(page_number);
+    }
+
+
+
 }

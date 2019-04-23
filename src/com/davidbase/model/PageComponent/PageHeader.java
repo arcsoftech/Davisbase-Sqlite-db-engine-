@@ -37,6 +37,9 @@ public class PageHeader {
 
     private int page_number;
 
+    public PageHeader(){
+    }
+
     public PageHeader(int pageNum){
         this.page_number=pageNum;
     }
@@ -87,5 +90,11 @@ public class PageHeader {
 
     public void setPage_number(int page_number) {
         this.page_number = page_number;
+    }
+
+    public short getSize(){
+        Integer size =  Byte.BYTES+Byte.BYTES+Short.BYTES+Integer.BYTES+Integer.BYTES+
+            (Short.BYTES * num_cells);
+        return size.shortValue();
     }
 }

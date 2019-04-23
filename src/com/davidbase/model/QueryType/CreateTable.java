@@ -24,7 +24,7 @@ public class CreateTable implements QueryBase {
     private int rows;
 
     @Override
-    public QueryResult Execute() {
+    public QueryResult execute() {
         //Run any pre-req for the create
 
         try {

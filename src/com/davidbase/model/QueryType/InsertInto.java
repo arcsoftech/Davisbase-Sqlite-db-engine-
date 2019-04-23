@@ -25,7 +25,7 @@ public class InsertInto implements QueryBase {
     }
 
     @Override
-    public QueryResult Execute() {
+    public QueryResult execute() {
         // map passed values to records ready to be inserted into file
         LeafCell recordsToFile = prepareRecord();
         new DavisBaseFileHandler().writeLeafCell(databaseName,tableName, recordsToFile );

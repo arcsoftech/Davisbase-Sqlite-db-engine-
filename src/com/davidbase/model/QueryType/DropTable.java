@@ -21,7 +21,7 @@ public class DropTable implements QueryBase {
     }
 
     @Override
-    public QueryResult Execute() {
+    public QueryResult execute() {
         return new QueryResult(1);
     }
 }

@@ -17,7 +17,7 @@ public class SelectFrom implements QueryBase {
     private List<String> columns;
 
     @Override
-    public QueryResult Execute() {
+    public QueryResult execute() {
         try {
             new DavisBaseFileHandler().readFromFile(tableName);
         }catch(Exception e){

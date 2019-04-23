@@ -28,7 +28,7 @@ public class DavisBaseCatalogHandler {
         filehandler = new DavisBaseFileHandler();
     }
 
-    public static void InitializeDatabase() {
+    public static void initialize() {
         File baseDir = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME);
         if (!baseDir.exists()) {
             File catalogDir = new File(
@@ -50,9 +50,9 @@ public class DavisBaseCatalogHandler {
                     DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME);
             int startingRowId = this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
                     DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 2);
-            // startingRowId *=
-            // this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
-            // DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 6);
+             startingRowId *=
+             this.updateSystemTablesTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
+             DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 7);
             if (startingRowId >= 0) {
                 List<InternalColumn> columns = new ArrayList<>();
                 columns.add(new InternalColumn("rowid", DataType.INT, false, false));
@@ -69,7 +69,7 @@ public class DavisBaseCatalogHandler {
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("column_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("data_type", DataType.TEXT, false, false));
-                columns.add(new InternalColumn("ordinal_position", DataType.TINYINT, false, false));
+//                columns.add(new InternalColumn("ordinal_position", DataType.TINYINT, false, false));
                 columns.add(new InternalColumn("primary_key", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("is_nullable", DataType.TEXT, false, false));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
@@ -112,7 +112,7 @@ public class DavisBaseCatalogHandler {
                 colVal.add(columns.get(i).getName());
 
                 colValTypes.add(DataType.TEXT);
-                colVal.add(columns.get(i).getDataType());
+                colVal.add(columns.get(i).getDataType().getDataTypeName());
 
                 colValTypes.add(DataType.INT);
                 colVal.add(i+1);

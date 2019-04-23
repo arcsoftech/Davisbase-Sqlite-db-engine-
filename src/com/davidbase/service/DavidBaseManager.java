@@ -53,7 +53,7 @@ public class DavidBaseManager {
     public static void main(String[] args) {
 
         /* Display the welcome screen */
-        DavisBaseCatalogHandler.InitializeDatabase();
+        DavisBaseCatalogHandler.initialize();
         splashScreen();
 
         /* Variable to collect user input from the prompt */

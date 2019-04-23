@@ -11,7 +11,6 @@ import java.util.List;
 public class CellPayload {
 
     // 1-byte TINYINT that indicates the number of columns n.
-    @Deprecated
     private byte num_columns;
 
     // n-bytes which are Serial Type Codes, one for each of n columns
@@ -23,7 +22,7 @@ public class CellPayload {
     // not serializable
     private List<Object> colValues;
     private List<DataType> colTypes;
-    private short payloadSize;
+    private short dataSize;
 
     public CellPayload() {
     }
@@ -82,8 +81,9 @@ public class CellPayload {
     public void generateByteData() {
         this.data_type = new byte[colTypes.size()];
         fillSizeArray();
+        this.num_columns =(byte) colTypes.size();
 
-        this.data = new byte[payloadSize];
+        this.data = new byte[dataSize];
         fillDataArray();
     }
 
@@ -91,21 +91,28 @@ public class CellPayload {
         for (int i = 0; i < colTypes.size(); i++) {
             if (colTypes.get(i) == DataType.TEXT) {
                 this.data_type[i] = (byte) colTypes.get(i).getSerialCode();
-                this.payloadSize += (colValues.get(i) != null ? String.valueOf(colValues.get(i)).length() : 0);
+                this.dataSize += (colValues.get(i) != null ? String.valueOf(colValues.get(i)).length() : 0);
             } else {
                 this.data_type[i] = colTypes.get(i).getSerialCode();
-                this.payloadSize += this.colTypes.get(i).getSize();
+                this.dataSize += this.colTypes.get(i).getSize();
             }
         }
     }
     private static byte[] intToBytes(final int data) {
         return new byte[] {
-            (byte)((data >> 24) & 0xff),
-            (byte)((data >> 16) & 0xff),
-            (byte)((data >> 8) & 0xff),
-            (byte)((data >> 0) & 0xff),
+                (byte)((data >> 24) & 0xff),
+                (byte)((data >> 16) & 0xff),
+                (byte)((data >> 8) & 0xff),
+                (byte)((data >> 0) & 0xff),
         };
     }
+
+    private static byte[] floatToBytes(final float data) {
+        int intBits =  Float.floatToIntBits(data);
+        return new byte[] {
+                (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
+    }
+
     private void fillDataArray() {
         int i = 0;
         int k = 0;
@@ -118,21 +125,41 @@ public class CellPayload {
                 }
                 break;
             case INT:
-            for ( byte valueInBytes: intToBytes(Integer.valueOf(String.valueOf(colValues.get(k++)))))
-            {
-                this.data[i++] = valueInBytes;
-            }
+                for ( byte valueInBytes: intToBytes(Integer.valueOf(String.valueOf(colValues.get(k++)))))
+                {
+                    this.data[i++] = valueInBytes;
+                }
+                    break;
+                case TINYINT:
+                for ( byte valueInBytes: intToBytes(Byte.valueOf(String.valueOf(colValues.get(k++)))))
+                {
+                    this.data[i++] = valueInBytes;
+                }
                 break;
-            default:
+                case SMALLINT:
+                for ( byte valueInBytes: intToBytes(Integer.valueOf(String.valueOf(colValues.get(k++)))))
+                {
+                    this.data[i++] = valueInBytes;
+                }
+                break;
+            case REAL:
+                for ( byte valueInBytes: floatToBytes(Float.valueOf(String.valueOf(colValues.get(k++)))))
+                {
+                    this.data[i++] = valueInBytes;
+                }
+                break;
+                default:
                 throw new DavidBaseError("Unable to write data type");
             }
     }
 
     public short getPayloadSize() {
-        return payloadSize;
+        int payloadSize =  Byte.BYTES+ (Byte.BYTES)* (data_type.length) + (Byte.BYTES)* (data.length);
+        return (short)payloadSize;
     }
 
-    public void setPayloadSize(short payloadSize) {
-        this.payloadSize = payloadSize;
+    public void setDataSize(short dataSize) {
+        this.dataSize = dataSize;
     }
+
 }

@@ -35,7 +35,7 @@ public class DavisBaseFileHandler {
              * Create RandomAccessFile tableFile in read-write mode. Note that this doesn't
              * create the table file in the correct directory structure
              */
-            RandomAccessFile tableFile = new RandomAccessFile(FILE_DIR + tableFileName + FILE_EXT, "rw");
+            RandomAccessFile tableFile = new RandomAccessFile(DEFAULT_DATA_DIRNAME + tableFileName + FILE_EXT, "rw");
             tableFile.setLength(PAGE_SIZE);
             tableFile.seek(0);
             tableFile.writeInt(63);
@@ -76,21 +76,21 @@ public class DavisBaseFileHandler {
                     header.setPage_number(0);
 
                     header.setNum_cells((byte) 1);
-                    System.out.println("Test data"+CellHeader.getSize());
-                    System.out.println(leafCell.getPayload().getData().length);
-                    int offset = ((short) PAGE_SIZE) - (leafCell.getPayload().getData().length + CellHeader.getSize());
+                    int offset = ((short) PAGE_SIZE) - (leafCell.getPayload().getPayloadSize() + CellHeader.getSize());
                     header.setData_offset((short) offset);
+                    System.out.println("offset "+offset);
                     header.setData_cell_offset((new short[] { (short) offset }));
 
                 } else {
                     header.setNum_cells((byte) (page.getPageheader().getNum_cells() + 1));
-                    int offset = page.getPageheader().getData_offset() - leafCell.getPayload().getData().length
-                            + CellHeader.getSize();
+                    int offset = page.getPageheader().getData_offset() - (leafCell.getPayload().getPayloadSize()
+                            + CellHeader.getSize());
                     header.setData_offset((short) offset);
                     int length = page.getPageheader().getData_cell_offset().length + 1;
                     short[] newOffsets = Arrays.copyOf(page.getPageheader().getData_cell_offset(), length);
                     newOffsets[length - 1] = (short) offset;
                     header.setData_cell_offset(newOffsets);
+                    System.out.println("offset "+offset);
                 }
 
                 header.setPage_type(PageType.table_leaf);
@@ -192,10 +192,10 @@ public class DavisBaseFileHandler {
             tableFile.writeInt(cell.getHeader().getRow_id());
 
             // write data @Deprecated
-            // tableFile.writeByte(cell.getPayload().getNum_columns());
+             tableFile.writeByte(cell.getPayload().getNum_columns());
 
-            // for (byte colType : cell.getPayload().getData_type())
-            //     tableFile.writeByte(colType);
+             for (byte colType : cell.getPayload().getData_type())
+                 tableFile.writeByte(colType);
 
             for (byte colData : cell.getPayload().getData())
                 tableFile.writeByte(colData);

@@ -19,7 +19,7 @@ public class DropDatabase implements QueryBase {
     }
 
     @Override
-    public QueryResult Execute() {
+    public QueryResult execute() {
         File database = new File(DavisBaseCatalogHandler.getDatabasePath(databaseName));
 
         QueryResult result = new QueryResult(1);

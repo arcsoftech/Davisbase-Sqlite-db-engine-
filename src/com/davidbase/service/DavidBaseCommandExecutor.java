@@ -13,7 +13,7 @@ public class DavidBaseCommandExecutor {
      *  @param query
      */
     public QueryResult executeQuery(QueryBase query) {
-        return query.Execute();
+        return query.execute();
     }
 
 }

@@ -19,7 +19,7 @@ public class CreateDatabase implements QueryBase {
     }
 
     @Override
-    public QueryResult Execute() {
+    public QueryResult execute() {
         File database = new File(DavisBaseCatalogHandler.getDatabasePath(this.databaseName));
         boolean isCreated = database.mkdir();
 
