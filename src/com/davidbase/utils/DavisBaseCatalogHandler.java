@@ -55,25 +55,22 @@ public class DavisBaseCatalogHandler {
             // DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 6);
             if (startingRowId >= 0) {
                 List<InternalColumn> columns = new ArrayList<>();
-                // columns.add(new InternalColumn("rowid", DataType.INT, false, false));
-                // columns.add(new InternalColumn("database_name", DataType.TEXT, false,
-                // false));
-                // columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
+                columns.add(new InternalColumn("rowid", DataType.INT, false, false));
+                columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
                 // columns.add(new InternalColumn("record_count", DataType.INT, false, false));
                 // columns.add(new InternalColumn("col_tbl_st_rowid", DataType.INT, false,
                 // false));
                 // columns.add(new InternalColumn("nxt_avl_col_tbl_rowid", DataType.INT, false,
                 // false));
-                // this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
-                // DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 1, columns);
-                // columns.clear();
+                this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
+                DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 1, columns);
+                columns.clear();
                 columns.add(new InternalColumn("rowid", DataType.INT, false, false));
-                columns.add(new InternalColumn("database_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("column_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("data_type", DataType.TEXT, false, false));
-                columns.add(new InternalColumn("column_key", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("ordinal_position", DataType.TINYINT, false, false));
+                columns.add(new InternalColumn("primary_key", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("is_nullable", DataType.TEXT, false, false));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
                         DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 7, columns);
@@ -112,19 +109,16 @@ public class DavisBaseCatalogHandler {
                 colVal.add(tableName);
 
                 colValTypes.add(DataType.TEXT);
-                colVal.add(columns.get(i).getDataType());
-
-                colValTypes.add(DataType.TEXT);
                 colVal.add(columns.get(i).getName());
 
                 colValTypes.add(DataType.TEXT);
                 colVal.add(columns.get(i).getDataType());
 
+                colValTypes.add(DataType.INT);
+                colVal.add(i+1);
+
                 colValTypes.add(DataType.TEXT);
                 colVal.add(columns.get(i).getStringIsPrimary());
-
-                colValTypes.add(DataType.INT);
-                colVal.add(i + 1);
 
                 colValTypes.add(DataType.TEXT);
                 colVal.add(columns.get(i).getStringIsNullable());
