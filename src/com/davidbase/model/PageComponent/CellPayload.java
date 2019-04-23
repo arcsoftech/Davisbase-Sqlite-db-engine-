@@ -1,5 +1,6 @@
 package com.davidbase.model.PageComponent;
 
+import com.davidbase.model.DavidBaseError;
 import com.davidbase.utils.DataType;
 
 import java.util.List;
@@ -82,7 +83,7 @@ public class CellPayload {
         this.data_type = new byte[colTypes.size()];
         fillSizeArray();
 
-        this.data = new byte[colTypes.size()];
+        this.data = new byte[payloadSize];
         fillDataArray();
     }
 
@@ -98,9 +99,18 @@ public class CellPayload {
     }
 
     private void fillDataArray() {
-        for(int i=0;i<colTypes.size();i++){
-            this.data[i]=Byte.valueOf(String.valueOf(colValues.get(i)));
-        }
+        int i=0;
+        int k=0;
+        for(DataType type : colTypes)
+            switch(type){
+                case TEXT:  for(byte valueInBytes: String.valueOf(colValues.get(k++)).getBytes())
+                    this.data[i++]=valueInBytes;
+                    break;
+                case INT:   this.data[i++] = Integer.valueOf(String.valueOf(colValues.get(k++))).byteValue();
+                    break;
+                default:
+                    throw new DavidBaseError("Unable to write data type");
+            }
     }
 
     public short getPayloadSize() {

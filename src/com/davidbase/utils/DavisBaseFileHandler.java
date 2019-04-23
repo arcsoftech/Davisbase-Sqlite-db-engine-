@@ -58,39 +58,39 @@ public class DavisBaseFileHandler {
             RandomAccessFile tablefile = new RandomAccessFile(new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT),"rw");
             int pageNumber =0;
             //iterate over each record to be inserted
-                int pageCount = (int) (tablefile.length() / PAGE_SIZE);
-                Page page;
-                if(pageCount>0)
-                    page = findPage(tablefile,leafCell.getHeader().getRow_id(), pageNumber);
+            int pageCount = (int) (tablefile.length() / PAGE_SIZE);
+            Page page;
+            if(pageCount>0)
+                page = findPage(tablefile,leafCell.getHeader().getRow_id(), pageNumber);
 
-                switch(pageCount){
-                    case 0: // this is the first page to be inserted
-                        // insert leaf node with data
+            switch(pageCount){
+                case 0: // this is the first page to be inserted
+                    // insert leaf node with data
 
-                        // Prepare the leaf node
-                        Page<LeafCell> dataNode = new Page();
-                        PageHeader header = new PageHeader(0);
-                        List<LeafCell> dataCells = new ArrayList<>();
-                        header.setPage_number(0);
-                        header.setPage_type(PageType.table_leaf);
-                        header.setNum_cells((byte)1);
-                        header.setData_cell_offset((new short[]{0}));
-                        header.setData_offset((short)0);
-                        header.setNext_page_pointer(RIGHT_MOST_LEAF);
-                        dataNode.setPageheader(header);
-                        dataCells.add(leafCell);
-                        dataNode.setCells(dataCells);
-                        write(tablefile,dataNode,pageNumber);
+                    // Prepare the leaf node
+                    Page<LeafCell> dataNode = new Page();
+                    PageHeader header = new PageHeader(0);
+                    List<LeafCell> dataCells = new ArrayList<>();
+                    header.setPage_number(0);
+                    header.setPage_type(PageType.table_leaf);
+                    header.setNum_cells((byte)1);
+                    header.setData_cell_offset((new short[]{0}));
+                    header.setData_offset((short)0);
+                    header.setNext_page_pointer(RIGHT_MOST_LEAF);
+                    dataNode.setPageheader(header);
+                    dataCells.add(leafCell);
+                    dataNode.setCells(dataCells);
+                    write(tablefile,dataNode,pageNumber);
 
-                        break;
-                    default: // for all other cases.
-                        //cases:
-                        // 1. insert to existing leaf
-                        // 2. if leaf is full, split the node and add one internal plus 2 leaf nodes.
-                        break;
-                }
+                    break;
+                default: // for all other cases.
+                    //cases:
+                    // 1. insert to existing leaf
+                    // 2. if leaf is full, split the node and add one internal plus 2 leaf nodes.
+                    break;
+            }
 
-                //check for page overflow
+            //check for page overflow
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -213,7 +213,7 @@ public class DavisBaseFileHandler {
 
     public List<LeafCell> findRecord(String databaseName, String tableName, List<Condition> conditionList, List<Byte> selectionColumnIndexList, boolean getOne) {
         try {
-            File file = new File(FILE_DIR+databaseName + "/" + tableName + FILE_EXT);
+            File file = new File(DEFAULT_DATA_DIRNAME+"/"+databaseName + "/" + tableName + FILE_EXT);
             if (file.exists()) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 if (conditionList != null) {
@@ -532,5 +532,20 @@ public class DavisBaseFileHandler {
             return (leafCell.getHeader().getPayload_size() + CellHeader.getSize() + Short.BYTES) <= (endingAddress - startingAddress);
         }
         return false;
+    }
+
+    public Page getRightmostLeafPage(File file) {
+        try {
+            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+            Page page = readSinglePage(randomAccessFile, 0);
+            while (page.getPageheader().getPage_type() == PageType.table_node && page.getPageheader().getNext_page_pointer() != RIGHT_MOST_LEAF) {
+                page = readSinglePage(randomAccessFile, page.getPageheader().getNext_page_pointer());
+            }
+            randomAccessFile.close();
+            return page;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DavidBaseError(e.getMessage());
+        }
     }
 }

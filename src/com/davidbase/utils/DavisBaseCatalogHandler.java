@@ -203,6 +203,8 @@ public class DavisBaseCatalogHandler {
 //                    record.getColumnValueList().add(new DataType_Int(returnValue));
 //                    record.getColumnValueList().add(new DataType_Int(returnValue + columnCount));
                 }
+                newLeaf.getPayload().setColTypes(colTypes);
+                newLeaf.getPayload().setColValues(colValues);
                 newLeaf.initializeLeafForWrite();
                 filehandler.writeLeafCell(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, newLeaf);
                 return returnValue;
@@ -222,7 +224,7 @@ public class DavisBaseCatalogHandler {
             File file = new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
             if (file.exists()) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-                Page<LeafCell> page = getRightmostLeafPage(file);
+                Page<LeafCell> page = filehandler.getRightmostLeafPage(file);
                 if (page.getNumberOfCells() > 0) {
                     randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number()) + Page.getHeaderFixedLength() + ((page.getNumberOfCells() - 1) * Short.BYTES));
                     short address = randomAccessFile.readShort();
@@ -241,15 +243,6 @@ public class DavisBaseCatalogHandler {
             throw new DavidBaseError(e.getMessage());
         }
     }
-    
-    
-    private Page getRightmostLeafPage(File file) throws Exception {
-       	
-        return null;
-    }
-
-
-   
     
     public boolean createTable(String databaseName, String tableName){
         try {
