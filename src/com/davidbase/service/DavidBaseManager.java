@@ -86,7 +86,7 @@ public class DavidBaseManager {
     }
 
     /**
-     * @param s The String to be repeated
+     * @param  The String to be repeated
      * @param num The number of time to repeat String s.
      * @return String A String object, which is the String s appended to itself num times.
      */
