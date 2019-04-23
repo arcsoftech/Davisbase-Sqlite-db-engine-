@@ -64,7 +64,7 @@ public class DavisBaseFileHandler {
                 page = findPage(tablefile,leafCell.getHeader().getRow_id(), pageNumber);
 
             switch(pageCount){
-                case 0: // this is the first page to be inserted
+                case 1: // this is the first page to be inserted
                     // insert leaf node with data
 
                     // Prepare the leaf node
@@ -74,8 +74,9 @@ public class DavisBaseFileHandler {
                     header.setPage_number(0);
                     header.setPage_type(PageType.table_leaf);
                     header.setNum_cells((byte)1);
-                    header.setData_cell_offset((new short[]{0}));
-                    header.setData_offset((short)0);
+                    int offset = ((short)PAGE_SIZE)-(leafCell.getPayload().getData().length+CellHeader.getSize());
+                    header.setData_offset((short)offset);
+                    header.setData_cell_offset((new short[]{(short)offset}));
                     header.setNext_page_pointer(RIGHT_MOST_LEAF);
                     dataNode.setPageheader(header);
                     dataCells.add(leafCell);
@@ -159,7 +160,7 @@ public class DavisBaseFileHandler {
             }
 
             //writing the page cells
-            tableFile.seek(pageLocation);
+            tableFile.seek(header.getData_offset());
             switch(header.getPage_type()){
                 case table_leaf: writeLeafCell(tableFile,page.getCells());
                     break;

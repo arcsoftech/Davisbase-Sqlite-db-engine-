@@ -171,38 +171,36 @@ public class DavisBaseCatalogHandler {
                 List<DataType> colTypes = new ArrayList<>();
                 colTypes.add(DataType.INT);
                 colTypes.add(DataType.TEXT);
-                colTypes.add(DataType.TEXT);
-                colTypes.add(DataType.INT);
 
                 List<Object> colValues = new ArrayList<>();
                 colValues.add(newLeaf.getHeader().getRow_id());
-                colValues.add(databaseName);
+//                colValues.add(databaseName);
                 colValues.add(tableName);
-                colValues.add(0);
+//                colValues.add(0);
 ;
-                if (lastRecord == null) {
-
-                    colTypes.add(DataType.INT);
-                    colValues.add(1);
-
-                    colTypes.add(DataType.INT);
-                    colValues.add(columnCount + 1);
-
-                } else {
-                   
-                	int startingColumnIndex = (Integer)lastRecord.getPayload().getColValues().get(DavisBaseConstants.TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID);
-                   
-                	returnValue = startingColumnIndex;
-
-                    colTypes.add(DataType.INT);
-                    colValues.add(returnValue);
-
-                    colTypes.add(DataType.INT);
-                    colValues.add(returnValue + columnCount);
-                    
-//                    record.getColumnValueList().add(new DataType_Int(returnValue));
-//                    record.getColumnValueList().add(new DataType_Int(returnValue + columnCount));
-                }
+//                if (lastRecord == null) {
+//
+//                    colTypes.add(DataType.INT);
+//                    colValues.add(1);
+//
+//                    colTypes.add(DataType.INT);
+//                    colValues.add(columnCount + 1);
+//
+//                } else {
+//
+//                	int startingColumnIndex = (Integer)lastRecord.getPayload().getColValues().get(DavisBaseConstants.TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID);
+//
+//                	returnValue = startingColumnIndex;
+//
+//                    colTypes.add(DataType.INT);
+//                    colValues.add(returnValue);
+//
+//                    colTypes.add(DataType.INT);
+//                    colValues.add(returnValue + columnCount);
+//
+////                    record.getColumnValueList().add(new DataType_Int(returnValue));
+////                    record.getColumnValueList().add(new DataType_Int(returnValue + columnCount));
+//                }
                 newLeaf.getPayload().setColTypes(colTypes);
                 newLeaf.getPayload().setColValues(colValues);
                 newLeaf.initializeLeafForWrite();
