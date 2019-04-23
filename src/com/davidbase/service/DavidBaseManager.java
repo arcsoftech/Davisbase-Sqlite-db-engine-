@@ -39,6 +39,7 @@ public class DavidBaseManager {
      */
 
     static String currentDB=" ";
+    static String currentTable=" ";
     static Scanner scanner = new Scanner(System.in).useDelimiter(";");
 
     static DavidBaseCommandValidator commandValidator = new DavidBaseCommandValidator();
@@ -227,13 +228,17 @@ public class DavidBaseManager {
         System.out.println("createTable");
         try {
             CreateTable queryObject = commandValidator.isValidCreateTable(createTableString,currentDB);
+            currentTable=queryObject.getTableName();
+            System.out.println(currentTable);
+            //int rows=queryObject.getRows();
+            
             //System.out.println(queryObject);
             // List<String> columns=queryObject.getColumns();
             //  for(int i=0; i<columns.size();i++){
             //      System.out.println(columns.get(i));
             //  }
             QueryResult result = commandExecutor.executeQuery(queryObject);
-            //System.out.println("Rows affected: " + result.getRowsAffected());
+            System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
             //throw new DavidBaseError("Create table command in not valid.");
@@ -246,8 +251,11 @@ public class DavidBaseManager {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
             currentDB=queryObject.databaseName;
-            commandExecutor.executeQuery(queryObject);
             System.out.println(currentDB);
+            commandExecutor.executeQuery(queryObject);
+            QueryResult result=commandExecutor.executeQuery(queryObject);
+           // System.out.println("Rows affected: " + );
+            
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
@@ -289,6 +297,7 @@ public class DavidBaseManager {
         try {
             DropDatabase queryObject = commandValidator.isValidDropDatabase(dropDBString);
             System.out.println(queryObject.databaseName);
+            
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
@@ -315,17 +324,33 @@ public class DavidBaseManager {
 
 
     }
-    public static void selectFrom(String selectFromString)
+	/*
+	 * public static void selectFrom(String userCommand) {
+	 * System.out.println("STUB: This is the selectFrom method"); try { SelectFrom
+	 * queryObject = commandValidator.isValidSelectFrom(userCommand); QueryResult
+	 * result = commandExecutor.executeQuery(queryObject);
+	 * System.out.println(result.getRowsAffected());
+	 * }catch(DavidBaseValidationException e) { System.out.println(e.getErrorMsg());
+	 * }
+	 */
+    public static void selectFrom(String userCommand)
     {
     	System.out.println("STUB: This is the selectFrom method");
     	try {
-            boolean isTrue = commandValidator.isValidSelectFrom(selectFromString);
-            //System.out.println(queryObject.databaseName);
+            SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);
+            QueryResult result = commandExecutor.executeQuery(queryObject);
+            //System.out.println("Rows affected: " + result.getRowsAffected());
+            //List columns=result.getColumns();
+            /*for(int i=0;i<columns.size();i++){
+                System.out.println(columns.get(i));
+            } */
+            
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
-    	
     }
+    	
+    
     public static void insertInto(String insertIntoString)
     {
     	try {

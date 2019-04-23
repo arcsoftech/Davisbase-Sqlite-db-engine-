@@ -224,7 +224,7 @@ public class DavidBaseCommandValidator {
     }
 
 
-    public boolean isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
+    public SelectFrom isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
     	 ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
         int size=commandTokens.size();
          //check if the second key word is "table"
@@ -232,7 +232,9 @@ public class DavidBaseCommandValidator {
          if(!userCommandlower.contains("from"))
         	 throw new DavidBaseValidationException("Incorrect SELECT statement");
         	//check if table exists ---- Qi
-        return true;
+        
+        SelectFrom select=new SelectFrom();
+        return select;
     }
 
 
