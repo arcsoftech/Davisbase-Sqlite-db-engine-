@@ -2,6 +2,7 @@ package com.davidbase.service;
 
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.DavidBaseValidationException;
+import com.davidbase.model.PageComponent.InternalColumn;
 import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.utils.*;
@@ -228,10 +229,10 @@ public class DavidBaseManager {
         try {
             CreateTable queryObject = commandValidator.isValidCreateTable(createTableString,currentDB);
             //System.out.println(queryObject);
-            // List<String> columns=queryObject.getColumns();
-            //  for(int i=0; i<columns.size();i++){
-            //      System.out.println(columns.get(i));
-            //  }
+            // List<InternalColumn> columns=queryObject.getColumns();
+            // for(int i=0; i<columns.size();i++){
+            //     System.out.println(columns.get(i).getName());
+            //   }
             //QueryResult result = commandExecutor.executeQuery(queryObject);
             //System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {

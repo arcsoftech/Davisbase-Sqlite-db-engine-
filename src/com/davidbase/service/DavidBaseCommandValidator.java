@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import com.davidbase.utils.DataType;
 
+import com.davidbase.model.PageComponent.InternalColumn;
 import com.davidbase.model.DavidBaseValidationException;
+import com.davidbase.model.QueryType.Condition;
 import com.davidbase.model.QueryType.CreateDatabase;
 import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.QueryType.DropDatabase;
@@ -50,8 +52,9 @@ public class DavidBaseCommandValidator {
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         boolean isExist=catalog_handler.tableExists(current_DB, commandTokens.get(2)); //??figure out database name
         
+        
         //parse and put all columns to a list
-        List<String> columns_list=new ArrayList<String>();
+        List<InternalColumn> columns_list=new ArrayList<InternalColumn>();
         //table's primary key
         String pri=null;
 
@@ -61,19 +64,21 @@ public class DavidBaseCommandValidator {
 
         String string_inside_brackets=userCommand.substring(open_bracket_index + 1, close_bracket_index).trim();
         ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split(",")));
+
         for(int i=0;i<columns_substrings.size();i++){
             String columns_substrings_trim=columns_substrings.get(i).trim();
             ArrayList<String> temp = new ArrayList<String>(Arrays.asList(columns_substrings_trim.split(" ")));
-            
+            boolean is_pri=false;
             //get primary key
-             for(int j=0;j<temp.size();j++){
+            for(int j=0;j<temp.size();j++){
                 if(temp.get(j).toLowerCase().contains("primary")==true){
                     pri=temp.get(0);
+                    is_pri=true;
                 }
-             }
-            
-            //put all columns to a arraylist
-            columns_list.add(temp.get(0));
+            }
+            columns_list.add(new InternalColumn(temp.get(0), DataType.getTypeFromText(temp.get(1).toUpperCase().trim()),is_pri,false));
+
+
         }
 
         // checks for tables and columns etc, and returns a valid CreateTable object else throw exception
@@ -233,8 +238,139 @@ public class DavidBaseCommandValidator {
          String userCommandlower=userCommand.toLowerCase();
          if(!userCommandlower.contains("from"))
         	 throw new DavidBaseValidationException("Incorrect SELECT statement");
-        	//check if table exists ---- Qi
+        
+        
+        //check if table exists ---- Qi
+        DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
+        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2)); 
+
+        if (isExist!=false){
+            throw new DavidBaseValidationException("The table does not Exist");
+        }  
+        // else{
+        //     DropDatabase dropDB= new DropDatabase(commandTokens.get(2));
+        //     return dropDB;
+        // }
+        
+        // int where_index = userCommand.toLowerCase().indexOf("where");
+        // int semicolon_index=userCommand.toLowerCase().indexOf(";");
+        // String string_where_clause=userCommand.substring(where_index + 1, semicolon_index-1).trim();
+        // ArrayList<String> columns = new ArrayList<String>(Arrays.asList(string_where_clause.split(" ")));
+
+        // for(int i=0; i<columns.size();i++){
+        //     System.out.println(columns.get(i));
+        // }
+        int from_index = userCommand.toLowerCase().indexOf("from");
+        //String attribute = userCommand.substring("select".length(), from_index).trim();
+        String rest = userCommand.substring(from_index + "from".length());
+
+        int where_index = rest.toLowerCase().indexOf("where");
+        if(where_index == -1) {
+            String tableName = rest.trim();
+        }
+
+        String tableName = rest.substring(0, where_index).trim();
+        String condition_string = rest.substring(where_index + "where".length()).trim();
+
+        //parse condition
+        Condition condition=parse_condition(condition_string, tableName);
+
+
+        String str="=";
+        short cnd=0;
+        switch(str){
+            case "=": cnd = Condition.EQUALS;break;
+            case ">" : cnd = Condition.GREATER_THAN;break;
+            case "<" : cnd = Condition.LESS_THAN;break;
+            case ">=" : cnd = Condition.GREATER_THAN_EQUALS;break;
+            case "<=" : cnd = Condition.LESS_THAN_EQUALS;break;
+        }
+
+
+
         return true;
+    }
+
+    public Condition parse_condition(String condition_String, String tableName) throws DavidBaseValidationException{
+        short cnd=-1;
+        String op="";
+        
+        if(condition_String.contains("<=")){
+            cnd=Condition.LESS_THAN_EQUALS;
+            op="<=";
+        }
+
+        else if(condition_String.contains(">=")){
+            cnd= Condition.GREATER_THAN_EQUALS;
+            op=">=";
+
+        }
+
+        else if(condition_String.contains(">")){
+            cnd= Condition.GREATER_THAN;
+            op=">";
+
+        }
+
+        else if(condition_String.contains("<")){
+            cnd= Condition.LESS_THAN;
+            op="<";
+
+        }
+
+        else if(condition_String.contains("=")){
+            cnd= Condition.EQUALS;
+            op="=";
+
+        }
+        else {
+            cnd=-1;
+        }
+
+        if (cnd==-1){
+            throw new DavidBaseValidationException("No Operator");
+        }
+
+        String[] strings;
+        String column;
+        String value;
+        //DataType dataType;  Need to get data type of the value 
+        Condition condition;
+        strings = condition_String.split(op);
+        if(strings.length != 2) {
+            throw new DavidBaseValidationException("Unrecongnized Condition");           
+        }
+
+        column = strings[0].trim();
+        value=strings[2].trim();
+        //dataType=fetchAllTableColumnDataTypes(tableName);
+        condition = Condition.CreateCondition(0,column, null, (Object)value);
+
+        switch (cnd){
+            case 0:
+                condition = parse(conditionString, operator, "=");
+                break;
+            case 1:
+                condition = parse(conditionString, operator, "<");
+                break;
+            case 2:
+                condition = parse(conditionString, operator, ">");
+                break;          
+            case 3:
+                condition = parse(conditionString, operator, "<=");
+                break;
+            case 4:
+                condition = getConditionInternal(conditionString, operator, ">=");
+                break;
+            
+        }
+
+
+
+
+        return null;
+
+        
     }
 
 

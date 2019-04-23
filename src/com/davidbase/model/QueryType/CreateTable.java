@@ -1,6 +1,7 @@
 package com.davidbase.model.QueryType;
 
 import com.davidbase.model.DavidBaseError;
+import com.davidbase.model.PageComponent.InternalColumn;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.utils.DavisBaseFileHandler;
@@ -18,7 +19,7 @@ import static com.davidbase.utils.DavisBaseConstants.PAGE_SIZE;
 public class CreateTable implements QueryBase {
 
     private String tableName;
-    private List<String> columns;
+    private List<InternalColumn> columns;
     private String primaryKey;
     private List<String> indexes;
 
@@ -53,11 +54,11 @@ public class CreateTable implements QueryBase {
         this.tableName = tableName;
     }
 
-    public List<String> getColumns() {
+    public List<InternalColumn> getColumns() {
         return columns;
     }
 
-    public void setColumns(List<String> columns) {
+    public void setColumns(List<InternalColumn> columns) {
         this.columns = columns;
     }
 

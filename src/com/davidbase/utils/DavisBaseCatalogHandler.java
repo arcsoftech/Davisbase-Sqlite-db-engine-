@@ -299,7 +299,7 @@ public class DavisBaseCatalogHandler {
         return true;
     }
 
-    public HashMap<String, DataType> fetchAllTableColumnDataTypes(String databaseName, String tableName){
+    public HashMap<String, DataType> fetchAllTableColumnDataTypes(String tableName){
         return null;
     }
 
