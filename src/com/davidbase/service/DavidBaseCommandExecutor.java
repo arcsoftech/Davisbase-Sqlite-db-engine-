@@ -12,7 +12,7 @@ public class DavidBaseCommandExecutor {
      *  Method for creating new tables
      *  @param query
      */
-    public static QueryResult executeQuery(QueryBase query) {
+    public QueryResult executeQuery(QueryBase query) {
         return query.Execute();
     }
 

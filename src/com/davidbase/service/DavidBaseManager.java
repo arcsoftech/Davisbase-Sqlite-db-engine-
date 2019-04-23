@@ -246,7 +246,7 @@ public class DavidBaseManager {
         try {
             CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
             currentDB=queryObject.databaseName;
-            DavidBaseCommandExecutor.executeQuery(queryObject);
+            commandExecutor.executeQuery(queryObject);
             System.out.println(currentDB);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
