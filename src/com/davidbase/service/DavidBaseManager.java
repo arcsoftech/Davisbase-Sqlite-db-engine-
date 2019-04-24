@@ -10,10 +10,13 @@ import com.davidbase.utils.DavisBaseCatalogHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.List;
+import java.util.Properties;
 
 import static com.davidbase.utils.DavisBaseConstants.*;
 import static java.lang.System.out;
+
+import java.io.FileInputStream;
+
 import com.davidbase.model.QueryType.*;
 
 /**
@@ -55,24 +58,18 @@ public class DavidBaseManager {
 
         /* Display the welcome screen */
         DavisBaseCatalogHandler.initialize();
-        /*Code under developement -- Arihant Chhajed */
-        // Map<String, Integer> metadata = new HashMap<String, Integer>();
-        // Properties properties = new Properties();
- 
-        // try {
-           
-          
-            
-        //         properties.load(new FileInputStream(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties"));
-        //         for (String key : properties.stringPropertyNames()) {
-        //            metadata.put(key, Integer.valueOf(properties.get(key).toString()));
-        //         }
-            
-        //  System.out.println(metadata);
+        /*Code for Metadata */
+        Properties properties = new Properties();
+        try {
+                properties.load(new FileInputStream(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties"));
+                for (String key : properties.stringPropertyNames()) {
+                    DavisBaseFileHandler.metadata.put(key, properties.get(key).toString());
+                 }
+         System.out.println(DavisBaseFileHandler.metadata);
       
-        // } catch (Exception e) {
-        //     System.out.println(e.getStackTrace());
-        // }
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
         splashScreen();
 
         /* Variable to collect user input from the prompt */
