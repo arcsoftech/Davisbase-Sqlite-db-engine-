@@ -7,6 +7,7 @@ import com.davidbase.model.QueryType.QueryResult;
 
 import java.io.File;
 
+@Deprecated
 public class DropDatabase implements QueryBase {
     public String databaseName;
 

@@ -33,25 +33,6 @@ public class DavisBaseFileHandler {
         return DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + databaseName;
     }
 
-    public static boolean createFile(String tableFileName) {
-        /* Code to create a .tbl file to contain table data */
-        try(RandomAccessFile tableFile =
-                    new RandomAccessFile(DEFAULT_DATA_DIRNAME + tableFileName + FILE_EXT, "rw");
-        ) {
-            /*
-             * Create RandomAccessFile tableFile in read-write mode. Note that this doesn't
-             * create the table file in the correct directory structure
-             */
-            tableFile.setLength(PAGE_SIZE);
-            tableFile.seek(0);
-            tableFile.writeInt(63);
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
     public boolean deleteFile(String tableFileName) {
         return true;
     }
