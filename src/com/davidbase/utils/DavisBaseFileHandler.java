@@ -370,7 +370,7 @@ public class DavisBaseFileHandler {
                         for (Object offset : page.getPageheader().getData_cell_offset()) {
                             isMatch = true;
                             leafCell = readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
-                                    (short) offset, page.getNum_cells());
+                                    (short) offset);
                          
 //                            System.out.print(leafCell.getPayload().getColValues());
                     
@@ -446,10 +446,10 @@ public class DavisBaseFileHandler {
         return null;
     }
 
-    public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset,int cells) {
+    public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset) {
         {
             try {
-                if (pageNumber >= 0 && offset >= 0 && pageNumber <= cells) {
+                if (pageNumber >= 0 && offset >= 0 ) {
                     randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
                     short payloadSize = randomAccessFile.readShort();
                     int rowId = randomAccessFile.readInt();
