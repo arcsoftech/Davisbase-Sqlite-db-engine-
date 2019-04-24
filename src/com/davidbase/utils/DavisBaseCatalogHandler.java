@@ -221,29 +221,30 @@ public class DavisBaseCatalogHandler {
     }
 
     public Page<LeafCell> getLastRecordAndPage(String databaseName, String tableName) {
-        try {
-            File file = new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
-            if (file.exists()) {
-                RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-                Page<LeafCell> page = filehandler.getRightmostLeafPage(file);
-                if (page.getPageheader().getNum_cells() > 0) {
-                    randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number())
-                            + Page.getHeaderFixedLength() + ((page.getPageheader().getNum_cells() - 1) * Short.BYTES));
-                    short address = randomAccessFile.readShort();
-                    LeafCell dataCell = filehandler.readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
-                            address);
-                    if (dataCell != null)
-                        page.getCells().add(dataCell);
-                }
-                randomAccessFile.close();
-                return page;
-            } else {
-                throw new DavidBaseError("Table doesn't exist." + databaseName + " " + tableName);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DavidBaseError(e.getMessage());
-        }
+//        try {
+//            File file = new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
+//            if (file.exists()) {
+//                RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+//                Page<LeafCell> page = filehandler.getRightmostLeafPage(file);
+//                if (page.getPageheader().getNum_cells() > 0) {
+//                    randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number())
+//                            + Page.getHeaderFixedLength() + ((page.getPageheader().getNum_cells() - 1) * Short.BYTES));
+//                    short address = randomAccessFile.readShort();
+//                    LeafCell dataCell = filehandler.readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
+//                            address);
+//                    if (dataCell != null)
+//                        page.getCells().add(dataCell);
+//                }
+//                randomAccessFile.close();
+//                return page;
+//            } else {
+//                throw new DavidBaseError("Table doesn't exist." + databaseName + " " + tableName);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new DavidBaseError(e.getMessage());
+//        }
+    	return null;
     }
 
     public boolean createTable(String databaseName, String tableName) {
@@ -280,7 +281,11 @@ public class DavisBaseCatalogHandler {
     }
 
     public boolean tableExists(String databaseName, String tableName) {
-        return false;
+    	
+    	   File file = new File(getDatabasePath(DEFAULT_DATA_DIRNAME) + "/" + tableName + FILE_EXT);
+    	   
+    	   return file.exists();
+    		
     }
 
     public List<String> fetchAllTableColumns(String databaseName, String tableName){
@@ -295,7 +300,7 @@ public class DavisBaseCatalogHandler {
 
           for (LeafCell record : records) {
         	  
-        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
+//        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
         	  
 //              Object object = record.getColumns().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
 //              columnNames.add(((String) object));
@@ -306,11 +311,33 @@ public class DavisBaseCatalogHandler {
     }
 
     public boolean checkNullConstraint(String databaseName, String tableName, HashMap<String, Integer> columnMap) {
+    	
+    	
+    	
+    	
         return true;
     }
 
-    public HashMap<String, DataType> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
-        return null;
+    public HashMap<String, String> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
+    	
+    	List<Condition> conditions = new ArrayList<>();
+//        conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
+        conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
+
+        List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
+        HashMap<String, String> columDataTypeMapping = new HashMap<>();
+
+        for (LeafCell record : records) {
+            Object object = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
+            Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATA_TYPE);
+
+            String columnName = ((String) object);
+            String columnDataType = ((String)dataTypeObject );
+            columDataTypeMapping.put(columnName.toLowerCase(), columnDataType);
+        }
+
+        System.out.print(columDataTypeMapping);
+        return columDataTypeMapping;
     }
 
     public String getTablePrimaryKey(String databaseName, String tableName) {
