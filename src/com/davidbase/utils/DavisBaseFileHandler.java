@@ -124,11 +124,13 @@ public class DavisBaseFileHandler {
 
                 // page already has a root page at pagenumber ;
                 int rootPageIndex = 1;
-                Page<NonLeafCell> currentRoot = readSinglePage(tablefile,rootPageIndex);
                 if(!checkSpaceRequirements(page,leafCell)) {
-                    System.out.println("Splitting page");
 
+                    System.out.println("Splitting page");
+                    Page<NonLeafCell> currentRoot = readSinglePage(tablefile,rootPageIndex);
+                    currentRoot.setNum_cells((byte) (currentRoot.getNum_cells() + 1));
                     splitPage(tablefile,page, currentRoot,leafCell,page.getPage_number());
+
                 }else{
                     // add the leaf cell to the current leaf
                     // Prepare the leaf node
@@ -207,12 +209,11 @@ public class DavisBaseFileHandler {
         NonLeafCell nonLeafCell = new NonLeafCell(page.getPage_number(), leafCell.getHeader().getRow_id());
 
         if(rootPage.getNum_cells()>1) {
-            PageHeader header = page.getPageheader();
-            header.setNum_cells((byte) (page.getPageheader().getNum_cells() + 1));
-            offset = page.getPageheader().getData_offset() - (NonLeafCell.getLinkRecordSize());
+            PageHeader header = rootPage.getPageheader();
+            offset = rootPage.getPageheader().getData_offset() - (NonLeafCell.getLinkRecordSize());
             header.setData_offset((short) offset);
-            int length = page.getPageheader().getData_cell_offset().length + 1;
-            short[] newOffsets = Arrays.copyOf(page.getPageheader().getData_cell_offset(), length);
+            int length = rootPage.getPageheader().getData_cell_offset().length + 1;
+            short[] newOffsets = Arrays.copyOf(rootPage.getPageheader().getData_cell_offset(), length);
             newOffsets[length - 1] = (short) offset;
             header.setData_cell_offset(newOffsets);
             System.out.println("offset " + offset);
