@@ -21,8 +21,16 @@ public class InternalColumn {
 
 	    }
 
-	    public InternalColumn(String name, DataType dataType, boolean isPrimary, boolean isNullable) {
-	        this.name = name;
+		public InternalColumn(String name, DataType dataType, boolean isPrimary, boolean isNullable) {
+			this.name = name;
+			this.dataType = dataType;
+			this.isPrimary = isPrimary;
+			this.isNullable = isNullable;
+		}
+
+	    public InternalColumn(int index, String name, DataType dataType, boolean isPrimary, boolean isNullable) {
+	        this.index = index;
+	    	this.name = name;
 	        this.dataType = dataType;
 	        this.isPrimary = isPrimary;
 	        this.isNullable = isNullable;
