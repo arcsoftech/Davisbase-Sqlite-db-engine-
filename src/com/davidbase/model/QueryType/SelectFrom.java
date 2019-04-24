@@ -14,7 +14,8 @@ import java.util.List;
 public class SelectFrom implements QueryBase {
 
     private String tableName;
-    private List<String> columns;
+    private String column;
+    private Condition condition;
 
     @Override
     public QueryResult Execute() {
@@ -25,5 +26,29 @@ public class SelectFrom implements QueryBase {
             throw new DavidBaseError("Error while creating new table");
         }
         return null;
+    }
+
+    public void setColumn(String column){
+        this.column=column;
+    }
+
+    public void setCondition(Condition condition){
+        this.condition=condition;
+    }
+
+    public void setTableName(String tableName){
+        this.tableName=tableName;
+    }
+
+    public String getColumn(){
+        return column;
+    }
+
+    public Condition getCondition(){
+        return condition;
+    }
+    
+    public String getTableName(){
+        return tableName;
     }
 }

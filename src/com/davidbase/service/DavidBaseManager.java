@@ -320,8 +320,8 @@ public class DavidBaseManager {
     {
     	System.out.println("STUB: This is the selectFrom method");
     	try {
-            boolean isTrue = commandValidator.isValidSelectFrom(selectFromString);
-            //System.out.println(queryObject.databaseName);
+            SelectFrom selectFrom_object = commandValidator.isValidSelectFrom(selectFromString);
+            System.out.println(selectFrom_object.getColumn());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }

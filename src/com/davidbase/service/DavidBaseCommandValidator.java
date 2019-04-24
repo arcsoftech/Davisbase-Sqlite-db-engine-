@@ -231,7 +231,7 @@ public class DavidBaseCommandValidator {
     }
 
 
-    public boolean isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
+    public SelectFrom isValidSelectFrom(String userCommand)throws DavidBaseValidationException{
     	 ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
         int size=commandTokens.size();
          //check if the second key word is "table"
@@ -273,25 +273,27 @@ public class DavidBaseCommandValidator {
         String condition_string = rest.substring(where_index + "where".length()).trim();
 
         //parse condition
-        Condition condition=parse_condition(condition_string, tableName);
+        List column_cndition=parse_condition(condition_string, tableName);
+        Condition condition= (Condition)column_cndition.get(0);
+        String column=(String)column_cndition.get(1);
 
-
-        String str="=";
-        short cnd=0;
-        switch(str){
-            case "=": cnd = Condition.EQUALS;break;
-            case ">" : cnd = Condition.GREATER_THAN;break;
-            case "<" : cnd = Condition.LESS_THAN;break;
-            case ">=" : cnd = Condition.GREATER_THAN_EQUALS;break;
-            case "<=" : cnd = Condition.LESS_THAN_EQUALS;break;
-        }
-
-
-
-        return true;
+        SelectFrom select_object= new SelectFrom();
+        select_object.setTableName(tableName);
+        select_object.setColumn(column);
+        select_object.setCondition(condition);
+        return select_object;
+        // String str="=";
+        // short cnd=0;
+        // switch(str){
+        //     case "=": cnd = Condition.EQUALS;break;
+        //     case ">" : cnd = Condition.GREATER_THAN;break;
+        //     case "<" : cnd = Condition.LESS_THAN;break;
+        //     case ">=" : cnd = Condition.GREATER_THAN_EQUALS;break;
+        //     case "<=" : cnd = Condition.LESS_THAN_EQUALS;break;
+        // }
     }
 
-    public Condition parse_condition(String condition_String, String tableName) throws DavidBaseValidationException{
+    public List parse_condition(String condition_String, String tableName) throws DavidBaseValidationException{
         short cnd=-1;
         String op="";
         
@@ -342,33 +344,32 @@ public class DavidBaseCommandValidator {
         }
 
         column = strings[0].trim();
-        value=strings[2].trim();
+        value=strings[1].trim();
         //dataType=fetchAllTableColumnDataTypes(tableName);
-        condition = Condition.CreateCondition(0,column, null, (Object)value);
-
-        switch (cnd){
-            case 0:
-                condition = parse(conditionString, operator, "=");
-                break;
-            case 1:
-                condition = parse(conditionString, operator, "<");
-                break;
-            case 2:
-                condition = parse(conditionString, operator, ">");
-                break;          
-            case 3:
-                condition = parse(conditionString, operator, "<=");
-                break;
-            case 4:
-                condition = getConditionInternal(conditionString, operator, ">=");
-                break;
+        condition = Condition.CreateCondition(0,cnd, DataType.getTypeFromText("INT"), (Object)value);
+        List column_condition= new ArrayList();
+        column_condition.add(condition);
+        column_condition.add(column);
+        return column_condition;
+        // switch (cnd){
+        //     case 0:
+        //         condition = parse(conditionString, operator, "=");
+        //         break;
+        //     case 1:
+        //         condition = parse(conditionString, operator, "<");
+        //         break;
+        //     case 2:
+        //         condition = parse(conditionString, operator, ">");
+        //         break;          
+        //     case 3:
+        //         condition = parse(conditionString, operator, "<=");
+        //         break;
+        //     case 4:
+        //         condition = getConditionInternal(conditionString, operator, ">=");
+        //         break;
             
-        }
+        //}
 
-
-
-
-        return null;
 
         
     }
