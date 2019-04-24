@@ -284,8 +284,26 @@ public class DavisBaseCatalogHandler {
         return false;
     }
 
-    public List<String> fetchAllTableColumns(String databaseName, String tableName) {
-        return null;
+    public List<String> fetchAllTableColumns(String databaseName, String tableName){
+    	
+  	  
+    	List<String> columnNames = new ArrayList<>();
+          List<Condition> conditions = new ArrayList<>();
+//          conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, Condition.EQUALS, DataType.TEXT ,databaseName));
+          conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
+
+          List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions,null, false);
+
+          for (LeafCell record : records) {
+        	  
+        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
+        	  
+//              Object object = record.getColumns().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
+//              columnNames.add(((String) object));
+          }
+
+          return columnNames;
+   
     }
 
     public boolean checkNullConstraint(String databaseName, String tableName, HashMap<String, Integer> columnMap) {
@@ -311,5 +329,6 @@ public class DavisBaseCatalogHandler {
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
         ctlg.createTable("db1", "test2");
+        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
     }
 }

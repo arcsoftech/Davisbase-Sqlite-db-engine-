@@ -26,10 +26,10 @@ public class Condition {
         return condition;
     }
 
-    public static Condition CreateCondition(int index, short conditionType, DataType valType, Object value) {
-        Condition condition = new Condition(index, conditionType, valType, value);
-        return condition;
-    }
+//    public static Condition CreateCondition(int index, short conditionType, DataType valType, Object value) {
+//        Condition condition = new Condition(index, conditionType, valType, value);
+//        return condition;
+//    }
 
     public Condition() {}
 

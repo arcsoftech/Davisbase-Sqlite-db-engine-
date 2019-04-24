@@ -301,24 +301,42 @@ public class DavisBaseFileHandler {
                     short condition;
                     Object conditionValue;
                     DataType conditionValueType;
-                    while (page != null) {
+                    
+//                    System.out.print(page.getNum_cells());
+                    int count = 0;
+                    while (page != null && count < page.getNum_cells()) {
+                    	count = count + 1;
                         for (Object offset : page.getPageheader().getData_cell_offset()) {
                             isMatch = true;
                             leafCell = readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
-                                    (short) offset);
+                                    (short) offset, page.getNum_cells());
+                         
+//                            System.out.print(leafCell.getPayload().getColValues());
+                    
                             for (int i = 0; i < conditionList.size(); i++) {
                                 isMatch = false;
-                                columnIndex = conditionList.get(i).getIndex();
-                                conditionValue = conditionList.get(i).getValue();
-                                condition = conditionList.get(i).getConditionType();
-                                conditionValueType = conditionList.get(i).getValType();
+                                columnIndex = conditionList.get(i).getIndex();				// 1
+                                conditionValue = conditionList.get(i).getValue();			//davisbase_tables
+                                condition = conditionList.get(i).getConditionType();		// 0
+                                conditionValueType = conditionList.get(i).getValType();		// TEXT
+                                
+                         
+//                                System.out.print(leafCell.getPayload().getColValues());	// 2
+                                
+                                
+//                              System.out.print(columnIndex + " " + conditionValue + " " + condition + " " + conditionValueType + "\n" );
+                              
                                 if (leafCell != null && leafCell.getPayload().getColValues().size() > columnIndex) {
+                                	
                                     Object colValue = leafCell.getPayload().getColValues().get(columnIndex);
                                     DataType colType = DataType
                                             .getTypeFromSerialCode(leafCell.getPayload().getData_type()[columnIndex]);
                                     try {
-                                        isMatch = compare(colValue, conditionValue, condition, colType,
+//                                        System.out.print(colValue + " " + conditionValue + " " + condition + " " + colType + " " +conditionValueType +"\n" );
+
+                                        isMatch = compare((String)colValue,(String)conditionValue, condition, colType,
                                                 conditionValueType);
+//                                        System.out.print(isMatch);
                                     } catch (Exception e) {
                                         randomAccessFile.close();
                                         throw new DavidBaseError("Error while executing query.");
@@ -352,6 +370,9 @@ public class DavisBaseFileHandler {
                         page = readSinglePage(randomAccessFile, page.getPageheader().getNext_page_pointer());
                     }
                     randomAccessFile.close();
+                    
+//                    System.out.print(matchingLeafCells);
+              
                     return matchingLeafCells;
                 }
             } else {
@@ -364,10 +385,10 @@ public class DavisBaseFileHandler {
         return null;
     }
 
-    public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset) {
+    public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset,int cells) {
         {
             try {
-                if (pageNumber >= 0 && offset >= 0) {
+                if (pageNumber >= 0 && offset >= 0 && pageNumber <= cells) {
                     randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
                     short payloadSize = randomAccessFile.readShort();
                     int rowId = randomAccessFile.readInt();
@@ -435,17 +456,14 @@ public class DavisBaseFileHandler {
                             break;
 
                         case TEXT:
-                            if (serialTypeCodes[i] > DataType.TEXT.getSerialCode()) {
-                                byte length = (byte) (serialTypeCodes[i] - DataType.TEXT.getSerialCode());
-                                char[] text = new char[length];
-                                for (byte k = 0; k < length; k++) {
-                                    text[k] = (char) randomAccessFile.readByte();
-                                }
-                                object = new String(text);
-                            } else
-                                object = null;
+                        	object = "";
+                            char[] text = new char[serialTypeCodes[i] - 12 ];
+                            for (byte k = 0; k < (serialTypeCodes[i] - 12); k++) {
+                                text[k] = (char) randomAccessFile.readByte();
+                            }
+                            object = new String(text);
+                          
                             break;
-
                         }
 
                         values.add(object);
@@ -455,11 +473,14 @@ public class DavisBaseFileHandler {
                     LeafCell leafCell = new LeafCell(cellheader, payload);
                     leafCell.setPageNumber(pageNumber);
                     leafCell.setOffset(offset);
+                    
+//                    System.out.print(values);
+                    
                     return leafCell;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new DavidBaseError("Error while executing query.");
+                throw new DavidBaseError("Error while executing query Here.");
             }
             return null;
         }
@@ -526,7 +547,8 @@ public class DavisBaseFileHandler {
             case DATETIME:
                 break;
             case TEXT:
-                break;
+            	 return compare((String)value1,(String) value2, condition, conditionType);
+             
             }
         return false;
     }
@@ -606,6 +628,20 @@ public class DavisBaseFileHandler {
         }
         return false;
     }
+    
+    private boolean compare(String value1, String value2, short condition, DataType conditionType) {
+        switch (conditionType) {
+        case TEXT:
+            return DavisBaseUtil.conditionCompare(value1,  value2, condition);
+
+        }
+        return false;
+    }
+    
+    
+    
+    
+    
 
     public boolean writeFirstPageHeader(RandomAccessFile randomAccessFile, Page page) {
         try {
