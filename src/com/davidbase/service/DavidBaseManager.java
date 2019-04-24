@@ -5,6 +5,7 @@ import com.davidbase.model.DavidBaseValidationException;
 import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.utils.*;
+import com.davidbase.utils.DavisBaseCatalogHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -338,7 +339,11 @@ public class DavidBaseManager {
     	System.out.println("STUB: This is the selectFrom method");
     	try {
             SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);
-            QueryResult result = commandExecutor.executeQuery(queryObject);
+            System.out.println(queryObject.getColumns());
+            System.out.println(queryObject.getCondition().getConditionType());
+
+
+            //QueryResult result = commandExecutor.executeQuery(queryObject);
             //System.out.println("Rows affected: " + result.getRowsAffected());
             //List columns=result.getColumns();
             /*for(int i=0;i<columns.size();i++){

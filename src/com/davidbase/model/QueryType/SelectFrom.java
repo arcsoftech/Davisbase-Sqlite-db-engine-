@@ -14,7 +14,33 @@ import java.util.List;
 public class SelectFrom implements QueryBase {
 
     private String tableName;
-    private List<String> columns;
+    private String columns;
+    private Condition condition;
+
+	public String getTableName() {
+		return this.tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public String getColumns() {
+		return this.columns;
+	}
+
+	public void setColumns(String columns) {
+		this.columns = columns;
+	}
+
+	public Condition getCondition() {
+		return this.condition;
+	}
+
+	public void setCondition(Condition condition) {
+		this.condition = condition;
+	}
+
 
     @Override
     public QueryResult execute() {
