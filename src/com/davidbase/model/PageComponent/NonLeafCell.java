@@ -31,4 +31,8 @@ public class NonLeafCell implements Cell{
     public void setKey_delim(int key_delim) {
         this.key_delim = key_delim;
     }
+
+    public static short getLinkRecordSize(){
+        return 2*Integer.BYTES;
+    }
 }

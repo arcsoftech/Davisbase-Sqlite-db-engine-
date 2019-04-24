@@ -1,5 +1,7 @@
 package com.davidbase.model.PageComponent;
 
+import static com.davidbase.utils.DavisBaseConstants.PAGE_SIZE;
+
 /**
  * This class represents a Page Header
  * All DavisBase table pages have an 8-byte page header

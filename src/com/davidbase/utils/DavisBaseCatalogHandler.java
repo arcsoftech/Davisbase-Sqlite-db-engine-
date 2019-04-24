@@ -69,7 +69,7 @@ public class DavisBaseCatalogHandler {
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("column_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("data_type", DataType.TEXT, false, false));
-//                columns.add(new InternalColumn("ordinal_position", DataType.TINYINT, false, false));
+                columns.add(new InternalColumn("ordinal_position", DataType.TINYINT, false, false));
                 columns.add(new InternalColumn("primary_key", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("is_nullable", DataType.TEXT, false, false));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
