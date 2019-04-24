@@ -4,6 +4,11 @@ import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.PageComponent.*;
 import com.davidbase.model.QueryType.Condition;
 
+import java.util.Properties;
+import java.util.Map;
+import java.util.HashMap;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +23,7 @@ import static com.davidbase.utils.DavisBaseConstants.*;
  * File utility to read/write data from .tbl files
  */
 public class DavisBaseFileHandler {
-
+    public static Map<String, String> metadata = new HashMap<>();
     public static boolean databaseExists(String databaseName) {
         File databaseDir = new File(getDatabasePath(databaseName));
         return databaseDir.exists();
@@ -26,24 +31,6 @@ public class DavisBaseFileHandler {
 
     public static String getDatabasePath(String databaseName) {
         return DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + databaseName;
-    }
-
-    public static boolean createFile(String tableFileName) {
-        /* Code to create a .tbl file to contain table data */
-        try {
-            /*
-             * Create RandomAccessFile tableFile in read-write mode. Note that this doesn't
-             * create the table file in the correct directory structure
-             */
-            RandomAccessFile tableFile = new RandomAccessFile(DEFAULT_DATA_DIRNAME + tableFileName + FILE_EXT, "rw");
-            tableFile.setLength(PAGE_SIZE);
-            tableFile.seek(0);
-            tableFile.writeInt(63);
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
     }
 
     public boolean deleteFile(String tableFileName) {
@@ -58,10 +45,9 @@ public class DavisBaseFileHandler {
         try {
             RandomAccessFile tablefile = new RandomAccessFile(
                     new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT), "rw");
-            int pageNumber = 0;
             // iterate over each record to be inserted
             int pageCount = (int) (tablefile.length() / PAGE_SIZE);
-            Page page = findPage(tablefile, leafCell.getHeader().getRow_id(), pageNumber);
+            Page page = findPage(tablefile, leafCell.getHeader().getRow_id(), 0);
 
             switch (pageCount) {
             case 1: // this is the first page to be inserted
@@ -71,7 +57,7 @@ public class DavisBaseFileHandler {
 
                     //3.  create root page (non leaf)
                     Page<NonLeafCell> rootPage = new Page();
-                    rootPage.setPage_number(pageNumber+1);
+                    rootPage.setPage_number(1);
                     rootPage.setPage_type(PageType.table_node);
                     rootPage.setNum_cells((byte) 1);
                     int offset = ((short)((long)(rootPage.getPage_number()+1) * PAGE_SIZE)) - (NonLeafCell.getLinkRecordSize());
@@ -79,26 +65,30 @@ public class DavisBaseFileHandler {
                     System.out.println("offset " + offset);
                     rootPage.setData_cell_offset((new short[]{(short) offset}));
 
-                    splitPage(tablefile,page, rootPage,leafCell,pageNumber+1);
+                    splitPage(tablefile,page, rootPage,leafCell,1);
                     
-                    swapPage(page,rootPage);
+                    storeRootInformation(rootPage,tableName);
+
 
                 }else {
                     // Prepare the leaf node
                     Page<LeafCell> dataNode = new Page<LeafCell>();
-                    PageHeader header = new PageHeader(0);
+                    PageHeader header;
                     List<LeafCell> dataCells = new ArrayList<>();
 
                     if (page.getPageheader().getNum_cells() <= 0) {
+                        header = new PageHeader(0);;
                         header.setPage_number(0);
-
                         header.setNum_cells((byte) 1);
                         int offset = ((short) PAGE_SIZE) - (leafCell.getPayload().getPayloadSize() + CellHeader.getSize());
                         header.setData_offset((short) offset);
                         System.out.println("offset " + offset);
                         header.setData_cell_offset((new short[]{(short) offset}));
+                        header.setPage_type(PageType.table_leaf);
+                        header.setNext_page_pointer(RIGHT_MOST_LEAF);
 
                     } else {
+                        header = page.getPageheader();
                         header.setNum_cells((byte) (page.getPageheader().getNum_cells() + 1));
                         int offset = page.getPageheader().getData_offset() - (leafCell.getPayload().getPayloadSize()
                                 + CellHeader.getSize());
@@ -110,24 +100,64 @@ public class DavisBaseFileHandler {
                         System.out.println("offset " + offset);
                     }
 
-                    header.setPage_type(PageType.table_leaf);
-                    header.setNext_page_pointer(RIGHT_MOST_LEAF);
-
                     dataNode.setPageheader(header);
                     dataCells.add(leafCell);
                     dataNode.setCells(dataCells);
-
+                    storeRootInformation(page,tableName);
                     writeLeafCell(tablefile, dataCells, header.getData_offset());
-                    writePageHeader(tablefile, dataNode, pageNumber);
+                    writePageHeader(tablefile, dataNode, 0);
                 }
                 break;
             default: // for all other cases.
 
-                // page already has a root page at pagenumber =0;
+                // page already has a root page at pagenumber ;
+                int rootPageIndex = 1;
+                if(!checkSpaceRequirements(page,leafCell)) {
 
-                // cases:
-                // 1. insert to existing leaf
-                // 2. if leaf is full, split the node and add one internal plus 2 leaf nodes.
+                    System.out.println("Splitting page");
+                    Page<NonLeafCell> currentRoot = readSinglePage(tablefile,rootPageIndex);
+                    currentRoot.setNum_cells((byte) (currentRoot.getNum_cells() + 1));
+                    splitPage(tablefile,page, currentRoot,leafCell,page.getPage_number());
+
+                }else{
+                    // add the leaf cell to the current leaf
+                    // Prepare the leaf node
+
+                    List<LeafCell> dataCells = new ArrayList<>();
+                    PageHeader header;
+                    if (page.getPageheader().getNum_cells() <= 0) {
+                        header = new PageHeader(0);
+                        header.setPage_number(0);
+
+                        header.setNum_cells((byte) 1);
+                        int offset = ((short) PAGE_SIZE) - (leafCell.getPayload().getPayloadSize() + CellHeader.getSize());
+                        header.setData_offset((short) offset);
+                        System.out.println("offset " + offset);
+                        header.setData_cell_offset((new short[]{(short) offset}));
+                        header.setPage_type(PageType.table_leaf);
+                        header.setNext_page_pointer(RIGHT_MOST_LEAF);
+
+                    } else {
+                        header = page.getPageheader();
+                        header.setNum_cells((byte) (page.getPageheader().getNum_cells() + 1));
+                        int offset = page.getPageheader().getData_offset() - (leafCell.getPayload().getPayloadSize()
+                                + CellHeader.getSize());
+                        header.setData_offset((short) offset);
+                        int length = page.getPageheader().getData_cell_offset().length + 1;
+                        short[] newOffsets = Arrays.copyOf(page.getPageheader().getData_cell_offset(), length);
+                        newOffsets[length - 1] = (short) offset;
+                        header.setData_cell_offset(newOffsets);
+                        System.out.println("offset " + offset);
+                    }
+
+                    page.setPageheader(header);
+                    dataCells.add(leafCell);
+                    page.setCells(dataCells);
+
+                    writeLeafCell(tablefile, dataCells, header.getData_offset());
+                    writePageHeader(tablefile, page, page.getPage_number());
+
+                }
                 break;
             }
 
@@ -141,7 +171,27 @@ public class DavisBaseFileHandler {
         return true;
     }
 
-    private void swapPage(Page page, Page<NonLeafCell> rootPage) {
+    private void storeRootInformation(Page rootPage, String tableName) {
+        /*Code to store table root page meta data */
+        Map<String, String> metadata = new HashMap<>();
+        Properties properties = new Properties();
+ 
+        try {
+            File f = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties");
+            if(f.exists())
+            {
+                properties.load(new FileInputStream(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties"));
+                for (String key : properties.stringPropertyNames()) {
+                    DavisBaseFileHandler.metadata.put(key, properties.get(key).toString());
+                }
+            }
+            DavisBaseFileHandler.metadata.put(tableName,String.valueOf(rootPage.getPage_number()));
+            properties.putAll(DavisBaseFileHandler.metadata);
+            properties.store(new FileOutputStream(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties"), null);
+      
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void splitPage(RandomAccessFile tableFile,Page page, Page<NonLeafCell> rootPage, LeafCell leafCell, int pageNumber) throws IOException {
@@ -164,7 +214,19 @@ public class DavisBaseFileHandler {
 
         rootPage.setNext_page_pointer(rightLeafPage.getPage_number());
         List<NonLeafCell> nonLeafCells = new ArrayList<>();
-        NonLeafCell nonLeafCell = new NonLeafCell(page.getPage_number(),leafCell.getHeader().getRow_id());
+        NonLeafCell nonLeafCell = new NonLeafCell(page.getPage_number(), leafCell.getHeader().getRow_id());
+
+        if(rootPage.getNum_cells()>1) {
+            PageHeader header = rootPage.getPageheader();
+            offset = rootPage.getPageheader().getData_offset() - (NonLeafCell.getLinkRecordSize());
+            header.setData_offset((short) offset);
+            int length = rootPage.getPageheader().getData_cell_offset().length + 1;
+            short[] newOffsets = Arrays.copyOf(rootPage.getPageheader().getData_cell_offset(), length);
+            newOffsets[length - 1] = (short) offset;
+            header.setData_cell_offset(newOffsets);
+            System.out.println("offset " + offset);
+            rootPage.setPageheader(header);
+        }
         nonLeafCells.add(nonLeafCell);
 
         writeNonLeafCell(tableFile,nonLeafCells,rootPage.getData_offset());
@@ -181,8 +243,7 @@ public class DavisBaseFileHandler {
             && nextPage.getNext_page_pointer()==RIGHT_MOST_LEAF)
             return nextPage;
         pageNumber = pageNumber + 1; // FIXME
-        findPage(tableFile, rowID, pageNumber);
-        return null;
+        return findPage(tableFile, rowID, pageNumber);
     }
 
     public static boolean deleteFromFile(String tableFileName) {
@@ -662,8 +723,8 @@ public class DavisBaseFileHandler {
     private boolean checkSpaceRequirements(Page page, LeafCell leafCell) {
         if (page != null && leafCell != null) {
             short endingAddress = page.getPageheader().getData_offset();
-            short startingAddress = (short) (Page.getHeaderFixedLength()
-                    + (page.getPageheader().getData_cell_offset().length * Short.BYTES));
+            short startingAddress = (short)((page.getPage_number()*PAGE_SIZE)+ (Page.getHeaderFixedLength()
+                    + (page.getPageheader().getData_cell_offset().length * Short.BYTES)));
             return (leafCell.getHeader().getPayload_size() + CellHeader.getSize() + Short.BYTES) <= (endingAddress
                     - startingAddress);
         }

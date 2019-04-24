@@ -6,11 +6,8 @@ import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 
 import java.io.File;
-import java.util.ArrayList;
 
-/**
- * Created by parag on 4/12/2017.
- */
+@Deprecated
 public class DropDatabase implements QueryBase {
     public String databaseName;
 

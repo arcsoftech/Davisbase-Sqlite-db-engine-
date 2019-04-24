@@ -11,6 +11,7 @@ import java.io.File;
  * Class represents a Create database query
  */
 
+@Deprecated
 public class CreateDatabase implements QueryBase {
     public String databaseName;
 

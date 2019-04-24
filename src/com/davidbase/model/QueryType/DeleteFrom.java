@@ -1,7 +1,6 @@
 package com.davidbase.model.QueryType;
 
-
-public class ShowTable implements QueryBase {
+public class DeleteFrom implements QueryBase {
     @Override
     public QueryResult execute() {
         return null;

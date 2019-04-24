@@ -12,8 +12,7 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-import static com.davidbase.utils.DavisBaseConstants.FILE_EXT;
-import static com.davidbase.utils.DavisBaseConstants.PAGE_SIZE;
+import static com.davidbase.utils.DavisBaseConstants.*;
 
 /**
  * Class to read/write the Database catalog files. Since the Catalog files are
@@ -324,6 +323,15 @@ public class DavisBaseCatalogHandler {
 
     public boolean checkIfValueForPrimaryKeyExists(String databaseName, String tableName, int value) {
         return true;
+    }
+
+    public int getLastRowId(String databasename, String tableName) {
+        //Get the Last record in last leaf
+        Page<LeafCell> lastPage = getLastRecordAndPage(databasename,tableName);
+        if(lastPage!=null && lastPage.getCells()!=null){
+            return lastPage.getCells().get(0).getHeader().getRow_id();
+        }
+        throw new DavidBaseError("table does not exist, no row id found");
     }
 
     public static void main(String[] args) {
