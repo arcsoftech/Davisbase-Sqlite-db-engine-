@@ -55,6 +55,24 @@ public class DavidBaseManager {
 
         /* Display the welcome screen */
         DavisBaseCatalogHandler.initialize();
+        /*Code under developement -- Arihant Chhajed */
+        // Map<String, Integer> metadata = new HashMap<String, Integer>();
+        // Properties properties = new Properties();
+ 
+        // try {
+           
+          
+            
+        //         properties.load(new FileInputStream(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties"));
+        //         for (String key : properties.stringPropertyNames()) {
+        //            metadata.put(key, Integer.valueOf(properties.get(key).toString()));
+        //         }
+            
+        //  System.out.println(metadata);
+      
+        // } catch (Exception e) {
+        //     System.out.println(e.getStackTrace());
+        // }
         splashScreen();
 
         /* Variable to collect user input from the prompt */

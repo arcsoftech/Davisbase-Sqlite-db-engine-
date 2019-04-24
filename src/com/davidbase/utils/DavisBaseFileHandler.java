@@ -4,6 +4,12 @@ import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.PageComponent.*;
 import com.davidbase.model.QueryType.Condition;
 
+/*Library required for developement. -- Arihant Chhajed */
+// import java.util.Properties;
+// import java.util.Map;
+// import java.util.HashMap;
+// import java.io.FileOutputStream;
+// import java.io.FileInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -80,7 +86,8 @@ public class DavisBaseFileHandler {
 
                     splitPage(tablefile,page, rootPage,leafCell,1);
                     
-                    swapPage(page,rootPage);
+                    storeRootInformation(rootPage,tableName);
+
 
                 }else {
                     // Prepare the leaf node
@@ -183,7 +190,29 @@ public class DavisBaseFileHandler {
         return true;
     }
 
-    private void swapPage(Page page, Page<NonLeafCell> rootPage) {
+    private void storeRootInformation(Page<NonLeafCell> rootPage, String tableName) {
+       /*Code under developement -- Arihant Chhajed */
+        // Map<String, String> metadata = new HashMap<>();
+        // Properties properties = new Properties();
+ 
+        // try {
+        //     File f = new File(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties");
+        //     if(f.exists())
+        //     {
+        //         properties.load(new FileInputStream(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties"));
+        //         for (String key : properties.stringPropertyNames()) {
+        //            metadata.put(key, properties.get(key).toString());
+        //         }
+        //     }
+        //     else{
+        //         metadata.put(tableName,String.valueOf(rootPage.getPage_number()));
+        //         properties.putAll(metadata);
+        //         properties.store(new FileOutputStream(DavisBaseConstants.DEFAULT_DATA_DIRNAME + "/" + DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME + "/"+"MetaData.properties"), null);
+        //     }
+      
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
     }
 
     private void splitPage(RandomAccessFile tableFile,Page page, Page<NonLeafCell> rootPage, LeafCell leafCell, int pageNumber) throws IOException {
