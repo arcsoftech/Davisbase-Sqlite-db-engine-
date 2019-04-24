@@ -282,7 +282,9 @@ public class DavisBaseCatalogHandler {
 
     public boolean tableExists(String databaseName, String tableName) {
     	
-    	   File file = new File(getDatabasePath(DEFAULT_DATA_DIRNAME) + "/" + tableName + FILE_EXT);
+    	   File file = new File(getDatabasePath(databaseName)  + "/" + tableName + FILE_EXT);
+    	   
+//    	   System.out.print(file.getAbsoluteFile());
     	   
     	   return file.exists();
     		
@@ -343,6 +345,7 @@ public class DavisBaseCatalogHandler {
     public String getTablePrimaryKey(String databaseName, String tableName) {
     	
     	
+    	
         return null;
     }
 
@@ -351,7 +354,10 @@ public class DavisBaseCatalogHandler {
     }
 
     public boolean checkIfValueForPrimaryKeyExists(String databaseName, String tableName, int value) {
-        return true;
+        
+    	
+    	
+    	return true;
     }
 
     public int getLastRowId(String databasename, String tableName) {
@@ -367,6 +373,7 @@ public class DavisBaseCatalogHandler {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        ctlg.createTable("db1", "test2");
 //        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
-        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
+         System.out.print(ctlg.tableExists("data", "test2"));
+//        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
     }
 }
