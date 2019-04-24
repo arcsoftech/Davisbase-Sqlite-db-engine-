@@ -123,6 +123,7 @@ public class DavisBaseFileHandler {
                 break;
             default: // for all other cases.
 
+                // page already has a root page at pagenumber =0;
 
                 // cases:
                 // 1. insert to existing leaf
@@ -161,7 +162,6 @@ public class DavisBaseFileHandler {
         writeLeafCell(tableFile, dataCells, rightLeafPage.getData_offset());
         writePageHeader(tableFile, rightLeafPage, rightLeafPage.getPage_number());
 
-
         rootPage.setNext_page_pointer(rightLeafPage.getPage_number());
         List<NonLeafCell> nonLeafCells = new ArrayList<>();
         NonLeafCell nonLeafCell = new NonLeafCell(page.getPage_number(),leafCell.getHeader().getRow_id());
@@ -170,7 +170,6 @@ public class DavisBaseFileHandler {
         writeNonLeafCell(tableFile,nonLeafCells,rootPage.getData_offset());
         writePageHeader(tableFile,rootPage,rootPage.getPage_number());
 
-
         //update left leaf right point
         page.setNext_page_pointer(rightLeafPage.getPage_number());
         writePageHeader(tableFile,page,page.getPage_number());
@@ -178,7 +177,8 @@ public class DavisBaseFileHandler {
 
     private static Page findPage(RandomAccessFile tableFile, int rowID, int pageNumber) {
         Page nextPage = readSinglePage(tableFile, pageNumber);
-        if (nextPage.getPageheader().getPage_type() == PageType.table_leaf)
+        if (nextPage.getPageheader().getPage_type() == PageType.table_leaf
+            && nextPage.getNext_page_pointer()==RIGHT_MOST_LEAF)
             return nextPage;
         pageNumber = pageNumber + 1; // FIXME
         findPage(tableFile, rowID, pageNumber);
@@ -378,7 +378,7 @@ public class DavisBaseFileHandler {
                         serialTypeCodes[i] = randomAccessFile.readByte();
                     }
                     List<Object> values = new ArrayList<>();
-                    Object object;
+                    Object object=null;
                     for (byte i = 0; i < numberOfColumns; i++) {
                         switch (DataType.getTypeFromSerialCode(serialTypeCodes[i])) {
                         // case DataType_TinyInt.nullSerialCode is overridden with DataType_Text
@@ -435,10 +435,6 @@ public class DavisBaseFileHandler {
                             break;
 
                         case TEXT:
-                            object = "";
-                            break;
-
-                        default:
                             if (serialTypeCodes[i] > DataType.TEXT.getSerialCode()) {
                                 byte length = (byte) (serialTypeCodes[i] - DataType.TEXT.getSerialCode());
                                 char[] text = new char[length];
@@ -449,7 +445,9 @@ public class DavisBaseFileHandler {
                             } else
                                 object = null;
                             break;
+
                         }
+
                         values.add(object);
                     }
                     CellPayload payload = new CellPayload(numberOfColumns, serialTypeCodes);
@@ -460,6 +458,7 @@ public class DavisBaseFileHandler {
                     return leafCell;
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new DavidBaseError("Error while executing query.");
             }
             return null;

@@ -90,8 +90,9 @@ public class CellPayload {
     public void fillSizeArray() {
         for (int i = 0; i < colTypes.size(); i++) {
             if (colTypes.get(i) == DataType.TEXT) {
-                this.data_type[i] = (byte) colTypes.get(i).getSerialCode();
-                this.dataSize += (colValues.get(i) != null ? String.valueOf(colValues.get(i)).length() : 0);
+                int textLen = (colValues.get(i) != null ? String.valueOf(colValues.get(i)).length() : 0);
+                this.data_type[i] = (byte) (colTypes.get(i).getSerialCode()+textLen);
+                this.dataSize += textLen;
             } else {
                 this.data_type[i] = colTypes.get(i).getSerialCode();
                 this.dataSize += this.colTypes.get(i).getSize();

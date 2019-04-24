@@ -60,9 +60,8 @@ public enum DataType {
             case 0x09: return DOUBLE;
             case 0x0A: return DATETIME;
             case 0x0B: return DATE;
-            case 0x0C: return TEXT;
+            default: return TEXT;
         }
-        throw new DavidBaseValidationException("Unrecognized serial code");
     }
 
     public static DataType getTypeFromText(String typeText) throws DavidBaseValidationException {
