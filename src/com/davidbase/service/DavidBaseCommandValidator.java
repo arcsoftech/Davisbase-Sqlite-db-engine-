@@ -20,7 +20,7 @@ import com.davidbase.model.QueryType.SelectFrom;
 
 
 import com.davidbase.utils.DavisBaseCatalogHandler;
- 
+
 /**
  * This class validates the user commands to avoid errors while execution.
  */
@@ -43,7 +43,7 @@ public class DavidBaseCommandValidator {
     public CreateTable isValidCreateTable(String userCommand, String current_DB) throws DavidBaseValidationException {
         //parse command
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
-        
+
         //check if the second key word is "table"
         if(commandTokens.get(1).compareToIgnoreCase("table")!=0){
             throw new DavidBaseValidationException("You are not creating table, command is not recognizable");
@@ -51,8 +51,8 @@ public class DavidBaseCommandValidator {
         //check if the table has been existed. do not know if need to check column?
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         boolean isExist=catalog_handler.tableExists(current_DB, commandTokens.get(2)); //??figure out database name
-        
-        
+
+
         //parse and put all columns to a list
         List<InternalColumn> columns_list=new ArrayList<InternalColumn>();
         //table's primary key
@@ -85,7 +85,7 @@ public class DavidBaseCommandValidator {
         //boolean isExist=false;
         if (isExist!=false){
             throw new DavidBaseValidationException("The table has been already Existed");
-        }  
+        }
         else{
             CreateTable ctable = new CreateTable();
             ctable.setTableName(commandTokens.get(2));
@@ -96,7 +96,7 @@ public class DavidBaseCommandValidator {
             //  }
             return ctable;
         }
-        
+
     }
 
     public CreateDatabase isValidDatabase(String userCommand)throws DavidBaseValidationException{
@@ -109,12 +109,12 @@ public class DavidBaseCommandValidator {
         boolean isExist=catalog_handler.databaseExists(commandTokens.get(2)); //??figure out database name
         if (isExist!=false){
             throw new DavidBaseValidationException("The database has been already Existed");
-        }  
+        }
         else{
             CreateDatabase db=new CreateDatabase(commandTokens.get(2));
             return db;
         }
-        
+
     }
 
     public boolean isValidShowDB(String userCommand)throws DavidBaseValidationException{
@@ -124,8 +124,8 @@ public class DavidBaseCommandValidator {
         }
 
         //ShowTable showTable=new ShowTable();
-        return true;        
-        
+        return true;
+
     }
 
     public boolean isValidShowTable(String userCommand)throws DavidBaseValidationException{
@@ -134,8 +134,8 @@ public class DavidBaseCommandValidator {
             throw new DavidBaseValidationException("Failed to show tables");
         }
 
-        return true;        
-        
+        return true;
+
     }
 
     public DropDatabase isValidDropDatabase(String userCommand)throws DavidBaseValidationException{
@@ -143,19 +143,19 @@ public class DavidBaseCommandValidator {
         if(commandTokens.size()>3){
             throw new DavidBaseValidationException("Failed to drop database");
         }
-        
+
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2)); 
+        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2));
 
         if (isExist==false){
             throw new DavidBaseValidationException("The database does not Exist");
-        }  
+        }
         else{
             DropDatabase dropDB= new DropDatabase(commandTokens.get(2));
             return dropDB;
         }
 
-        
+
     }
 
     public DropTable isValidDropTable(String userCommand, String current_DB)throws DavidBaseValidationException{
@@ -163,18 +163,18 @@ public class DavidBaseCommandValidator {
         if(commandTokens.size()>3){
             throw new DavidBaseValidationException("Failed to drop tables");
         }
-        
+
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        boolean isExist=catalog_handler.tableExists(current_DB, commandTokens.get(2)); 
+        boolean isExist=true;
 
         if (isExist==false){
             throw new DavidBaseValidationException("The table does not Exist");
-        }  
+        }
         else{
             DropTable dropTable= new DropTable(current_DB, commandTokens.get(2));
             return dropTable;
-        }      
-        
+        }
+
     }
 
     public InsertInto isValidInsertInto(String userCommand, String currentDB)throws DavidBaseValidationException{
@@ -183,7 +183,7 @@ public class DavidBaseCommandValidator {
         // boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
         // if (isExist==false){
         //     throw new DavidBaseValidationException("The table does not Exist");
-        // } 
+        // }
 
         int first_open_bracket_index = userCommand.toLowerCase().indexOf("(");
         int last_close_bracket_index = userCommand.toLowerCase().lastIndexOf(")");
@@ -203,7 +203,7 @@ public class DavidBaseCommandValidator {
 
         ArrayList<String> columns_list = new ArrayList<String>(Arrays.asList(columns_string.split(",")));
         ArrayList<String> values_list = new ArrayList<String>(Arrays.asList(values_string.split(",")));
-        
+
         for(int i=0; i<columns_list.size();i++){
             columns.add(columns_list.get(i).trim());
         }
@@ -221,32 +221,32 @@ public class DavidBaseCommandValidator {
         // for(int i=0; i<values.size();i++){
         //     System.out.println(values.get(i));
         // }
-        
 
 
 
 
 
-        
+
+
     }
 
 
     public SelectFrom isValidSelectFrom(String userCommand) throws DavidBaseValidationException{
-    	 ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
         int size=commandTokens.size();
-         //check if the second key word is "table"
-         String userCommandlower=userCommand.toLowerCase();
-         if(!userCommandlower.contains("from"))
-        	 throw new DavidBaseValidationException("Incorrect SELECT statement");
-        
-        
+        //check if the second key word is "table"
+        String userCommandlower=userCommand.toLowerCase();
+        if(!userCommandlower.contains("from"))
+            throw new DavidBaseValidationException("Incorrect SELECT statement");
+
+
         //check if table exists ---- Qi
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2)); 
+        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2));
 
         if (isExist!=false){
             throw new DavidBaseValidationException("The table does not Exist");
-        }  
+        }
         int from_index = userCommand.toLowerCase().indexOf("from");
         //String attribute = userCommand.substring("select".length(), from_index).trim();
         String rest = userCommand.substring(from_index + "from".length());
@@ -275,7 +275,7 @@ public class DavidBaseCommandValidator {
     public List parse_condition(String condition_String, String tableName) throws DavidBaseValidationException{
         short cnd=-1;
         String op="";
-        
+
         if(condition_String.contains("<=")){
             cnd=Condition.LESS_THAN_EQUALS;
             op="<=";
@@ -315,17 +315,17 @@ public class DavidBaseCommandValidator {
         String[] strings;
         String column;
         String value;
-        //DataType dataType;  Need to get data type of the value 
+        //DataType dataType;  Need to get data type of the value
         Condition condition;
         strings = condition_String.split(op);
         if(strings.length != 2) {
-            throw new DavidBaseValidationException("Unrecongnized Condition");           
+            throw new DavidBaseValidationException("Unrecongnized Condition");
         }
 
         column = strings[0].trim();
         value=strings[1].trim();
 
-        condition = Condition.CreateCondition(0,cnd, DataType.getTypeFromText("INT"), (Object)value);
+        condition = Condition.CreateCondition((byte)0,cnd, DataType.getTypeFromText("INT"), (Object)value);
 
         List column_condition=new ArrayList();
         column_condition.add(column);
@@ -335,9 +335,6 @@ public class DavidBaseCommandValidator {
 
         return column_condition;
 
-        
+
     }
-
-
-
 }

@@ -221,30 +221,29 @@ public class DavisBaseCatalogHandler {
     }
 
     public Page<LeafCell> getLastRecordAndPage(String databaseName, String tableName) {
-//        try {
-//            File file = new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
-//            if (file.exists()) {
-//                RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-//                Page<LeafCell> page = filehandler.getRightmostLeafPage(file);
-//                if (page.getPageheader().getNum_cells() > 0) {
-//                    randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number())
-//                            + Page.getHeaderFixedLength() + ((page.getPageheader().getNum_cells() - 1) * Short.BYTES));
-//                    short address = randomAccessFile.readShort();
-//                    LeafCell dataCell = filehandler.readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
-//                            address);
-//                    if (dataCell != null)
-//                        page.getCells().add(dataCell);
-//                }
-//                randomAccessFile.close();
-//                return page;
-//            } else {
-//                throw new DavidBaseError("Table doesn't exist." + databaseName + " " + tableName);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new DavidBaseError(e.getMessage());
-//        }
-    	return null;
+        try {
+            File file = new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
+            if (file.exists()) {
+                RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+                Page<LeafCell> page = filehandler.getRightmostLeafPage(file);
+                if (page.getPageheader().getNum_cells() > 0) {
+                    randomAccessFile.seek((PAGE_SIZE * page.getPageheader().getPage_number())
+                            + Page.getHeaderFixedLength() + ((page.getPageheader().getNum_cells() - 1) * Short.BYTES));
+                    short address = randomAccessFile.readShort();
+                    LeafCell dataCell = filehandler.readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
+                            address);
+                    if (dataCell != null)
+                        page.getCells().add(dataCell);
+                }
+                randomAccessFile.close();
+                return page;
+            } else {
+                throw new DavidBaseError("Table doesn't exist." + databaseName + " " + tableName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DavidBaseError(e.getMessage());
+        }
     }
 
     public boolean createTable(String databaseName, String tableName) {
