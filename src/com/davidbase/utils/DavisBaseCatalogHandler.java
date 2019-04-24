@@ -246,7 +246,7 @@ public class DavisBaseCatalogHandler {
         }
     }
 
-    public boolean createTable(String databaseName, String tableName) {
+    public boolean 	createTable(String databaseName, String tableName) {
         try {
             File dirFile = new File(getDatabasePath(databaseName));
             if (!dirFile.exists()) {
@@ -299,7 +299,7 @@ public class DavisBaseCatalogHandler {
 
           for (LeafCell record : records) {
         	  
-//        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
+        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
         	  
 //              Object object = record.getColumns().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
 //              columnNames.add(((String) object));
@@ -340,6 +340,8 @@ public class DavisBaseCatalogHandler {
     }
 
     public String getTablePrimaryKey(String databaseName, String tableName) {
+    	
+    	
         return null;
     }
 
@@ -362,7 +364,8 @@ public class DavisBaseCatalogHandler {
 
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
-        ctlg.createTable("db1", "test2");
-        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
+//        ctlg.createTable("db1", "test2");
+//        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
+        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
     }
 }
