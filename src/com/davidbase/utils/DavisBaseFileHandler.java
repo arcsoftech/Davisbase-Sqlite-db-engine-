@@ -159,12 +159,13 @@ public class DavisBaseFileHandler {
         rightLeafPage.setCells(dataCells);
 
         writeLeafCell(tableFile, dataCells, rightLeafPage.getData_offset());
-        writePageHeader(tableFile, rightLeafPage, pageNumber);
+        writePageHeader(tableFile, rightLeafPage, rightLeafPage.getPage_number());
 
 
         rootPage.setNext_page_pointer(rightLeafPage.getPage_number());
         List<NonLeafCell> nonLeafCells = new ArrayList<>();
         NonLeafCell nonLeafCell = new NonLeafCell(page.getPage_number(),leafCell.getHeader().getRow_id());
+        nonLeafCells.add(nonLeafCell);
 
         writeNonLeafCell(tableFile,nonLeafCells,rootPage.getData_offset());
         writePageHeader(tableFile,rootPage,rootPage.getPage_number());
