@@ -92,20 +92,25 @@ public class InsertInto implements QueryBase {
 
         try {
             // map passed values to records ready to be inserted into file
-        LeafCell records = prepareRecord();
+        LeafCell record = prepareRecord();
         int lastRowId = catalog.getLastRowId(DEFAULT_DATA_DIRNAME, tableName);
-        records.getHeader().setRow_id(++lastRowId);
+        record.getHeader().setRow_id(++lastRowId);
         
         List<Object> colVal = new ArrayList<>();
         List<DataType> colValTypes = new ArrayList<>();
-        HashMap<String,String> columnDataTypeMap = catalog.fetchAllTableColumnDataTypes(DEFAULT_DATA_DIRNAME,tableName);
+        HashMap<String,DataType> columnDataTypeMap = catalog.fetchAllTableColumnDataTypes(DEFAULT_DATA_DIRNAME,tableName);
+        colValTypes.add(DataType.INT);
+        colVal.add(record.getHeader().getRow_id());
+        for (int i = 0;i<columnValues.size();i++)
+        {
+            colValTypes.add(columnDataTypeMap.get(columns.get(i)));
+            colVal.add(columnValues.get(i));
+        }
+        record.getPayload().setColTypes(colValTypes);
+        record.getPayload().setColValues(colVal);
+        record.initializeLeafForWrite();
 
-        // for (String col : columns) {
-        //     colValTypes.add(columnDataTypeMap.get(col))
-        // }
-        
-
-        new DavisBaseFileHandler().writeLeafCell(databaseName, tableName, records);
+        new DavisBaseFileHandler().writeLeafCell(DEFAULT_DATA_DIRNAME, tableName, record);
 
         } catch (Exception e) {
             e.printStackTrace();

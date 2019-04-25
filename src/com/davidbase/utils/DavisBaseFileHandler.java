@@ -520,8 +520,15 @@ public class DavisBaseFileHandler {
             try {
                 if (pageNumber >= 0 && offset >= 0 && pageNumber <= records) {
                 	
+//<<<<<<< HEAD
+//                    randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
+//||||||| merged common ancestors
+//               
+//                    randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
+//=======
                
                     randomAccessFile.seek( offset);
+
                     short payloadSize = randomAccessFile.readShort();
                     int rowId = randomAccessFile.readInt();
                     CellHeader cellheader = new CellHeader(payloadSize, rowId);
