@@ -307,7 +307,6 @@ public class DavidBaseCommandValidator {
         }
         int from_index = userCommand.toLowerCase().indexOf("from");
         
-        System.out.print(from_index);
         
         //String attribute = userCommand.substring("select".length(), from_index).trim();
         String rest = userCommand.substring(from_index + "from".length());
