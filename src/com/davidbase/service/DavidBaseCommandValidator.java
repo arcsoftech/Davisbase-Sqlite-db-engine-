@@ -239,6 +239,7 @@ public class DavidBaseCommandValidator {
         }
 
         for(int i=0; i<values_list.size();i++){
+            //values.add(values_list.get(i).trim());
             if(values_list.get(i).contains("\"")){
                 String str= values_list.get(i).trim().replace("\"", "");
                 values.add(str);
@@ -247,13 +248,13 @@ public class DavidBaseCommandValidator {
             }
         }
 
-        for(int i=0; i<columns.size();i++){
-            System.out.println(columns.get(i).trim());
-        }
+        // for(int i=0; i<columns.size();i++){
+        //     System.out.println(columns.get(i).trim());
+        // }
 
-        for(int i=0; i<values.size();i++){
-            System.out.println(values.get(i));
-        }
+        // for(int i=0; i<values.size();i++){
+        //     System.out.println(values.get(i));
+        // }
 
         InsertInto queryObject=new InsertInto(DavidBaseManager.getCurrentDB(),commandTokens.get(2),columns, values);
         return queryObject;
