@@ -209,8 +209,10 @@ public class DavidBaseManager {
                     parseCreateDatabase(userCommand);
                 }
                 break;
-           
-       
+            case "delete":
+                System.out.println("CASE: Delete");
+                parseDeleteFrom(userCommand);
+                break;
             case "update":
                 System.out.println("CASE: UPDATE");
                 //parseUpdate(userCommand);
@@ -417,6 +419,14 @@ public class DavidBaseManager {
             //throw new DavidBaseError("Create table command in not valid.");
         //}catch(Exception e) {
             //throw new DavidBaseError("Error while executing command.");
+        }
+    }
+
+    public static void parseDeleteFrom(String userCommand) {
+       try{
+        DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
+       }catch(DavidBaseValidationException e) {
+        System.out.println(e.getErrorMsg());
         }
     }
 

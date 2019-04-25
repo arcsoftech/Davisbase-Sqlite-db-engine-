@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 import com.davidbase.utils.DataType;
 
 import com.davidbase.model.PageComponent.InternalColumn;
@@ -18,6 +20,7 @@ import com.davidbase.model.QueryType.InsertInto;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.QueryType.SelectFrom;
+import com.davidbase.utils.DavisBaseCatalogHandler;
 
 
 import com.davidbase.utils.DavisBaseCatalogHandler;
@@ -193,15 +196,15 @@ public class DavidBaseCommandValidator {
         //String userCommand_copy=userCommand;
         if(userCommand.contains("values")==false){
             throw new DavidBaseValidationException("Missing keyword Values");
-
         }
         
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
-        // DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        // boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
-        // if (isExist==false){
-        //      throw new DavidBaseValidationException("The table does not Exist");
-        // } 
+        
+        DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
+        boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
+        if (isExist==false){
+             throw new DavidBaseValidationException("The table does not Exist");
+        } 
 
         int first_open_bracket_index = userCommand.indexOf("(");
         int last_close_bracket_index = userCommand.lastIndexOf(")");
@@ -218,6 +221,9 @@ public class DavidBaseCommandValidator {
         String values_string=columns_substrings.get(1).replaceAll("[(]","");
         columns_string=columns_string.trim();
         values_string=values_string.trim();
+
+        System.out.println(columns_string);
+        System.out.println(values_string);
 
         ArrayList<String> columns_list = new ArrayList<String>(Arrays.asList(columns_string.split(",")));
         ArrayList<String> values_list = new ArrayList<String>(Arrays.asList(values_string.split(",")));
@@ -265,7 +271,8 @@ public class DavidBaseCommandValidator {
             int index = userCommand.toLowerCase().indexOf("where");
              if(index == -1) {
                  tableName = userCommand.substring("Delete From".length()).trim();
-                 //System.out.println(tableName);
+                 throw new DavidBaseValidationException("Tell me which record you want to delete");
+
              }
 
             if(tableName.equals("")) {
@@ -294,10 +301,10 @@ public class DavidBaseCommandValidator {
         //check if table exists ---- Qi
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         
-//        System.out.print(commandTokens.get(3));
+        //System.out.print(commandTokens.get(2));
         
         
-        boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(3));
+        boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(2).trim());
         
         
         System.out.print(isExist);
@@ -385,7 +392,16 @@ public class DavidBaseCommandValidator {
 
         column = strings[0].trim();
         value=strings[1].trim();
-
+        // DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
+        // HashMap<String, String> dataTypes= d.fetchAllTableColumnDataTypes("catalog","test");
+        // Iterator iterator = dataTypes.keySet().iterator();
+        // while (iterator.hasNext()){
+        //     String key = (String)iterator.next();
+        //     System.out.println(key+"="+dataTypes.get(key));
+        // }
+        // System.out.println(dataTypes.get(column));
+        //DataType type= DataType.getTypeFromText(dataTypes.get(column));
+        //System.out.println(type);
         condition = Condition.CreateCondition((byte)0,cnd, DataType.getTypeFromText("INT"), (Object)value);
 
         List column_condition=new ArrayList();
