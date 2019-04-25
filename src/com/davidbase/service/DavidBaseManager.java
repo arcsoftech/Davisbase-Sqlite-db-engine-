@@ -267,8 +267,7 @@ public class DavidBaseManager {
             currentDB=queryObject.databaseName;
             System.out.println(currentDB);
             commandExecutor.executeQuery(queryObject);
-            QueryResult result=commandExecutor.executeQuery(queryObject);
-           // System.out.println("Rows affected: " + );
+        //    System.out.println("Rows affected: " + );
             
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());

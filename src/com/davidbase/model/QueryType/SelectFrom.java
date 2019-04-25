@@ -5,13 +5,7 @@ import com.davidbase.model.PageComponent.LeafCell;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.utils.DavisBaseCatalogHandler;
-import com.davidbase.utils.DavisBaseConstants;
 import com.davidbase.utils.DavisBaseFileHandler;
-
-import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
-import static com.davidbase.utils.DavisBaseConstants.FILE_EXT;
-
-import java.io.File;
 import java.util.List;
 
 /**

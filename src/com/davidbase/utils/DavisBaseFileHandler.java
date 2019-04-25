@@ -555,29 +555,16 @@ public class DavisBaseFileHandler {
                         switch (DataType.getTypeFromSerialCode(serialTypeCodes[i])) {
                             // case DataType_TinyInt.nullSerialCode is overridden with DataType_Text
 
-                            case NULL_TINYINT:
-                                object = null;
-                                break;
-
-                            case NULL_SMALLINT:
-                                randomAccessFile.readShort();
-                                object = null;
-                                break;
-
-                            case NULL_INT:
-                                randomAccessFile.readFloat();
-                                object = null;
-                                break;
-
-                            case NULL_DOUBLE_DATE:
-                                randomAccessFile.readDouble();
+                            case NULL:
                                 object = null;
                                 break;
 
                             case TINYINT:
                                 object = (Byte) randomAccessFile.readByte();
                                 break;
-
+                            case YEAR:
+                                object = (Byte) randomAccessFile.readByte();
+                                break;
                             case SMALLINT:
                                 object = randomAccessFile.readShort();
                                 break;
@@ -594,8 +581,8 @@ public class DavisBaseFileHandler {
                                 object = randomAccessFile.readFloat();
                                 break;
 
-                            case DOUBLE:
-                                object = randomAccessFile.readDouble();
+                            case TIME:
+                                object = randomAccessFile.readInt();
                                 break;
 
                             case DATETIME:
@@ -613,9 +600,7 @@ public class DavisBaseFileHandler {
                                     text[k] = (char) randomAccessFile.readByte();
                                 }
                                 object = new String(text);
-                                
-                     
-                              
+
                                 break;
 
                         }
@@ -659,69 +644,53 @@ public class DavisBaseFileHandler {
                     for (byte i = 0; i < numberOfColumns; i++) {
                         switch (DataType.getTypeFromSerialCode(serialTypeCodes[i])) {
                             // case DataType_TinyInt.nullSerialCode is overridden with DataType_Text
+                            case NULL:
+                            object = null;
+                            break;
 
-                            case NULL_TINYINT:
-                                object = null;
-                                break;
+                        case TINYINT:
+                            object = (Byte) randomAccessFile.readByte();
+                            break;
+                        case YEAR:
+                            object = (Byte) randomAccessFile.readByte();
+                            break;
+                        case SMALLINT:
+                            object = randomAccessFile.readShort();
+                            break;
 
-                            case NULL_SMALLINT:
-                                randomAccessFile.readShort();
-                                object = null;
-                                break;
+                        case INT:
+                            object = randomAccessFile.readInt();
+                            break;
 
-                            case NULL_INT:
-                                randomAccessFile.readFloat();
-                                object = null;
-                                break;
+                        case BIGINT:
+                            object = randomAccessFile.readLong();
+                            break;
 
-                            case NULL_DOUBLE_DATE:
-                                randomAccessFile.readDouble();
-                                object = null;
-                                break;
+                        case REAL:
+                            object = randomAccessFile.readFloat();
+                            break;
 
-                            case TINYINT:
-                                object = (Byte) randomAccessFile.readByte();
-                                break;
+                        case TIME:
+                            object = randomAccessFile.readInt();
+                            break;
 
-                            case SMALLINT:
-                                object = randomAccessFile.readShort();
-                                break;
+                        case DATETIME:
+                            object = randomAccessFile.readLong();
+                            break;
 
-                            case INT:
-                                object = randomAccessFile.readInt();
-                                break;
+                        case DATE:
+                            object = randomAccessFile.readLong();
+                            break;
 
-                            case BIGINT:
-                                object = randomAccessFile.readLong();
-                                break;
+                        case TEXT:
+                            object = "";
+                            char[] text = new char[serialTypeCodes[i] - 12 ];
+                            for (byte k = 0; k < (serialTypeCodes[i] - 12); k++) {
+                                text[k] = (char) randomAccessFile.readByte();
+                            }
+                            object = new String(text);
 
-                            case REAL:
-                                object = randomAccessFile.readFloat();
-                                break;
-
-                            case DOUBLE:
-                                object = randomAccessFile.readDouble();
-                                break;
-
-                            case DATETIME:
-                                object = randomAccessFile.readLong();
-                                break;
-
-                            case DATE:
-                                object = randomAccessFile.readLong();
-                                break;
-
-                            case TEXT:
-                                if (serialTypeCodes[i] > DataType.TEXT.getSerialCode()) {
-                                    byte length = (byte) (serialTypeCodes[i] - DataType.TEXT.getSerialCode());
-                                    char[] text = new char[length];
-                                    for (byte k = 0; k < length; k++) {
-                                        text[k] = (char) randomAccessFile.readByte();
-                                    }
-                                    object = new String(text);
-                                } else
-                                    object = null;
-                                break;
+                            break;
 
                         }
 
@@ -791,17 +760,18 @@ public class DavisBaseFileHandler {
                 case SMALLINT:
                     return compare((short) value1, value2, condition, conditionType);
                 case INT:
-          
                     return compare((int) value1, value2, condition, conditionType);
                 case BIGINT:
                     return compare((long) value1, value2, condition, conditionType);
                 case REAL:
                     return compare((float) value1, value2, condition, conditionType);
-                case DOUBLE:
-                    return compare((double) value1, value2, condition, conditionType);
                 case DATE:
                     break;
                 case DATETIME:
+                    break;
+                case TIME:
+                    break;
+                case YEAR:
                     break;
                 case TEXT:
                	 return compare((String)value1,(String) value2, condition, conditionType);
@@ -845,7 +815,6 @@ public class DavisBaseFileHandler {
                 return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
                 return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
-
             case BIGINT:
                 return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
         }
@@ -870,8 +839,6 @@ public class DavisBaseFileHandler {
         switch (conditionType) {
             case REAL:
                 return DavisBaseUtil.conditionCompare(value1, Float.valueOf(String.valueOf(value2)), condition);
-            case DOUBLE:
-                return DavisBaseUtil.conditionCompare(value1, Double.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
@@ -880,8 +847,6 @@ public class DavisBaseFileHandler {
         switch (conditionType) {
             case REAL:
                 return DavisBaseUtil.conditionCompare(value1, Float.valueOf(String.valueOf(value2)), condition);
-            case DOUBLE:
-                return DavisBaseUtil.conditionCompare(value1, Double.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
