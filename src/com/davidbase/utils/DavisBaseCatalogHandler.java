@@ -277,7 +277,7 @@ public class DavisBaseCatalogHandler {
 
     public boolean tableExists(String databaseName, String tableName) {
     	
-    	   File file = new File(getDatabasePath(DEFAULT_DATA_DIRNAME) + "/" + tableName + FILE_EXT);
+    	   File file = new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT);
     	   
     	   return file.exists();
     		
