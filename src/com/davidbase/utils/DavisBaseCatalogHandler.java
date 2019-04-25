@@ -298,12 +298,12 @@ public class DavisBaseCatalogHandler {
 
           for (LeafCell record : records) {
         	  
-        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
-        	  
-//              Object object = record.getColumns().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
-//              columnNames.add(((String) object));
+      	  
+        	  columnNames.add((String) record.getPayload().getColValues().get(2));
+
           }
 
+         
           return columnNames;
    
     }
@@ -316,31 +316,54 @@ public class DavisBaseCatalogHandler {
         return true;
     }
 
-    public HashMap<String, String> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
+    public HashMap<String, DataType> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
     	
     	List<Condition> conditions = new ArrayList<>();
 //        conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
         conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
 
         List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
-        HashMap<String, String> columDataTypeMapping = new HashMap<>();
+        HashMap<String, DataType> columDataTypeMapping = new HashMap<>();
 
         for (LeafCell record : records) {
             Object object = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
             Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATA_TYPE);
 
+        
             String columnName = ((String) object);
-            String columnDataType = ((String)dataTypeObject );
+            String dataType = (String) dataTypeObject;
+            DataType columnDataType = DataType.valueOf(dataType.toUpperCase());
+        
             columDataTypeMapping.put(columnName.toLowerCase(), columnDataType);
         }
 
-        System.out.print(columDataTypeMapping);
+//        System.out.print(columDataTypeMapping);
         return columDataTypeMapping;
+   
     }
 
     public String getTablePrimaryKey(String databaseName, String tableName) {
     	
-    	
+
+    	List<Condition> conditions = new ArrayList<>();
+//      conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
+      conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
+
+      List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
+      HashMap<String, String> columDataTypeMapping = new HashMap<>();
+
+      for (LeafCell record : records) {
+          Object object = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
+          Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATA_TYPE);
+          	
+          System.out.print(record.getPayload().getColValues());
+          String columnName = ((String) object);
+          String columnDataType = ((String)dataTypeObject );
+          columDataTypeMapping.put(columnName.toLowerCase(), columnDataType);
+      }
+
+//      System.out.print(columDataTypeMapping);
+
         return null;
     }
 
@@ -364,7 +387,16 @@ public class DavisBaseCatalogHandler {
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        ctlg.createTable("db1", "test2");
+
 //        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
-        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
+//         System.out.print(ctlg.tableExists("data", "test2"));
+
+//        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
+//         System.out.print(ctlg.tableExists("data", "test2"));
+
+        ctlg.fetchAllTableColumnDataTypes("data", "davisbase_columns");
+        
+//        System.out.print(ctlg.fetchAllTableColumns("data", "davisbase_columns"));
+        
     }
 }
