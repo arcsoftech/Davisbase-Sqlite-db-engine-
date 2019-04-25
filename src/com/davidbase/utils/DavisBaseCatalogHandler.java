@@ -344,7 +344,25 @@ public class DavisBaseCatalogHandler {
 
     public String getTablePrimaryKey(String databaseName, String tableName) {
     	
-    	
+    	List<Condition> conditions = new ArrayList<>();
+//      conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
+      conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
+
+      List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
+      HashMap<String, String> columDataTypeMapping = new HashMap<>();
+
+      for (LeafCell record : records) {
+          Object object = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
+          Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATA_TYPE);
+          	
+          System.out.print(record.getPayload().getColValues());
+          String columnName = ((String) object);
+          String columnDataType = ((String)dataTypeObject );
+          columDataTypeMapping.put(columnName.toLowerCase(), columnDataType);
+      }
+
+//      System.out.print(columDataTypeMapping);
+
     	
         return null;
     }
@@ -372,8 +390,11 @@ public class DavisBaseCatalogHandler {
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        ctlg.createTable("db1", "test2");
-        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
+//        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
 //         System.out.print(ctlg.tableExists("data", "test2"));
         ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
+        
+//        ctlg.getTablePrimaryKey("abc", "davisbase_columns");
+        
     }
 }

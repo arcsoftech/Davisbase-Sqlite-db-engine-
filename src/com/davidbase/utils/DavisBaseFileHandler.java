@@ -520,7 +520,6 @@ public class DavisBaseFileHandler {
             try {
                 if (pageNumber >= 0 && offset >= 0 && pageNumber <= records) {
                 	
-               
                     randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
                     short payloadSize = randomAccessFile.readShort();
                     int rowId = randomAccessFile.readInt();
