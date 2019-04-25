@@ -194,7 +194,6 @@ public class DavidBaseCommandValidator {
 
     public InsertInto isValidInsertInto(String userCommand, String currentDB)throws DavidBaseValidationException{
         //String userCommand_copy=userCommand;
-        //System.out.println(userCommand);
         if(userCommand.contains("values")==false){
             throw new DavidBaseValidationException("Missing keyword Values");
         }

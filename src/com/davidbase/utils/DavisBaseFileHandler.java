@@ -521,7 +521,7 @@ public class DavisBaseFileHandler {
                 if (pageNumber >= 0 && offset >= 0 && pageNumber <= records) {
                 	
                
-                    randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
+                    randomAccessFile.seek( offset);
                     short payloadSize = randomAccessFile.readShort();
                     int rowId = randomAccessFile.readInt();
                     CellHeader cellheader = new CellHeader(payloadSize, rowId);
@@ -784,7 +784,6 @@ public class DavisBaseFileHandler {
                 case DATETIME:
                     break;
                 case TEXT:
-           
                	 return compare((String)value1,(String) value2, condition, conditionType);
             }
         return false;
@@ -871,7 +870,6 @@ public class DavisBaseFileHandler {
         switch (conditionType) {
         case TEXT:
             return DavisBaseUtil.conditionCompare(value1,  value2, condition);
-
         }
         return false;
     }
