@@ -289,6 +289,8 @@ public class DavidBaseManager {
     private static void parseShowDatabase(String showDB) {
         try {
             boolean isTrue = commandValidator.isValidShowDB(showDB);
+            
+            
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -297,7 +299,11 @@ public class DavidBaseManager {
 
     private static void parseShowTable(String showTable) {
         try {
-            boolean isTrue = commandValidator.isValidShowTable(showTable);
+            ShowTable isTrue = commandValidator.isValidShowTable(showTable);
+            
+            System.out.print(isTrue);   
+            
+            QueryResult result = commandExecutor.executeQuery(isTrue);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -359,8 +365,7 @@ public class DavidBaseManager {
  
             
             QueryResult result = commandExecutor.executeQuery(queryObject);
-            
-            
+           
             System.out.println("Rows affected: " + result.getRowsAffected());
             //List columns=result.getColumns();
             /*for(int i=0;i<columns.size();i++){
