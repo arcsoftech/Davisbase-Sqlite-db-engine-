@@ -244,7 +244,6 @@ public class DavisBaseCatalogHandler {
             e.printStackTrace();
             throw new DavidBaseError(e.getMessage());
         }
-    
     }
 
     public boolean 	createTable(String databaseName, String tableName) {
