@@ -20,8 +20,10 @@ import com.davidbase.model.QueryType.InsertInto;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.QueryType.SelectFrom;
+import com.davidbase.model.QueryType.UpdateTable;
 import com.davidbase.utils.DavisBaseCatalogHandler;
 
+//import org.graalvm.compiler.nodes.InliningLog.UpdateScope;
 
 import com.davidbase.utils.DavisBaseCatalogHandler;
 
@@ -267,7 +269,7 @@ public class DavidBaseCommandValidator {
 
 
         String tableName = "";
-            String condition = "";
+            String condition_String = "";
             int index = userCommand.toLowerCase().indexOf("where");
              if(index == -1) {
                  tableName = userCommand.substring("Delete From".length()).trim();
@@ -279,12 +281,41 @@ public class DavidBaseCommandValidator {
                 tableName = userCommand.substring("Delete From".length(), index).trim();
             }
             System.out.println(tableName);
-            condition = userCommand.substring(index + "where".length()).trim();
-            System.out.println(condition);
-        return null;
+            condition_String = userCommand.substring(index + "where".length()).trim();
+
+            List column_condition=parse_condition(condition_String, tableName);
+            String column=(String)column_condition.get(0);
+            //System.out.println(column);
+            Condition condition=(Condition)column_condition.get(1);
+            //System.out.println(condition.getValue());
+            List<Condition> condition_list=new ArrayList<Condition>();
+            condition_list.add(condition);
+            DeleteFrom delete_object= new DeleteFrom("", tableName);
+            delete_object.setConditions(condition_list);
+            //System.out.println(delete_object.conditions.get(0).getValue());
+        return delete_object;
     }
 
+    public UpdateTable isValidUpdateTable(String userCommand)throws DavidBaseValidationException{
+        // String conditions = "";
+        // int setIndex = userCommand.toLowerCase().indexOf("set");
+        // if(setIndex == -1) {
+        //     throw new DavidBaseValidationException("Where is the set key word");
+        // }
 
+        // String tableName = userCommand.substring(QueryHandler.UPDATE_COMMAND.length(), setIndex).trim();
+        // String clauses = userCommand.substring(setIndex + "set".length());
+        // int whereIndex = userCommand.toLowerCase().indexOf("where");
+        // if(whereIndex == -1){
+        //     IQuery query = QueryHandler.UpdateQuery(tableName, clauses, conditions);
+        //     QueryHandler.ExecuteQuery(query);
+        //     return;
+        // }
+
+        
+        
+        return null;
+    }
 
 
 
@@ -394,7 +425,7 @@ public class DavidBaseCommandValidator {
         column = strings[0].trim();
         value=strings[1].trim();
         // DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
-        // HashMap<String, String> dataTypes= d.fetchAllTableColumnDataTypes("catalog","test");
+        // HashMap<String, String> dataTypes= d.fetchAllTableColumnDataTypes("catalog","davisbase_columns");
         // Iterator iterator = dataTypes.keySet().iterator();
         // while (iterator.hasNext()){
         //     String key = (String)iterator.next();
@@ -402,7 +433,7 @@ public class DavidBaseCommandValidator {
         // }
         // System.out.println(dataTypes.get(column));
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
-        //System.out.println(type);
+
         condition = Condition.CreateCondition((byte)0,cnd, DataType.getTypeFromText("INT"), (Object)value);
 
         List column_condition=new ArrayList();

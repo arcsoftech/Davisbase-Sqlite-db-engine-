@@ -215,7 +215,7 @@ public class DavidBaseManager {
                 break;
             case "update":
                 System.out.println("CASE: UPDATE");
-                //parseUpdate(userCommand);
+                parseUpdate(userCommand);
                 break;
             case "insert":
                 System.out.println("CASE: INSERT");
@@ -393,9 +393,13 @@ public class DavidBaseManager {
      *  Stub method for updating records
      *  @param updateString is a String of the user input
      */
-    public static void parseUpdate(String updateString) {
-        System.out.println("STUB: This is the dropTable method");
-        System.out.println("Parsing the string:\"" + updateString + "\"");
+    public static void parseUpdate(String userCommand) {
+        try{
+            UpdateTable update_object=commandValidator.isValidUpdateTable(userCommand);
+        }catch(DavidBaseValidationException e) {
+            System.out.println(e.getErrorMsg());
+
+        }
     }
 
     private static void parseInsert(String insertString) {
@@ -425,6 +429,7 @@ public class DavidBaseManager {
     public static void parseDeleteFrom(String userCommand) {
        try{
         DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
+        //System.out.println(delete_object.conditions.get(0).getValue());
        }catch(DavidBaseValidationException e) {
         System.out.println(e.getErrorMsg());
         }
