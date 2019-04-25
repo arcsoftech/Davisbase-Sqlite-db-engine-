@@ -22,6 +22,7 @@ import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.QueryType.SelectFrom;
 import com.davidbase.model.QueryType.UpdateTable;
 import com.davidbase.utils.DavisBaseCatalogHandler;
+import com.davidbase.utils.DavisBaseFileHandler;
 
 //import org.graalvm.compiler.nodes.InliningLog.UpdateScope;
 
@@ -40,6 +41,8 @@ public class DavidBaseCommandValidator {
     public boolean isValid(String userCommand){
         return true;
     }
+    
+    DavisBaseCatalogHandler ctlg ;
 
     /**
      * validate a create table query
@@ -338,7 +341,7 @@ public class DavidBaseCommandValidator {
         boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(2).trim());
         
         
-        System.out.print(isExist);
+       
 
         if (isExist==false){
             throw new DavidBaseValidationException("The table does not Exist");
@@ -361,13 +364,16 @@ public class DavidBaseCommandValidator {
         List column_condition=parse_condition(condition_string, tableName);
         String column=(String)column_condition.get(0);
         Condition condition=(Condition)column_condition.get(1);
-
+        
+        
+      
         SelectFrom select_object=new SelectFrom();
         select_object.setColumns(column);
         select_object.setCondition(condition);
         select_object.setTableName(tableName);
+        
+//        System.out.print(select_object.getCondition().getValType());
 
-        System.out.print(select_object);
         return select_object;
     }
 
@@ -433,16 +439,34 @@ public class DavidBaseCommandValidator {
         // System.out.println(dataTypes.get(column));
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
 
-        condition = Condition.CreateCondition((byte)0,cnd, DataType.getTypeFromText("INT"), (Object)value);
+        
 
-        List column_condition=new ArrayList();
-        column_condition.add(column);
-        column_condition.add(condition);
-
-
+        ctlg  = new DavisBaseCatalogHandler();
+      
+      HashMap<String,DataType> columnDataType = ctlg.fetchAllTableColumnDataTypes("", tableName);
+     
+      List column_condition=new ArrayList();
+      
+      int indexCount = 1;
+      
+      for (String coluName  : columnDataType.keySet()) {
+    	  
+  	
+      	if (coluName.equals(column)){
+         	  System.out.print(coluName + " " + indexCount);
+      		
+            condition = Condition.CreateCondition((byte)0,cnd,columnDataType.get(coluName) , (Object)value);
+            
+            column_condition.add(column);
+            column_condition.add(condition);
+      	}
+      	
+      	indexCount = indexCount + 1;
+      	
+      }
+        
 
         return column_condition;
-
 
     }
 }

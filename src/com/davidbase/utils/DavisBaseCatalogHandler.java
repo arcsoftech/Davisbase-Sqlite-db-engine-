@@ -302,8 +302,6 @@ public class DavisBaseCatalogHandler {
         	  columnNames.add((String) record.getPayload().getColValues().get(2));
 
           }
-
-         
           return columnNames;
    
     }
@@ -394,7 +392,7 @@ public class DavisBaseCatalogHandler {
 //        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
 //         System.out.print(ctlg.tableExists("data", "test2"));
 
-        ctlg.fetchAllTableColumnDataTypes("data", "davisbase_columns");
+       System.out.print( ctlg.fetchAllTableColumnDataTypes("data", "utd"));
         
 //        System.out.print(ctlg.fetchAllTableColumns("data", "davisbase_columns"));
         

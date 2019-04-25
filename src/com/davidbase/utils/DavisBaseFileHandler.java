@@ -112,7 +112,9 @@ public class DavisBaseFileHandler {
 
                     // page already has a root page at pagenumber ;
 //                int rootPageIndex = 1;
-                    int rootPageIndex = Integer.valueOf(metadata.get(tableName));
+                	System.out.print(tableName);
+//                    int rootPageIndex = Integer.valueOf(metadata.get(tableName));
+                	 int rootPageIndex = 1;
                     if(!checkSpaceRequirements(page,leafCell)) {
 
                         System.out.println("Splitting page");
@@ -429,6 +431,7 @@ public class DavisBaseFileHandler {
                                      List<Byte> selectionColumnIndexList, boolean getOne) {
         try {
             File file = new File(DEFAULT_DATA_DIRNAME + "/" + databaseName + "/" + tableName + FILE_EXT);
+           
             if (file.exists()) {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 if (conditionList != null) {
@@ -454,15 +457,19 @@ public class DavisBaseFileHandler {
                                 isMatch = false;
                                 columnIndex = conditionList.get(i).getIndex();
                                 conditionValue = conditionList.get(i).getValue();
+//                                System.out.print(conditionList.get(i).getIndex());
                                 condition = conditionList.get(i).getConditionType();
                                 conditionValueType = conditionList.get(i).getValType();
                                 if (leafCell != null && leafCell.getPayload().getColValues().size() > columnIndex) {
+//                                    Object colValue = leafCell.getPayload().getColValues().get(1);
                                     Object colValue = leafCell.getPayload().getColValues().get(columnIndex);
+//                                    DataType colType = DataType
+//                                            .getTypeFromSerialCode(leafCell.getPayload().getData_type()[1]);
                                     DataType colType = DataType
                                             .getTypeFromSerialCode(leafCell.getPayload().getData_type()[columnIndex]);
                                     try {
                                     	
-//                                      System.out.print(colValue + " " + conditionValue + " " + condition + " " + colType + " " +conditionValueType +"\n" );
+                                      System.out.print(colValue + " " + conditionValue + " " + condition + " " + colType + " " +conditionValueType +"\n" );
 
                                         isMatch = compare(colValue, conditionValue, condition, colType,
                                                 conditionValueType);
@@ -503,6 +510,7 @@ public class DavisBaseFileHandler {
                     }
                     randomAccessFile.close();
                   
+         
                     return matchingLeafCells;
                 }
             } else {
@@ -779,6 +787,7 @@ public class DavisBaseFileHandler {
                 case SMALLINT:
                     return compare((short) value1, value2, condition, conditionType);
                 case INT:
+                	System.out.print("Here1");
                     return compare((int) value1, value2, condition, conditionType);
                 case BIGINT:
                     return compare((long) value1, value2, condition, conditionType);
@@ -831,6 +840,8 @@ public class DavisBaseFileHandler {
             case SMALLINT:
                 return DavisBaseUtil.conditionCompare(value1, (short) value2, condition);
             case INT:
+            	System.out.print("Here2");
+            	
                 return DavisBaseUtil.conditionCompare(value1, (int) value2, condition);
             case BIGINT:
                 return DavisBaseUtil.conditionCompare(value1, (long) value2, condition);

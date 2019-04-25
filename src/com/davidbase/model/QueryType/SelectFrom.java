@@ -1,10 +1,17 @@
 package com.davidbase.model.QueryType;
 
 import com.davidbase.model.DavidBaseError;
+import com.davidbase.model.PageComponent.LeafCell;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
+import com.davidbase.utils.DavisBaseCatalogHandler;
+import com.davidbase.utils.DavisBaseConstants;
 import com.davidbase.utils.DavisBaseFileHandler;
 
+import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
+import static com.davidbase.utils.DavisBaseConstants.FILE_EXT;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -41,10 +48,20 @@ public class SelectFrom implements QueryBase {
 		this.condition = condition;
 	}
 
+	 private DavisBaseFileHandler filehandler;
 
     @Override
     public QueryResult execute() {
         try {
+        	
+//        	System.out.print(tableName);
+        	 filehandler = new DavisBaseFileHandler();
+            List<LeafCell> records = filehandler.findRecord("data", tableName, condition,null, false);
+
+            for (LeafCell record : records) {
+            	System.out.print(record.getPayload().getColValues());	
+            }
+        	
             new DavisBaseFileHandler().readFromFile(tableName);
         }catch(Exception e){
             e.printStackTrace();
