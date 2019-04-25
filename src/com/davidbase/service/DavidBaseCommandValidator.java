@@ -27,6 +27,8 @@ import com.davidbase.utils.DavisBaseCatalogHandler;
 
 import com.davidbase.utils.DavisBaseCatalogHandler;
 
+import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
+
 /**
  * This class validates the user commands to avoid errors while execution.
  */
@@ -296,7 +298,7 @@ public class DavidBaseCommandValidator {
             //System.out.println(condition.getValue());
             List<Condition> condition_list=new ArrayList<Condition>();
             condition_list.add(condition);
-            DeleteFrom delete_object= new DeleteFrom("", tableName);
+            DeleteFrom delete_object= new DeleteFrom(DEFAULT_DATA_DIRNAME, tableName);
             delete_object.setConditions(condition_list);
             //System.out.println(delete_object.conditions.get(0).getValue());
         return delete_object;
