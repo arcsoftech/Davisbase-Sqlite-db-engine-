@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import com.davidbase.utils.DataType;
 
 import com.davidbase.model.PageComponent.InternalColumn;
@@ -18,6 +19,7 @@ import com.davidbase.model.QueryType.InsertInto;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.QueryType.SelectFrom;
+import com.davidbase.utils.DavisBaseCatalogHandler;
 
 
 import com.davidbase.utils.DavisBaseCatalogHandler;
@@ -265,7 +267,8 @@ public class DavidBaseCommandValidator {
             int index = userCommand.toLowerCase().indexOf("where");
              if(index == -1) {
                  tableName = userCommand.substring("Delete From".length()).trim();
-                 //System.out.println(tableName);
+                 throw new DavidBaseValidationException("Tell me which record you want to delete");
+
              }
 
             if(tableName.equals("")) {
@@ -375,7 +378,10 @@ public class DavidBaseCommandValidator {
 
         column = strings[0].trim();
         value=strings[1].trim();
-
+        // DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
+        // HashMap<String, String> dataTypes= d.fetchAllTableColumnDataTypes("",tableName);
+        // DataType type= DataType.getTypeFromText(dataTypes.get(column));
+        // System.out.println(type);
         condition = Condition.CreateCondition((byte)0,cnd, DataType.getTypeFromText("INT"), (Object)value);
 
         List column_condition=new ArrayList();
