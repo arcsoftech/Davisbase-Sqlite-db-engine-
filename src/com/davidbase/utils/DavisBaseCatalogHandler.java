@@ -125,7 +125,6 @@ public class DavisBaseCatalogHandler {
                 record.getPayload().setColTypes(colValTypes);
                 record.getPayload().setColValues(colVal);
                 record.initializeLeafForWrite();
-                record.getPayload().setColTypes(colValTypes);
                 if (!filehandler.writeLeafCell(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
                         DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, record)) {
                     break;
