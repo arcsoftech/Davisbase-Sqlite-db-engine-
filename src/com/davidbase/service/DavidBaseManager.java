@@ -332,6 +332,8 @@ public class DavidBaseManager {
             DropTable queryObject = commandValidator.isValidDropTable(dropTableString,currentDB);
             System.out.println(queryObject.databaseName);
             System.out.println(queryObject.tableName);
+            QueryResult resultDel = commandExecutor.executeQuery(queryObject);
+            out.println("Rows affected " + resultDel.getRowsAffected());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
@@ -397,6 +399,7 @@ public class DavidBaseManager {
     public static void parseUpdate(String userCommand) {
         try{
             UpdateTable update_object=commandValidator.isValidUpdateTable(userCommand);
+            //System.out.println(update_object.getCondition().getValue());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
 
@@ -429,7 +432,9 @@ public class DavidBaseManager {
 
     public static void parseDeleteFrom(String userCommand) {
        try{
-        DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
+            DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
+           QueryResult result = commandExecutor.executeQuery(delete_object);
+           System.out.println("Rows affected: " + result.getRowsAffected());
         //System.out.println(delete_object.conditions.get(0).getValue());
        }catch(DavidBaseValidationException e) {
         System.out.println(e.getErrorMsg());

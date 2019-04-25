@@ -291,14 +291,19 @@ public class DavisBaseFileHandler {
 
                             if(isMatch) {
                                 page.setNumberOfCells((byte) (page.getNumberOfCells() - 1));
-                                page.setData_cell_offset(removeOffset(page.getData_cell_offset(),offSetIndex));
                                 if(page.getNumberOfCells() == 0) {
                                     page.setData_offset((short) ((page.getPage_number()*PAGE_SIZE) + PAGE_SIZE - 1));
+                                }else{
+                                    page.setData_cell_offset(removeOffset(page.getData_cell_offset(),offSetIndex));
+                                    int lengthOffsets = page.getData_cell_offset().length;
+                                    page.setData_offset(page.getData_cell_offset()[lengthOffsets-1]);
                                 }
                                 writePageHeader(randomAccessFile, page, page.getPage_number());
                                 deletedRecordCount++;
+                                offSetIndex=0;
+                            }else {
+                                offSetIndex++;
                             }
-                            offSetIndex++;
                         }
                         if(page.getNext_page_pointer() == RIGHT_MOST_LEAF)
                             break;
@@ -322,10 +327,10 @@ public class DavisBaseFileHandler {
 
     private short[] removeOffset(short[] data_cell_offset, int offSetIndex) {
         short[] newoffset = new short[data_cell_offset.length-1];
-        for(int i=0;i<data_cell_offset.length;i++){
+        for(int i=0,j=0;i<data_cell_offset.length;i++){
             if(i==offSetIndex)
                 continue;
-            newoffset[i] = data_cell_offset[i];
+            newoffset[j++] = data_cell_offset[i];
         }
         return  newoffset;
     }
@@ -808,13 +813,13 @@ public class DavisBaseFileHandler {
     private boolean compare(Byte value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
-                return DavisBaseUtil.conditionCompare(value1, (byte) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
-                return DavisBaseUtil.conditionCompare(value1, (short) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
-                return DavisBaseUtil.conditionCompare(value1, (int) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
             case BIGINT:
-                return DavisBaseUtil.conditionCompare(value1, (long) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
@@ -822,13 +827,13 @@ public class DavisBaseFileHandler {
     private boolean compare(Short value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
-                return DavisBaseUtil.conditionCompare(value1, (byte) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
-                return DavisBaseUtil.conditionCompare(value1, (short) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
-                return DavisBaseUtil.conditionCompare(value1, (int) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
             case BIGINT:
-                return DavisBaseUtil.conditionCompare(value1, (long) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
@@ -836,15 +841,14 @@ public class DavisBaseFileHandler {
     private boolean compare(Integer value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
-                return DavisBaseUtil.conditionCompare(value1, (byte) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
-                return DavisBaseUtil.conditionCompare(value1, (short) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
-            	System.out.print("Here2");
-            	
-                return DavisBaseUtil.conditionCompare(value1, (int) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
+
             case BIGINT:
-                return DavisBaseUtil.conditionCompare(value1, (long) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
@@ -852,13 +856,13 @@ public class DavisBaseFileHandler {
     private boolean compare(Long value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
-                return DavisBaseUtil.conditionCompare(value1, (byte) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
-                return DavisBaseUtil.conditionCompare(value1, (short) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
-                return DavisBaseUtil.conditionCompare(value1, (int) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
             case BIGINT:
-                return DavisBaseUtil.conditionCompare(value1, (long) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
@@ -866,9 +870,9 @@ public class DavisBaseFileHandler {
     private boolean compare(Float value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case REAL:
-                return DavisBaseUtil.conditionCompare(value1, (float) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Float.valueOf(String.valueOf(value2)), condition);
             case DOUBLE:
-                return DavisBaseUtil.conditionCompare(value1, (double) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Double.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
@@ -876,9 +880,9 @@ public class DavisBaseFileHandler {
     private boolean compare(Double value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case REAL:
-                return DavisBaseUtil.conditionCompare(value1, (float) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Float.valueOf(String.valueOf(value2)), condition);
             case DOUBLE:
-                return DavisBaseUtil.conditionCompare(value1, (double) value2, condition);
+                return DavisBaseUtil.conditionCompare(value1, Double.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }

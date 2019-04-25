@@ -28,6 +28,8 @@ import com.davidbase.utils.DavisBaseFileHandler;
 
 import com.davidbase.utils.DavisBaseCatalogHandler;
 
+import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
+
 /**
  * This class validates the user commands to avoid errors while execution.
  */
@@ -220,7 +222,7 @@ public class DavidBaseCommandValidator {
         //System.out.println(columns_substrings.get(1));
 
         List<String> columns=new ArrayList<String>();
-        List<String> values=new ArrayList<String>();
+        List values=new ArrayList();
 
         String columns_string=columns_substrings.get(0).replaceAll("[)]","");
         String values_string=columns_substrings.get(1).replaceAll("[(]","");
@@ -242,15 +244,21 @@ public class DavidBaseCommandValidator {
         }
 
         for(int i=0; i<values_list.size();i++){
-            values.add(values_list.get(i).trim());
+            //values.add(values_list.get(i).trim());
+            if(values_list.get(i).contains("\"")){
+                String str= values_list.get(i).trim().replace("\"", "");
+                values.add(str);
+            }else{
+                values.add(Integer.parseInt(values_list.get(i).trim()));
+            }
         }
 
-        // for(int i=0; i<columns_list.size();i++){
-        //     System.out.println(columns_list.get(i).trim());
+        // for(int i=0; i<columns.size();i++){
+        //     System.out.println(columns.get(i).trim());
         // }
 
-        // for(int i=0; i<values_list.size();i++){
-        //     System.out.println(values_list.get(i).trim());
+        // for(int i=0; i<values.size();i++){
+        //     System.out.println(values.get(i));
         // }
 
         InsertInto queryObject=new InsertInto(DavidBaseManager.getCurrentDB(),commandTokens.get(2),columns, values);
@@ -293,31 +301,53 @@ public class DavidBaseCommandValidator {
             //System.out.println(condition.getValue());
             List<Condition> condition_list=new ArrayList<Condition>();
             condition_list.add(condition);
-            DeleteFrom delete_object= new DeleteFrom("", tableName);
+            DeleteFrom delete_object= new DeleteFrom(DEFAULT_DATA_DIRNAME, tableName);
             delete_object.setConditions(condition_list);
             //System.out.println(delete_object.conditions.get(0).getValue());
         return delete_object;
     }
 
     public UpdateTable isValidUpdateTable(String userCommand)throws DavidBaseValidationException{
-        // String conditions = "";
-        // int setIndex = userCommand.toLowerCase().indexOf("set");
-        // if(setIndex == -1) {
-        //     throw new DavidBaseValidationException("Where is the set key word");
-        // }
+        String condition = "";
+        int setIndex = userCommand.toLowerCase().indexOf("set");
+        if(setIndex == -1) {
+            throw new DavidBaseValidationException("Where is the set key word");
+        }
 
-        // String tableName = userCommand.substring(QueryHandler.UPDATE_COMMAND.length(), setIndex).trim();
-        // String clauses = userCommand.substring(setIndex + "set".length());
-        // int whereIndex = userCommand.toLowerCase().indexOf("where");
-        // if(whereIndex == -1){
-        //     IQuery query = QueryHandler.UpdateQuery(tableName, clauses, conditions);
-        //     QueryHandler.ExecuteQuery(query);
-        //     return;
-        // }
+        String tableName = userCommand.substring("Update".length(), setIndex).trim();
+        String clauses = userCommand.substring(setIndex + "set".length()).trim();
+        int whereIndex = userCommand.toLowerCase().indexOf("where");
+        if(whereIndex == -1){
+            throw new DavidBaseValidationException("Give me where condition");
+
+        }
+
+        clauses = userCommand.substring(setIndex + "set".length(), whereIndex).trim();
+        condition = userCommand.substring(whereIndex + "where".length()).trim();
+
+        List column_condition=parse_condition(condition, tableName);
+        String column=(String)column_condition.get(0);
+        Condition con=(Condition)column_condition.get(1);
+        
+        if(!clauses.contains("=")){
+            throw new DavidBaseValidationException("Wrong input value");
+        }
+        String[] clause_strings=clauses.split("=");
+        String clause_column=clause_strings[0].trim();
+        String clause_value=clause_strings[1].trim();
+
+
+        UpdateTable update_object=new UpdateTable();
+        update_object.setColumns(column);
+        update_object.setCondition(con);
+        update_object.setTableName(tableName);
+        update_object.setClause_column(clause_column);
+        update_object.setClause_value(clause_value);
+
 
         
         
-        return null;
+        return update_object;
     }
 
 
@@ -429,41 +459,30 @@ public class DavidBaseCommandValidator {
 
         column = strings[0].trim();
         value=strings[1].trim();
-        // DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
-        // HashMap<String, String> dataTypes= d.fetchAllTableColumnDataTypes("catalog","davisbase_columns");
-        // Iterator iterator = dataTypes.keySet().iterator();
-        // while (iterator.hasNext()){
-        //     String key = (String)iterator.next();
-        //     System.out.println(key+"="+dataTypes.get(key));
-        // }
-        // System.out.println(dataTypes.get(column));
+        DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
+        HashMap<String, DataType> dataTypes= d.fetchAllTableColumnDataTypes("",tableName);
+        int count=0;
+        int index=0;
+        ArrayList<String> temp=new ArrayList<String>();
+        Iterator iterator = dataTypes.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = (String)iterator.next();
+            temp.add(key);
+
+
+        }
+        index=temp.size()-temp.indexOf(column);
+        //System.out.print("1111111111111   "+index+"   111111");
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
+        //System.out.print("1111111   "+(byte)index+"       dddddddd");
+        condition = Condition.CreateCondition((byte)index,cnd, dataTypes.get(column), (Object)value);
 
-        
+        List column_condition=new ArrayList();
+        column_condition.add(column);
+        column_condition.add(condition);
 
-        ctlg  = new DavisBaseCatalogHandler();
-      
-      HashMap<String,DataType> columnDataType = ctlg.fetchAllTableColumnDataTypes("", tableName);
-     
-      List column_condition=new ArrayList();
-      
-      int indexCount = 1;
-      
-      for (String coluName  : columnDataType.keySet()) {
-    	  
-  	
-      	if (coluName.equals(column)){
-         	  System.out.print(coluName + " " + indexCount);
-      		
-            condition = Condition.CreateCondition((byte)0,cnd,columnDataType.get(coluName) , (Object)value);
-            
-            column_condition.add(column);
-            column_condition.add(condition);
-      	}
-      	
-      	indexCount = indexCount + 1;
-      	
-      }
+
+
         
 
         return column_condition;
