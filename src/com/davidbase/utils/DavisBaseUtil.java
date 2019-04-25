@@ -19,7 +19,6 @@ public class DavisBaseUtil {
     public static boolean conditionCompare(String val1, String val2, short condition){
         switch(condition){
             case EQUALS:return val1.equalsIgnoreCase(val2);
-       
         }
         return false;
     }

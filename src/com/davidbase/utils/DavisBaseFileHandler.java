@@ -784,7 +784,6 @@ public class DavisBaseFileHandler {
                 case DATETIME:
                     break;
                 case TEXT:
-           
                	 return compare((String)value1,(String) value2, condition, conditionType);
             }
         return false;
@@ -871,7 +870,6 @@ public class DavisBaseFileHandler {
         switch (conditionType) {
         case TEXT:
             return DavisBaseUtil.conditionCompare(value1,  value2, condition);
-
         }
         return false;
     }
