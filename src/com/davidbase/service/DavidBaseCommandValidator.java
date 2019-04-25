@@ -324,9 +324,19 @@ public class DavidBaseCommandValidator {
         String column=(String)column_condition.get(0);
         Condition con=(Condition)column_condition.get(1);
         
-        
-        System.out.println(column);
-        System.out.println(con.getValue());
+        if(!clauses.contains("=")){
+            throw new DavidBaseValidationException("Wrong input value");
+        }
+
+        //System.out.println(clauses);
+        // System.out.println(con.getValue());
+
+        UpdateTable update_object=new UpdateTable();
+        update_object.setColumns(column);
+        update_object.setCondition(con);
+        update_object.setTableName(tableName);
+
+
         
         
         return null;
@@ -440,16 +450,19 @@ public class DavidBaseCommandValidator {
         value=strings[1].trim();
         DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
         HashMap<String, DataType> dataTypes= d.fetchAllTableColumnDataTypes("",tableName);
-        // Iterator iterator = dataTypes.keySet().iterator();
-        // while (iterator.hasNext()){
-        //     String key = (String)iterator.next();
-        //     System.out.println(key);
-        //     System.out.println(key+"="+dataTypes.get(key));
-        // }
-        //System.out.println(dataTypes.get(column)+"     dddddddddddd");
-        //DataType type= DataType.getTypeFromText(dataTypes.get(column));
+        int count=0;
+        int index=0;
+        ArrayList<String> temp=new ArrayList<String>();
+        Iterator iterator = dataTypes.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = (String)iterator.next();
+             temp.add(key);
 
-        condition = Condition.CreateCondition((byte)0,cnd, dataTypes.get(column), (Object)value);
+        }
+        index=temp.size()-temp.indexOf(column);
+        //DataType type= DataType.getTypeFromText(dataTypes.get(column));
+        
+        condition = Condition.CreateCondition((byte)index,cnd, dataTypes.get(column), (Object)value);
 
         List column_condition=new ArrayList();
         column_condition.add(column);
