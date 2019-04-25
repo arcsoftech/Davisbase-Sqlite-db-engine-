@@ -440,11 +440,16 @@ public class DavisBaseFileHandler {
                     short condition;
                     Object conditionValue;
                     DataType conditionValueType;
+//                    
+//                    int recordCount = page.getNum_cells();
+                    
+//                    System.out.print(recordCount);
+                    
                     while (page != null) {
                         for (Object offset : page.getPageheader().getData_cell_offset()) {
                             isMatch = true;
                             leafCell = readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
-                                    (short) offset);
+                                    (short) offset, page.getNum_cells());
                             for (int i = 0; i < conditionList.size(); i++) {
                                 isMatch = false;
                                 columnIndex = conditionList.get(i).getIndex();
@@ -456,9 +461,15 @@ public class DavisBaseFileHandler {
                                     DataType colType = DataType
                                             .getTypeFromSerialCode(leafCell.getPayload().getData_type()[columnIndex]);
                                     try {
+                                    	
+//                                      System.out.print(colValue + " " + conditionValue + " " + condition + " " + colType + " " +conditionValueType +"\n" );
+
                                         isMatch = compare(colValue, conditionValue, condition, colType,
                                                 conditionValueType);
+                                        
+//                                        System.out.print(isMatch);
                                     } catch (Exception e) {
+                                    	
                                         randomAccessFile.close();
                                         throw new DavidBaseError("Error while executing query.");
                                     }
@@ -491,6 +502,7 @@ public class DavisBaseFileHandler {
                         page = readSinglePage(randomAccessFile, page.getPageheader().getNext_page_pointer());
                     }
                     randomAccessFile.close();
+                  
                     return matchingLeafCells;
                 }
             } else {
@@ -501,6 +513,112 @@ public class DavisBaseFileHandler {
             throw new DavidBaseError("Error while executing query.");
         }
         return null;
+    }
+    
+    public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset, int records) {
+        {
+            try {
+                if (pageNumber >= 0 && offset >= 0 && pageNumber <= records) {
+                	
+               
+                    randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
+                    short payloadSize = randomAccessFile.readShort();
+                    int rowId = randomAccessFile.readInt();
+                    CellHeader cellheader = new CellHeader(payloadSize, rowId);
+                    byte numberOfColumns = randomAccessFile.readByte();
+                    byte[] serialTypeCodes = new byte[numberOfColumns];
+                    for (byte i = 0; i < numberOfColumns; i++) {
+                        serialTypeCodes[i] = randomAccessFile.readByte();
+                    }
+                    List<Object> values = new ArrayList<>();
+                    Object object=null;
+                    for (byte i = 0; i < numberOfColumns; i++) {
+                        switch (DataType.getTypeFromSerialCode(serialTypeCodes[i])) {
+                            // case DataType_TinyInt.nullSerialCode is overridden with DataType_Text
+
+                            case NULL_TINYINT:
+                                object = null;
+                                break;
+
+                            case NULL_SMALLINT:
+                                randomAccessFile.readShort();
+                                object = null;
+                                break;
+
+                            case NULL_INT:
+                                randomAccessFile.readFloat();
+                                object = null;
+                                break;
+
+                            case NULL_DOUBLE_DATE:
+                                randomAccessFile.readDouble();
+                                object = null;
+                                break;
+
+                            case TINYINT:
+                                object = (Byte) randomAccessFile.readByte();
+                                break;
+
+                            case SMALLINT:
+                                object = randomAccessFile.readShort();
+                                break;
+
+                            case INT:
+                                object = randomAccessFile.readInt();
+                                break;
+
+                            case BIGINT:
+                                object = randomAccessFile.readLong();
+                                break;
+
+                            case REAL:
+                                object = randomAccessFile.readFloat();
+                                break;
+
+                            case DOUBLE:
+                                object = randomAccessFile.readDouble();
+                                break;
+
+                            case DATETIME:
+                                object = randomAccessFile.readLong();
+                                break;
+
+                            case DATE:
+                                object = randomAccessFile.readLong();
+                                break;
+
+                            case TEXT:
+                            	object = "";
+                                char[] text = new char[serialTypeCodes[i] - 12 ];
+                                for (byte k = 0; k < (serialTypeCodes[i] - 12); k++) {
+                                    text[k] = (char) randomAccessFile.readByte();
+                                }
+                                object = new String(text);
+                                
+                     
+                              
+                                break;
+
+                        }
+
+                        values.add(object);
+                    }
+                    CellPayload payload = new CellPayload(numberOfColumns, serialTypeCodes);
+                    payload.setColValues(values);
+                    LeafCell leafCell = new LeafCell(cellheader, payload);
+                    leafCell.setPageNumber(pageNumber);
+                    leafCell.setOffset(offset);
+                    
+                  
+                    
+                    return leafCell;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new DavidBaseError("Error while executing query.");
+            }
+            return null;
+        }
     }
 
     public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset) {
@@ -666,7 +784,8 @@ public class DavisBaseFileHandler {
                 case DATETIME:
                     break;
                 case TEXT:
-                    break;
+           
+               	 return compare((String)value1,(String) value2, condition, conditionType);
             }
         return false;
     }
@@ -743,6 +862,16 @@ public class DavisBaseFileHandler {
                 return DavisBaseUtil.conditionCompare(value1, (float) value2, condition);
             case DOUBLE:
                 return DavisBaseUtil.conditionCompare(value1, (double) value2, condition);
+        }
+        return false;
+    }
+    
+    
+    private boolean compare(String value1, String value2, short condition, DataType conditionType) {
+        switch (conditionType) {
+        case TEXT:
+            return DavisBaseUtil.conditionCompare(value1,  value2, condition);
+
         }
         return false;
     }
