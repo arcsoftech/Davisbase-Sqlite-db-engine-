@@ -487,13 +487,15 @@ public class DavidBaseCommandValidator {
         while (iterator.hasNext()){
             String key = (String)iterator.next();
             temp.add(key);
-
-
+            //System.out.print("1111111   "+dataTypes.get(key)+"       dddddddd");
         }
         index=temp.size()-temp.indexOf(column);
         //System.out.print("1111111111111   "+index+"   111111");
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
-        //System.out.print("1111111   "+(byte)index+"       dddddddd");
+        //System.out.print("1111111   "+dataTypes.get(column)+"       dddddddd");
+        if((is_value_str && dataTypes.get(column).toString()!="TEXT")||(!is_value_str&&dataTypes.get(column).toString()!="INT") ){
+            throw new DavidBaseValidationException("Value Datatype not match")
+        }
         if(is_value_str==true){
             condition = Condition.CreateCondition((byte)index,cnd, dataTypes.get(column), (Object)str_value);
             System.out.println(str_value);

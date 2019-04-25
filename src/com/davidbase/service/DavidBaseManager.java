@@ -359,8 +359,9 @@ public class DavidBaseManager {
     	System.out.println("STUB: This is the selectFrom method");
     	try {
             SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);
-//            System.out.println(queryObject.getColumns());
-//            System.out.println(queryObject.getCondition().getConditionType());
+            System.out.println(queryObject.getTableName());
+            //System.out.println(queryObject.getCondition().getConditionType());
+
 
  
             
