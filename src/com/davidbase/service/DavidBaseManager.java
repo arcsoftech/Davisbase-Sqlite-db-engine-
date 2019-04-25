@@ -430,7 +430,9 @@ public class DavidBaseManager {
 
     public static void parseDeleteFrom(String userCommand) {
        try{
-        DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
+            DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
+           QueryResult result = commandExecutor.executeQuery(delete_object);
+           System.out.println("Rows affected: " + result.getRowsAffected());
         //System.out.println(delete_object.conditions.get(0).getValue());
        }catch(DavidBaseValidationException e) {
         System.out.println(e.getErrorMsg());
