@@ -72,7 +72,7 @@ public class DavisBaseCatalogHandler {
                 columns.add(new InternalColumn("is_nullable", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("column_key", DataType.TEXT, false, true));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
-                        DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 7, columns);
+                        DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 3, columns);
             }
             return true;
         } catch (Exception e) {
