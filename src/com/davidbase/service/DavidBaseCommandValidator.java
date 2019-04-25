@@ -200,11 +200,12 @@ public class DavidBaseCommandValidator {
         }
         
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
-        // DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        // boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
-        // if (isExist==false){
-        //      throw new DavidBaseValidationException("The table does not Exist");
-        // } 
+        
+        DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
+        boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
+        if (isExist==false){
+             throw new DavidBaseValidationException("The table does not Exist");
+        } 
 
         int first_open_bracket_index = userCommand.indexOf("(");
         int last_close_bracket_index = userCommand.lastIndexOf(")");
