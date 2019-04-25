@@ -299,12 +299,12 @@ public class DavisBaseCatalogHandler {
 
           for (LeafCell record : records) {
         	  
-        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
-        	  
-//              Object object = record.getColumns().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
-//              columnNames.add(((String) object));
+      	  
+        	  columnNames.add((String) record.getPayload().getColValues().get(2));
+
           }
 
+         
           return columnNames;
    
     }
@@ -391,7 +391,9 @@ public class DavisBaseCatalogHandler {
 //        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
 //         System.out.print(ctlg.tableExists("data", "test2"));
 
-        ctlg.fetchAllTableColumnDataTypes("data", "davisbase_columns");
+//        ctlg.fetchAllTableColumnDataTypes("data", "davisbase_columns");
+        
+        System.out.print(ctlg.fetchAllTableColumns("data", "davisbase_columns"));
         
     }
 }

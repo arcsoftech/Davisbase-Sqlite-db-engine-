@@ -300,7 +300,7 @@ public class DavidBaseCommandValidator {
         boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(3));
         
         
-//        System.out.print(isExist);
+        System.out.print(isExist);
 
         if (isExist==false){
             throw new DavidBaseValidationException("The table does not Exist");
