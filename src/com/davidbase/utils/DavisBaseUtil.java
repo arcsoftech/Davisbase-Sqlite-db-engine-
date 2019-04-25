@@ -125,7 +125,7 @@ public class DavisBaseUtil {
     }
 
     public static boolean conditionCompare(Integer val1, Integer val2, short condition){
-    	System.out.print("Here3");
+ 
         switch(condition){
             case EQUALS:return val1.intValue()==val2.intValue();
             case GREATER_THAN: return val1>val2;

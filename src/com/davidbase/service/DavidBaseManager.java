@@ -360,7 +360,9 @@ public class DavidBaseManager {
  
             
             QueryResult result = commandExecutor.executeQuery(queryObject);
-//            System.out.println("Rows affected: " + result.getRowsAffected());
+            
+            
+            System.out.println("Rows affected: " + result.getRowsAffected());
             //List columns=result.getColumns();
             /*for(int i=0;i<columns.size();i++){
                 System.out.println(columns.get(i));

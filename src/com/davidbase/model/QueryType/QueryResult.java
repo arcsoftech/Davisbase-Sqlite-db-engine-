@@ -1,5 +1,6 @@
 package com.davidbase.model.QueryType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QueryResult {
@@ -11,6 +12,8 @@ public class QueryResult {
 
     public QueryResult(int rowsInRes){
         this.rowsAffected=rowsInRes;
+        columns = new ArrayList<String>();
+        values = new ArrayList<String>();
     }
     public List<String> getColumns() {
         return columns;
