@@ -281,14 +281,16 @@ public class DavidBaseCommandValidator {
             int index = userCommand.toLowerCase().indexOf("where");
              if(index == -1) {
                  tableName = userCommand.substring("Delete From".length()).trim();
-                 throw new DavidBaseValidationException("Tell me which record you want to delete");
+                 DeleteFrom delete_object=new DeleteFrom("", tableName);
+                 delete_object.setConditions(null);
+                 return delete_object;
 
              }
 
             if(tableName.equals("")) {
                 tableName = userCommand.substring("Delete From".length(), index).trim();
             }
-            System.out.println(tableName);
+            //System.out.println(tableName);
             condition_String = userCommand.substring(index + "where".length()).trim();
 
             List column_condition=parse_condition(condition_String, tableName);
@@ -382,6 +384,11 @@ public class DavidBaseCommandValidator {
         int where_index = rest.toLowerCase().indexOf("where");
         if(where_index == -1) {
             String tableName = rest.trim();
+            SelectFrom select_object=new SelectFrom();
+            select_object.setColumns(null);
+            select_object.setTableName(tableName);
+            select_object.setCondition(null);
+            return select_object;
         }
 
         String tableName = rest.substring(0, where_index).trim();
@@ -443,7 +450,9 @@ public class DavidBaseCommandValidator {
 
         String[] strings;
         String column;
-        String value;
+        String temp_value;
+        String str_value="";
+        int int_value=0;
         //DataType dataType;  Need to get data type of the value
         Condition condition;
         strings = condition_String.split(op);
@@ -452,7 +461,17 @@ public class DavidBaseCommandValidator {
         }
 
         column = strings[0].trim();
-        value=strings[1].trim();
+        temp_value=strings[1].trim();
+
+        boolean is_value_str=false;
+        if(temp_value.contains("\"")){
+            str_value= temp_value.trim().replace("\"", "");
+            is_value_str=true;
+        }else{
+            int_value=Integer.parseInt(temp_value);
+        }
+
+
         DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
         HashMap<String, DataType> dataTypes= d.fetchAllTableColumnDataTypes("",tableName);
         int count=0;
@@ -468,7 +487,13 @@ public class DavidBaseCommandValidator {
         //System.out.print("1111111111111   "+index+"   111111");
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
         //System.out.print("1111111   "+(byte)index+"       dddddddd");
-        condition = Condition.CreateCondition((byte)index,cnd, dataTypes.get(column), (Object)value);
+        if(is_value_str==true){
+            condition = Condition.CreateCondition((byte)index,cnd, dataTypes.get(column), (Object)str_value);
+            System.out.println(str_value);
+        }else{
+            condition = Condition.CreateCondition((byte)index,cnd, dataTypes.get(column), (Object)int_value);
+            System.out.print(int_value);
+        }
 
         List column_condition=new ArrayList();
         column_condition.add(column);

@@ -354,8 +354,8 @@ public class DavidBaseManager {
     	System.out.println("STUB: This is the selectFrom method");
     	try {
             SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);
-            System.out.println(queryObject.getColumns());
-            System.out.println(queryObject.getCondition().getConditionType());
+            System.out.println(queryObject.getCondition().getValue());
+            //System.out.println(queryObject.getCondition().getConditionType());
 
 
             //QueryResult result = commandExecutor.executeQuery(queryObject);
@@ -432,9 +432,10 @@ public class DavidBaseManager {
     public static void parseDeleteFrom(String userCommand) {
        try{
             DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
-           QueryResult result = commandExecutor.executeQuery(delete_object);
-           System.out.println("Rows affected: " + result.getRowsAffected());
-        //System.out.println(delete_object.conditions.get(0).getValue());
+            System.out.println(delete_object.tableName);
+            QueryResult result = commandExecutor.executeQuery(delete_object);
+            System.out.println("Rows affected: " + result.getRowsAffected());
+        
        }catch(DavidBaseValidationException e) {
         System.out.println(e.getErrorMsg());
         }
