@@ -16,7 +16,7 @@ import static com.davidbase.utils.DavisBaseConstants.*;
 /**
  * Class represents a Drop Table query
  */
-public class DropTable implements QueryBase {
+public class  DropTable implements QueryBase {
 
     public String databaseName;
     public String tableName;

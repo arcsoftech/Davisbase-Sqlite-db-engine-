@@ -281,10 +281,7 @@ public class DavisBaseCatalogHandler {
 
     public boolean tableExists(String databaseName, String tableName) {
     	
-    		
-    	   File file = new File(getDatabasePath("data")  + "/" + tableName + FILE_EXT);
-    	   
-//    	   System.out.print(file.getAbsoluteFile());
+    	   File file = new File(getDatabasePath(DEFAULT_DATA_DIRNAME) + "/" + tableName + FILE_EXT);
     	   
     	   return file.exists();
     		
@@ -344,6 +341,7 @@ public class DavisBaseCatalogHandler {
 
     public String getTablePrimaryKey(String databaseName, String tableName) {
     	
+
     	List<Condition> conditions = new ArrayList<>();
 //      conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
       conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
@@ -363,7 +361,6 @@ public class DavisBaseCatalogHandler {
 
 //      System.out.print(columDataTypeMapping);
 
-    	
         return null;
     }
 
@@ -372,17 +369,14 @@ public class DavisBaseCatalogHandler {
     }
 
     public boolean checkIfValueForPrimaryKeyExists(String databaseName, String tableName, int value) {
-        
-    	
-    	
-    	return true;
+        return true;
     }
 
     public int getLastRowId(String databasename, String tableName) {
         //Get the Last record in last leaf
         Page<LeafCell> lastPage = getLastRecordAndPage(databasename,tableName);
         if(lastPage!=null && lastPage.getCells()!=null){
-            return lastPage.getCells().get(0).getHeader().getRow_id();
+            return lastPage.getCells().size()!=0 ?lastPage.getCells().get(0).getHeader().getRow_id() : 0;
         }
         throw new DavidBaseError("table does not exist, no row id found");
     }
@@ -390,11 +384,14 @@ public class DavisBaseCatalogHandler {
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        ctlg.createTable("db1", "test2");
+
 //        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
 //         System.out.print(ctlg.tableExists("data", "test2"));
-        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
-        
-//        ctlg.getTablePrimaryKey("abc", "davisbase_columns");
+
+//        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
+//         System.out.print(ctlg.tableExists("data", "test2"));
+
+        ctlg.fetchAllTableColumnDataTypes("data", "davisbase_columns");
         
     }
 }

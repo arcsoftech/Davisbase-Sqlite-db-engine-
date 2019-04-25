@@ -191,7 +191,7 @@ public class DavidBaseCommandValidator {
 
     public InsertInto isValidInsertInto(String userCommand, String currentDB)throws DavidBaseValidationException{
         //String userCommand_copy=userCommand;
-        if(userCommand.contains("Values")==false){
+        if(userCommand.contains("values")==false){
             throw new DavidBaseValidationException("Missing keyword Values");
 
         }
@@ -207,7 +207,7 @@ public class DavidBaseCommandValidator {
         int last_close_bracket_index = userCommand.lastIndexOf(")");
 
         String string_inside_brackets=userCommand.substring(first_open_bracket_index + 1, last_close_bracket_index).trim();
-        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("Values")));
+        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("values")));
         //System.out.println(columns_substrings.get(0));
         //System.out.println(columns_substrings.get(1));
 
