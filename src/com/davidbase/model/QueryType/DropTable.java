@@ -29,7 +29,7 @@ public class  DropTable implements QueryBase {
     @Override
     public QueryResult execute() {
 
-        DeleteFrom deleteQuery = new DeleteFrom(databaseName,SYSTEM_TABLES_TABLENAME);
+        DeleteFrom deleteQuery = new DeleteFrom(DEFAULT_CATALOG_DATABASENAME,SYSTEM_TABLES_TABLENAME);
 
         List<Condition> delConds = new ArrayList<Condition>();
         delConds.add(new Condition(1, Condition.EQUALS, DataType.TEXT,tableName));
