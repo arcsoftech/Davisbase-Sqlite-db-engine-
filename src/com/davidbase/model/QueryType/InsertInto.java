@@ -98,12 +98,12 @@ public class InsertInto implements QueryBase {
         
         List<Object> colVal = new ArrayList<>();
         List<DataType> colValTypes = new ArrayList<>();
-        HashMap<String,String> columnDataTypeMap = catalog.fetchAllTableColumnDataTypes(DEFAULT_DATA_DIRNAME,tableName);
+        HashMap<String,DataType> columnDataTypeMap = catalog.fetchAllTableColumnDataTypes(DEFAULT_DATA_DIRNAME,tableName);
         colValTypes.add(DataType.INT);
         colVal.add(record.getHeader().getRow_id());
         for (int i = 0;i<columnValues.size();i++)
         {
-            colValTypes.add(DataType.valueOf(columnDataTypeMap.get(columns.get(i))));
+            colValTypes.add(columnDataTypeMap.get(columns.get(i)));
             colVal.add(columnValues.get(i));
         }
         record.getPayload().setColTypes(colValTypes);
