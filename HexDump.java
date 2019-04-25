@@ -219,4 +219,9 @@ public class HexDump {
 		}
 		return s;
 	}
+
+	public static void displayBinaryHex(RandomAccessFile binaryFile, int i) {
+		// TODO Auto-generated method stub
+		
+	}
 }
