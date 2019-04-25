@@ -11,6 +11,7 @@ import com.davidbase.model.DavidBaseValidationException;
 import com.davidbase.model.QueryType.Condition;
 import com.davidbase.model.QueryType.CreateDatabase;
 import com.davidbase.model.QueryType.CreateTable;
+import com.davidbase.model.QueryType.DeleteFrom;
 import com.davidbase.model.QueryType.DropDatabase;
 import com.davidbase.model.QueryType.DropTable;
 import com.davidbase.model.QueryType.InsertInto;
@@ -48,6 +49,12 @@ public class DavidBaseCommandValidator {
         if(commandTokens.get(1).compareToIgnoreCase("table")!=0){
             throw new DavidBaseValidationException("You are not creating table, command is not recognizable");
         }
+
+        if(!userCommand.endsWith(")")){
+            throw new DavidBaseValidationException("Missing )");
+        }
+
+
         //check if the table has been existed. do not know if need to check column?
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         boolean isExist=catalog_handler.tableExists(current_DB, commandTokens.get(2)); //??figure out database name
@@ -72,8 +79,13 @@ public class DavidBaseCommandValidator {
             //get primary key
             for(int j=0;j<temp.size();j++){
                 if(temp.get(j).toLowerCase().contains("primary")==true){
-                    pri=temp.get(0);
-                    is_pri=true;
+                    if(DataType.getTypeFromText(temp.get(1).toUpperCase().trim())==DataType.INT){
+                        pri=temp.get(0);
+                        is_pri=true;
+                    }else{
+                        throw new DavidBaseValidationException("Primary Key must be INT data type ");
+                    }
+                    
                 }
             }
             columns_list.add(new InternalColumn(temp.get(0), DataType.getTypeFromText(temp.get(1).toUpperCase().trim()),is_pri,false));
@@ -178,18 +190,24 @@ public class DavidBaseCommandValidator {
     }
 
     public InsertInto isValidInsertInto(String userCommand, String currentDB)throws DavidBaseValidationException{
+        //String userCommand_copy=userCommand;
+        if(userCommand.contains("Values")==false){
+            throw new DavidBaseValidationException("Missing keyword Values");
+
+        }
+        
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
         // DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         // boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
         // if (isExist==false){
-        //     throw new DavidBaseValidationException("The table does not Exist");
-        // }
+        //      throw new DavidBaseValidationException("The table does not Exist");
+        // } 
 
-        int first_open_bracket_index = userCommand.toLowerCase().indexOf("(");
-        int last_close_bracket_index = userCommand.toLowerCase().lastIndexOf(")");
+        int first_open_bracket_index = userCommand.indexOf("(");
+        int last_close_bracket_index = userCommand.lastIndexOf(")");
 
         String string_inside_brackets=userCommand.substring(first_open_bracket_index + 1, last_close_bracket_index).trim();
-        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("values")));
+        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("Values")));
         //System.out.println(columns_substrings.get(0));
         //System.out.println(columns_substrings.get(1));
 
@@ -203,6 +221,10 @@ public class DavidBaseCommandValidator {
 
         ArrayList<String> columns_list = new ArrayList<String>(Arrays.asList(columns_string.split(",")));
         ArrayList<String> values_list = new ArrayList<String>(Arrays.asList(values_string.split(",")));
+        
+        if(columns_list.size()!=values_list.size()){
+            throw new DavidBaseValidationException("columns and corrosponding values do not match");
+        }
 
         for(int i=0; i<columns_list.size();i++){
             columns.add(columns_list.get(i).trim());
@@ -212,23 +234,52 @@ public class DavidBaseCommandValidator {
             values.add(values_list.get(i).trim());
         }
 
+        // for(int i=0; i<columns_list.size();i++){
+        //     System.out.println(columns_list.get(i).trim());
+        // }
+
+        // for(int i=0; i<values_list.size();i++){
+        //     System.out.println(values_list.get(i).trim());
+        // }
+
         InsertInto queryObject=new InsertInto(DavidBaseManager.getCurrentDB(),commandTokens.get(2),columns, values);
         return queryObject;
-        // for(int i=0; i<columns.size();i++){
-        //     System.out.println(columns.get(i));
-        // }
-
-        // for(int i=0; i<values.size();i++){
-        //     System.out.println(values.get(i));
-        // }
-
-
-
-
-
-
-
+        
     }
+
+
+    public DeleteFrom isValidDeleteFrom(String userCommand) throws DavidBaseValidationException{
+        String[] userParts = userCommand.toLowerCase().split(" ");
+        String[] actualParts = "Delete From".toLowerCase().split(" ");
+
+        for(int i=0;i<actualParts.length;i++){
+            if(!actualParts[i].equals(userParts[i])){
+                throw new DavidBaseValidationException("Unrecongnized query");
+
+            }
+        }
+
+
+        String tableName = "";
+            String condition = "";
+            int index = userCommand.toLowerCase().indexOf("where");
+             if(index == -1) {
+                 tableName = userCommand.substring("Delete From".length()).trim();
+                 //System.out.println(tableName);
+             }
+
+            if(tableName.equals("")) {
+                tableName = userCommand.substring("Delete From".length(), index).trim();
+            }
+            System.out.println(tableName);
+            condition = userCommand.substring(index + "where".length()).trim();
+            System.out.println(condition);
+        return null;
+    }
+
+
+
+
 
 
     public SelectFrom isValidSelectFrom(String userCommand) throws DavidBaseValidationException{

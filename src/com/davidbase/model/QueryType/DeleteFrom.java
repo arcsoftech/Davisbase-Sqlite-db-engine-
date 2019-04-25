@@ -31,4 +31,5 @@ public class DeleteFrom implements QueryBase {
     public void setConditions(List<Condition> conditions) {
         this.conditions = conditions;
     }
+
 }

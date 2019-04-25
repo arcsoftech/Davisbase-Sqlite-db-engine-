@@ -78,7 +78,7 @@ public class DavidBaseManager {
         while(!isExit) {
             System.out.print(PROMPT);
             /* toLowerCase() renders command case insensitive */
-            userCommand = scanner.next().replace("\n", " ").replace("\r", "").trim().toLowerCase();
+            userCommand = scanner.next().replace("\n", " ").replace("\r", "").trim();
             // userCommand = userCommand.replace("\n", "").replace("\r", "");
             parseUserCommand(userCommand);
         }
@@ -176,7 +176,7 @@ public class DavidBaseManager {
          *  This switch handles a very small list of hardcoded commands of known syntax.
          *  You will want to rewrite this method to interpret more complex commands.
          */
-        switch (commandTokens.get(0)) {
+        switch (commandTokens.get(0).toLowerCase()) {
             case "select":
                 System.out.println("CASE: SELECT");
                 selectFrom(userCommand);
@@ -209,8 +209,9 @@ public class DavidBaseManager {
                     parseCreateDatabase(userCommand);
                 }
                 break;
-           
-       
+            case "delete":
+                parseDelete(userCommand);
+                break;
             case "update":
                 System.out.println("CASE: UPDATE");
                 //parseUpdate(userCommand);
@@ -420,6 +421,17 @@ public class DavidBaseManager {
             System.out.println(e.getErrorMsg());
         }
     }
+
+    public static void parseDelete(String userCommand) {
+        try{
+            DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
+        }catch(DavidBaseValidationException e) {
+            System.out.println(e.getErrorMsg());
+        }
+        
+    }
+
+
 
     public static String getCurrentDB() {
         return currentDB;
