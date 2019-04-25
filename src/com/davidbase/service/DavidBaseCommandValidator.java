@@ -438,18 +438,18 @@ public class DavidBaseCommandValidator {
 
         column = strings[0].trim();
         value=strings[1].trim();
-        // DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
-        // HashMap<String, DataType> dataTypes= d.fetchAllTableColumnDataTypes("catalog","davisbase_columns");
+        DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
+        HashMap<String, DataType> dataTypes= d.fetchAllTableColumnDataTypes("",tableName);
         // Iterator iterator = dataTypes.keySet().iterator();
         // while (iterator.hasNext()){
         //     String key = (String)iterator.next();
         //     System.out.println(key);
         //     System.out.println(key+"="+dataTypes.get(key));
         // }
-        // System.out.println(dataTypes.get(column));
+        //System.out.println(dataTypes.get(column)+"     dddddddddddd");
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
 
-        condition = Condition.CreateCondition((byte)0,cnd, DataType.getTypeFromText("INT"), (Object)value);
+        condition = Condition.CreateCondition((byte)0,cnd, dataTypes.get(column), (Object)value);
 
         List column_condition=new ArrayList();
         column_condition.add(column);
