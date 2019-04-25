@@ -332,6 +332,8 @@ public class DavidBaseManager {
             DropTable queryObject = commandValidator.isValidDropTable(dropTableString,currentDB);
             System.out.println(queryObject.databaseName);
             System.out.println(queryObject.tableName);
+            QueryResult resultDel = commandExecutor.executeQuery(queryObject);
+            out.println("Rows affected " + resultDel.getRowsAffected());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }

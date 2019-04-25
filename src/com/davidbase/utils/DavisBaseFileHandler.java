@@ -320,10 +320,10 @@ public class DavisBaseFileHandler {
 
     private short[] removeOffset(short[] data_cell_offset, int offSetIndex) {
         short[] newoffset = new short[data_cell_offset.length-1];
-        for(int i=0;i<data_cell_offset.length;i++){
+        for(int i=0,j=0;i<data_cell_offset.length;i++){
             if(i==offSetIndex)
                 continue;
-            newoffset[i] = data_cell_offset[i];
+            newoffset[j++] = data_cell_offset[i];
         }
         return  newoffset;
     }
