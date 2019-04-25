@@ -281,7 +281,8 @@ public class DavisBaseCatalogHandler {
 
     public boolean tableExists(String databaseName, String tableName) {
     	
-    	   File file = new File(getDatabasePath(databaseName)  + "/" + tableName + FILE_EXT);
+    		
+    	   File file = new File(getDatabasePath("data")  + "/" + tableName + FILE_EXT);
     	   
 //    	   System.out.print(file.getAbsoluteFile());
     	   
@@ -371,8 +372,8 @@ public class DavisBaseCatalogHandler {
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        ctlg.createTable("db1", "test2");
-//        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
-         System.out.print(ctlg.tableExists("data", "test2"));
-//        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
+        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
+//         System.out.print(ctlg.tableExists("data", "test2"));
+        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
     }
 }

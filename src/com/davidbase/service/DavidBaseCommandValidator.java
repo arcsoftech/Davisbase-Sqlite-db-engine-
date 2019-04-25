@@ -242,12 +242,22 @@ public class DavidBaseCommandValidator {
 
         //check if table exists ---- Qi
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2));
+        
+//        System.out.print(commandTokens.get(3));
+        
+        
+        boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(3));
+        
+        
+//        System.out.print(isExist);
 
-        if (isExist!=false){
+        if (isExist==false){
             throw new DavidBaseValidationException("The table does not Exist");
         }
         int from_index = userCommand.toLowerCase().indexOf("from");
+        
+        System.out.print(from_index);
+        
         //String attribute = userCommand.substring("select".length(), from_index).trim();
         String rest = userCommand.substring(from_index + "from".length());
 
@@ -269,6 +279,7 @@ public class DavidBaseCommandValidator {
         select_object.setCondition(condition);
         select_object.setTableName(tableName);
 
+        System.out.print(select_object);
         return select_object;
     }
 
