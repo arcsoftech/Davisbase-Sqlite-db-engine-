@@ -3,7 +3,6 @@ package com.davidbase.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import com.davidbase.utils.DataType;
@@ -17,15 +16,11 @@ import com.davidbase.model.QueryType.DeleteFrom;
 import com.davidbase.model.QueryType.DropDatabase;
 import com.davidbase.model.QueryType.DropTable;
 import com.davidbase.model.QueryType.InsertInto;
-import com.davidbase.model.QueryType.QueryBase;
-import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.QueryType.SelectFrom;
+import com.davidbase.model.QueryType.ShowTable;
 import com.davidbase.model.QueryType.UpdateTable;
 import com.davidbase.utils.DavisBaseCatalogHandler;
 
-//import org.graalvm.compiler.nodes.InliningLog.UpdateScope;
-
-import com.davidbase.utils.DavisBaseCatalogHandler;
 
 import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
 
@@ -42,6 +37,8 @@ public class DavidBaseCommandValidator {
     public boolean isValid(String userCommand){
         return true;
     }
+    
+    DavisBaseCatalogHandler ctlg ;
 
     /**
      * validate a create table query
@@ -147,13 +144,20 @@ public class DavidBaseCommandValidator {
 
     }
 
-    public boolean isValidShowTable(String userCommand)throws DavidBaseValidationException{
+    public ShowTable isValidShowTable(String userCommand)throws DavidBaseValidationException{
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
         if(commandTokens.size()>3){
             throw new DavidBaseValidationException("Failed to show tables");
         }
+        
+        ShowTable showTable = new ShowTable();
+        showTable.execute();
+        
+        
+        
+        
 
-        return true;
+        return null;
 
     }
 
@@ -294,7 +298,6 @@ public class DavidBaseCommandValidator {
             condition_String = userCommand.substring(index + "where".length()).trim();
 
             List column_condition=parse_condition(condition_String, tableName);
-            String column=(String)column_condition.get(0);
             //System.out.println(column);
             Condition condition=(Condition)column_condition.get(1);
             //System.out.println(condition.getValue());
@@ -370,7 +373,7 @@ public class DavidBaseCommandValidator {
         boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(2).trim());
         
         
-        System.out.print(isExist);
+       
 
         if (isExist==false){
             throw new DavidBaseValidationException("The table does not Exist");
@@ -398,13 +401,16 @@ public class DavidBaseCommandValidator {
         List column_condition=parse_condition(condition_string, tableName);
         String column=(String)column_condition.get(0);
         Condition condition=(Condition)column_condition.get(1);
-
+        
+        
+      
         SelectFrom select_object=new SelectFrom();
         select_object.setColumns(column);
         select_object.setCondition(condition);
         select_object.setTableName(tableName);
+        
+//        System.out.print(select_object.getCondition().getValType());
 
-        System.out.print(select_object);
         return select_object;
     }
 
@@ -482,6 +488,7 @@ public class DavidBaseCommandValidator {
             String key = (String)iterator.next();
             temp.add(key);
 
+
         }
         index=temp.size()-temp.indexOf(column);
         //System.out.print("1111111111111   "+index+"   111111");
@@ -501,8 +508,9 @@ public class DavidBaseCommandValidator {
 
 
 
-        return column_condition;
+        
 
+        return column_condition;
 
     }
 }

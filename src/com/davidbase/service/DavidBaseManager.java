@@ -267,8 +267,7 @@ public class DavidBaseManager {
             currentDB=queryObject.databaseName;
             System.out.println(currentDB);
             commandExecutor.executeQuery(queryObject);
-            QueryResult result=commandExecutor.executeQuery(queryObject);
-           // System.out.println("Rows affected: " + );
+        //    System.out.println("Rows affected: " + );
             
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -290,6 +289,8 @@ public class DavidBaseManager {
     private static void parseShowDatabase(String showDB) {
         try {
             boolean isTrue = commandValidator.isValidShowDB(showDB);
+            
+            
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -298,7 +299,11 @@ public class DavidBaseManager {
 
     private static void parseShowTable(String showTable) {
         try {
-            boolean isTrue = commandValidator.isValidShowTable(showTable);
+            ShowTable isTrue = commandValidator.isValidShowTable(showTable);
+            
+            System.out.print(isTrue);   
+            
+            QueryResult result = commandExecutor.executeQuery(isTrue);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -354,19 +359,21 @@ public class DavidBaseManager {
     	System.out.println("STUB: This is the selectFrom method");
     	try {
             SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);
-            System.out.println(queryObject.getCondition().getValue());
-            //System.out.println(queryObject.getCondition().getConditionType());
+//            System.out.println(queryObject.getColumns());
+//            System.out.println(queryObject.getCondition().getConditionType());
 
-
-            //QueryResult result = commandExecutor.executeQuery(queryObject);
-            //System.out.println("Rows affected: " + result.getRowsAffected());
+ 
+            
+            QueryResult result = commandExecutor.executeQuery(queryObject);
+           
+            System.out.println("Rows affected: " + result.getRowsAffected());
             //List columns=result.getColumns();
             /*for(int i=0;i<columns.size();i++){
                 System.out.println(columns.get(i));
             } */
             
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println("Herre" +e.getErrorMsg());
         }
     }
     	

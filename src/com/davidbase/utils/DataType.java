@@ -3,16 +3,14 @@ package com.davidbase.utils;
 import com.davidbase.model.DavidBaseValidationException;
 
 public enum DataType {
-    NULL_TINYINT("NULL",1,0x00),
-    NULL_SMALLINT("NULL",2,0x01),
-    NULL_INT("NULL",4,0x02),
-    NULL_DOUBLE_DATE("NULL",8,0x03),
-    TINYINT("TINYINT",1,0x04),
-    SMALLINT("SMALLINT",2,0x05),
-    INT("INT",4,0x06),
-    BIGINT("BIGINT",8,0x07),
-    REAL("REAL",4,0x08),
-    DOUBLE("DOUBLE",8,0x09),
+    NULL("NULL",0,0x00),
+    TINYINT("TINYINT",1,0x01),
+    SMALLINT("SMALLINT",2,0x02),
+    INT("INT",4,0x03),
+    BIGINT("BIGINT",8,0x04),
+    REAL("REAL",8,0x05),
+    YEAR("YEAR",1,0x06),
+    TIME("TIME",4,0x08),
     DATETIME("DATETIME",8,0x0A),
     DATE("DATE",8,0x0B),
     TEXT("TEXT",1,0x0C);
@@ -48,16 +46,14 @@ public enum DataType {
     public static DataType getTypeFromSerialCode(byte serialCode) throws DavidBaseValidationException {
 
         switch (serialCode){
-            case 0x00: return NULL_TINYINT;
-            case 0x01: return NULL_SMALLINT;
-            case 0x02: return NULL_INT;
-            case 0x03: return NULL_DOUBLE_DATE;
-            case 0x04: return TINYINT;
-            case 0x05: return SMALLINT;
-            case 0x06: return INT;
-            case 0x07: return BIGINT;
-            case 0x08: return REAL;
-            case 0x09: return DOUBLE;
+            case 0x00: return NULL;
+            case 0x01: return TINYINT;
+            case 0x02: return SMALLINT;
+            case 0x03: return INT;
+            case 0x04: return BIGINT;
+            case 0x05: return REAL;
+            case 0x06: return YEAR;
+            case 0x08: return TIME;
             case 0x0A: return DATETIME;
             case 0x0B: return DATE;
             default: return TEXT;
@@ -72,10 +68,12 @@ public enum DataType {
             case "INT": return INT;
             case "BIGINT": return BIGINT;
             case "REAL": return REAL;
-            case "DOUBLE": return DOUBLE;
+            case "NULL": return NULL;
             case "DATETIME": return DATETIME;
             case "DATE": return DATE;
             case "TEXT": return TEXT;
+            case "TIME": return TIME;
+            case "YEAR": return YEAR;
         }
         throw new DavidBaseValidationException("Unrecognized data type");
     }

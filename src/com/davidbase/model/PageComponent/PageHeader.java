@@ -1,6 +1,5 @@
 package com.davidbase.model.PageComponent;
 
-import static com.davidbase.utils.DavisBaseConstants.PAGE_SIZE;
 
 /**
  * This class represents a Page Header

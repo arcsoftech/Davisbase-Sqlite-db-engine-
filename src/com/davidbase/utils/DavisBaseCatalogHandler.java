@@ -1,11 +1,8 @@
 package com.davidbase.utils;
 
 import com.davidbase.model.DavidBaseError;
-import com.davidbase.model.PageComponent.RawRecord;
 import com.davidbase.model.PageComponent.*;
 import com.davidbase.model.QueryType.*;
-
-import exceptions.InternalException;
 import java.util.HashMap;
 import java.util.List;
 import java.io.File;
@@ -54,7 +51,7 @@ public class DavisBaseCatalogHandler {
              DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 7);
             if (startingRowId >= 0) {
                 List<InternalColumn> columns = new ArrayList<>();
-                columns.add(new InternalColumn("rowid", DataType.INT, false, false));
+                columns.add(new InternalColumn("rowid", DataType.INT, true, false));
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
                 // columns.add(new InternalColumn("record_count", DataType.INT, false, false));
                 // columns.add(new InternalColumn("col_tbl_st_rowid", DataType.INT, false,
@@ -64,15 +61,15 @@ public class DavisBaseCatalogHandler {
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
                 DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 1, columns);
                 columns.clear();
-                columns.add(new InternalColumn("rowid", DataType.INT, false, false));
+                columns.add(new InternalColumn("rowid", DataType.INT, true, false));
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("column_name", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("data_type", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("ordinal_position", DataType.TINYINT, false, false));
-                columns.add(new InternalColumn("primary_key", DataType.TEXT, false, false));
                 columns.add(new InternalColumn("is_nullable", DataType.TEXT, false, false));
+                columns.add(new InternalColumn("column_key", DataType.TEXT, false, true));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
-                        DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 7, columns);
+                        DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 3, columns);
             }
             return true;
         } catch (Exception e) {
@@ -285,6 +282,8 @@ public class DavisBaseCatalogHandler {
     	   return file.exists();
     		
     }
+    
+    
 
     public List<String> fetchAllTableColumns(String databaseName, String tableName){
     	
@@ -351,20 +350,21 @@ public class DavisBaseCatalogHandler {
 
       List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
       HashMap<String, String> columDataTypeMapping = new HashMap<>();
+      
+      String primayKeyCol = "";
 
       for (LeafCell record : records) {
           Object object = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
-          Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATA_TYPE);
+          Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_PRIMARY_KEY);
           	
-          System.out.print(record.getPayload().getColValues());
-          String columnName = ((String) object);
-          String columnDataType = ((String)dataTypeObject );
-          columDataTypeMapping.put(columnName.toLowerCase(), columnDataType);
+          
+         if (((String)dataTypeObject).equals("YES")) {
+        	
+        	 primayKeyCol = (String)object;
+         }
+
       }
-
-//      System.out.print(columDataTypeMapping);
-
-        return null;
+        return primayKeyCol;
     }
 
     public int getTableRecordCount(String databaseName, String tableName) {
@@ -372,7 +372,8 @@ public class DavisBaseCatalogHandler {
     }
 
     public boolean checkIfValueForPrimaryKeyExists(String databaseName, String tableName, int value) {
-        return true;
+       
+    	return true;
     }
 
     public int getLastRowId(String databasename, String tableName) {
@@ -384,6 +385,8 @@ public class DavisBaseCatalogHandler {
         throw new DavidBaseError("table does not exist, no row id found");
     }
 
+    
+    
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        ctlg.createTable("db1", "test2");
@@ -394,9 +397,11 @@ public class DavisBaseCatalogHandler {
 //        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
 //         System.out.print(ctlg.tableExists("data", "test2"));
 
-        ctlg.fetchAllTableColumnDataTypes("data", "davisbase_columns");
+
         
 //        System.out.print(ctlg.fetchAllTableColumns("data", "davisbase_columns"));
+       
+       System.out.print(ctlg.getTablePrimaryKey(" ", "utd"));
         
     }
 }

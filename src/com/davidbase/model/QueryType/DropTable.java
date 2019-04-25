@@ -1,13 +1,11 @@
 package com.davidbase.model.QueryType;
 
 import com.davidbase.utils.DataType;
-import com.davidbase.utils.DavisBaseConstants;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.utils.DavisBaseFileHandler;
 
 import java.io.File;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,10 +1,11 @@
 package com.davidbase.model.QueryType;
 
 import com.davidbase.model.DavidBaseError;
+import com.davidbase.model.PageComponent.LeafCell;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
+import com.davidbase.utils.DavisBaseCatalogHandler;
 import com.davidbase.utils.DavisBaseFileHandler;
-
 import java.util.List;
 
 /**
@@ -41,15 +42,63 @@ public class SelectFrom implements QueryBase {
 		this.condition = condition;
 	}
 
+	 private DavisBaseFileHandler filehandler;
 
     @Override
     public QueryResult execute() {
         try {
-            new DavisBaseFileHandler().readFromFile(tableName);
+        	
+  
+        	
+        	DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
+//        	System.out.print(tableName);
+        	 filehandler = new DavisBaseFileHandler();
+            List<LeafCell> records = filehandler.findRecord("data", tableName, condition,null, false);
+            
+            List<String> colNames = ctlg.fetchAllTableColumns("", tableName);
+           
+            QueryResult queryObject = new QueryResult(records.size());
+            
+          
+         
+           
+            for (LeafCell record : records) {
+            	
+            	int colIndex = 0;
+            	
+            	int valueIndex = 0;
+            	
+            	List<Object> colValues = record.getPayload().getColValues();
+            	
+            	
+           
+            	for (Object colValue : colValues) {
+            		
+            		if (valueIndex > 0) {
+            		
+            			queryObject.getColumns().add(colNames.get(colIndex));
+            			
+            			queryObject.getValues().add(String.valueOf(colValue));
+            			
+            			colIndex = colIndex + 1;
+            		}
+            		valueIndex = valueIndex + 1;
+	
+            	}
+           
+ 	
+            }
+            
+//            System.out.print(queryObject.getColumns() + " " + queryObject.getValues());
+            
+//         
+//        	
+//            new DavisBaseFileHandler().readFromFile(tableName);
+            
+            return queryObject;
         }catch(Exception e){
             e.printStackTrace();
             throw new DavidBaseError("Error while creating new table");
         }
-        return null;
     }
 }
