@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 import com.davidbase.utils.DataType;
 
 import com.davidbase.model.PageComponent.InternalColumn;
@@ -193,9 +194,9 @@ public class DavidBaseCommandValidator {
 
     public InsertInto isValidInsertInto(String userCommand, String currentDB)throws DavidBaseValidationException{
         //String userCommand_copy=userCommand;
-        if(userCommand.contains("Values")==false){
+        //System.out.println(userCommand);
+        if(userCommand.contains("values")==false){
             throw new DavidBaseValidationException("Missing keyword Values");
-
         }
         
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
@@ -209,7 +210,7 @@ public class DavidBaseCommandValidator {
         int last_close_bracket_index = userCommand.lastIndexOf(")");
 
         String string_inside_brackets=userCommand.substring(first_open_bracket_index + 1, last_close_bracket_index).trim();
-        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("Values")));
+        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("values")));
         //System.out.println(columns_substrings.get(0));
         //System.out.println(columns_substrings.get(1));
 
@@ -220,6 +221,9 @@ public class DavidBaseCommandValidator {
         String values_string=columns_substrings.get(1).replaceAll("[(]","");
         columns_string=columns_string.trim();
         values_string=values_string.trim();
+
+        System.out.println(columns_string);
+        System.out.println(values_string);
 
         ArrayList<String> columns_list = new ArrayList<String>(Arrays.asList(columns_string.split(",")));
         ArrayList<String> values_list = new ArrayList<String>(Arrays.asList(values_string.split(",")));
@@ -297,10 +301,10 @@ public class DavidBaseCommandValidator {
         //check if table exists ---- Qi
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         
-//        System.out.print(commandTokens.get(3));
+        //System.out.print(commandTokens.get(2));
         
         
-        boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(3));
+        boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(2).trim());
         
         
 //        System.out.print(isExist);
@@ -390,9 +394,15 @@ public class DavidBaseCommandValidator {
         column = strings[0].trim();
         value=strings[1].trim();
         // DavisBaseCatalogHandler d=new DavisBaseCatalogHandler();
-        // HashMap<String, String> dataTypes= d.fetchAllTableColumnDataTypes("",tableName);
-        // DataType type= DataType.getTypeFromText(dataTypes.get(column));
-        // System.out.println(type);
+        // HashMap<String, String> dataTypes= d.fetchAllTableColumnDataTypes("catalog","test");
+        // Iterator iterator = dataTypes.keySet().iterator();
+        // while (iterator.hasNext()){
+        //     String key = (String)iterator.next();
+        //     System.out.println(key+"="+dataTypes.get(key));
+        // }
+        // System.out.println(dataTypes.get(column));
+        //DataType type= DataType.getTypeFromText(dataTypes.get(column));
+        //System.out.println(type);
         condition = Condition.CreateCondition((byte)0,cnd, DataType.getTypeFromText("INT"), (Object)value);
 
         List column_condition=new ArrayList();
