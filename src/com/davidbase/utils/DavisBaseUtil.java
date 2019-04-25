@@ -15,6 +15,16 @@ public class DavisBaseUtil {
         }
         return false;
     }
+    
+    public static boolean conditionCompare(String val1, String val2, short condition){
+        switch(condition){
+            case EQUALS:return val1.equalsIgnoreCase(val2);
+       
+        }
+        return false;
+    }
+    
+    
 
     public static boolean conditionCompare(Byte val1, Short val2, short condition){
         switch(condition){

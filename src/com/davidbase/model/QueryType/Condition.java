@@ -26,21 +26,21 @@ public class Condition {
         return condition;
     }
 
-    public static Condition CreateCondition(int index, short conditionType, DataType valType, Object value) {
-        Condition condition = new Condition(index, conditionType, valType, value);
-        return condition;
-    }
+//    public static Condition CreateCondition(int index, short conditionType, DataType valType, Object value) {
+//        Condition condition = new Condition(index, conditionType, valType, value);
+//        return condition;
+//    }
 
     public Condition() {}
 
-    private Condition(byte index, short conditionType, DataType valType, Object value) {
+    public Condition(byte index, short conditionType, DataType valType, Object value) {
         this.index = index;
         this.conditionType = conditionType;
         this.valType=valType;
         this.value = value;
     }
 
-    private Condition(int index, short conditionType, DataType valType,Object value) {
+    public Condition(int index, short conditionType, DataType valType,Object value) {
         this.index = (byte) index;
         this.conditionType = conditionType;
         this.valType = valType;

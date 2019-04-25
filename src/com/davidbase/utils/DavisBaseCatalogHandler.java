@@ -246,7 +246,7 @@ public class DavisBaseCatalogHandler {
         }
     }
 
-    public boolean createTable(String databaseName, String tableName) {
+    public boolean 	createTable(String databaseName, String tableName) {
         try {
             File dirFile = new File(getDatabasePath(databaseName));
             if (!dirFile.exists()) {
@@ -280,22 +280,68 @@ public class DavisBaseCatalogHandler {
     }
 
     public boolean tableExists(String databaseName, String tableName) {
-        return false;
+    	
+    	   File file = new File(getDatabasePath(DEFAULT_DATA_DIRNAME) + "/" + tableName + FILE_EXT);
+    	   
+    	   return file.exists();
+    		
     }
 
-    public List<String> fetchAllTableColumns(String databaseName, String tableName) {
-        return null;
+    public List<String> fetchAllTableColumns(String databaseName, String tableName){
+    	
+  	  
+    	List<String> columnNames = new ArrayList<>();
+          List<Condition> conditions = new ArrayList<>();
+//          conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, Condition.EQUALS, DataType.TEXT ,databaseName));
+          conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
+
+          List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions,null, false);
+
+          for (LeafCell record : records) {
+        	  
+        	  System.out.print(record.getPayload().getColValues().get(2) + "\n");
+        	  
+//              Object object = record.getColumns().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
+//              columnNames.add(((String) object));
+          }
+
+          return columnNames;
+   
     }
 
     public boolean checkNullConstraint(String databaseName, String tableName, HashMap<String, Integer> columnMap) {
+    	
+    	
+    	
+    	
         return true;
     }
 
-    public HashMap<String, DataType> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
-        return null;
+    public HashMap<String, String> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
+    	
+    	List<Condition> conditions = new ArrayList<>();
+//        conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
+        conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
+
+        List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
+        HashMap<String, String> columDataTypeMapping = new HashMap<>();
+
+        for (LeafCell record : records) {
+            Object object = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
+            Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_DATA_TYPE);
+
+            String columnName = ((String) object);
+            String columnDataType = ((String)dataTypeObject );
+            columDataTypeMapping.put(columnName.toLowerCase(), columnDataType);
+        }
+
+        System.out.print(columDataTypeMapping);
+        return columDataTypeMapping;
     }
 
     public String getTablePrimaryKey(String databaseName, String tableName) {
+    	
+    	
         return null;
     }
 
@@ -318,6 +364,8 @@ public class DavisBaseCatalogHandler {
 
     public static void main(String[] args) {
         DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
-        ctlg.createTable("db1", "test2");
+//        ctlg.createTable("db1", "test2");
+//        ctlg.fetchAllTableColumns("db1", "davisbase_columns");
+        ctlg.fetchAllTableColumnDataTypes("abc", "davisbase_columns");
     }
 }
