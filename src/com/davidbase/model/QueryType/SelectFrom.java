@@ -16,7 +16,8 @@ public class SelectFrom implements QueryBase {
 
     private String tableName;
     private String columns;
-    private Condition condition;
+	private Condition condition;
+	private String databaseName;
 
 	public String getTableName() {
 		return this.tableName;
@@ -26,6 +27,18 @@ public class SelectFrom implements QueryBase {
 		this.tableName = tableName;
 	}
 
+	/**
+	 * @return the databaseName
+	 */
+	public String getDatabaseName() {
+		return databaseName;
+	}
+	/**
+	 * @param databaseName the databaseName to set
+	 */
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
+	}
 	public String getColumns() {
 		return this.columns;
 	}
@@ -53,7 +66,7 @@ public class SelectFrom implements QueryBase {
         	DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        	System.out.print(tableName);
         	 filehandler = new DavisBaseFileHandler();
-            List<LeafCell> records = filehandler.findRecord("data", tableName, condition,null, false);
+            List<LeafCell> records = filehandler.findRecord(databaseName, tableName, condition,null, false);
             
             List<String> colNames = ctlg.fetchAllTableColumns("", tableName);
            

@@ -20,7 +20,7 @@ import com.davidbase.model.QueryType.SelectFrom;
 import com.davidbase.model.QueryType.ShowTable;
 import com.davidbase.model.QueryType.UpdateTable;
 import com.davidbase.utils.DavisBaseCatalogHandler;
-
+import com.davidbase.utils.DavisBaseConstants;
 
 import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
 
@@ -368,43 +368,49 @@ public class DavidBaseCommandValidator {
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         
         //System.out.print(commandTokens.get(2));
-        
-        
-        boolean isExist=catalog_handler.tableExists("abc", commandTokens.get(2).trim());
-        
-        
-       
-
-        if (isExist==false){
-            throw new DavidBaseValidationException("The table does not Exist");
-        }
+   
         int from_index = userCommand.toLowerCase().indexOf("from");
         
-        
+        SelectFrom select_object=new SelectFrom();
         //String attribute = userCommand.substring("select".length(), from_index).trim();
         String rest = userCommand.substring(from_index + "from".length());
 
         int where_index = rest.toLowerCase().indexOf("where");
+        boolean where = true;
         if(where_index == -1) {
             String tableName = rest.trim();
-            SelectFrom select_object=new SelectFrom();
+            
             select_object.setColumns(null);
             select_object.setTableName(tableName);
             select_object.setCondition(null);
-            return select_object;
+
+            
+            where = false;
+        }
+        
+        String tableName = where ? rest.substring(0, where_index).trim() : rest.trim(); 
+        String db = tableName.equals("davisbase_columns") || tableName.equals("davisbase_tables") ? DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME : DavisBaseConstants.DEFAULT_DATA_DIRNAME;
+        boolean isExist=catalog_handler.tableExists(db, tableName);
+        select_object.setDatabaseName(db);
+        if (isExist==false){
+            throw new DavidBaseValidationException("The table does not Exist");
         }
 
-        String tableName = rest.substring(0, where_index).trim();
-        String condition_string = rest.substring(where_index + "where".length()).trim();
+        if(!where)
+        {
+             return select_object;
+        }
 
+    
+        String condition_string = rest.substring(where_index + "where".length()).trim();
+       
+
+     
         //parse condition
         List column_condition=parse_condition(condition_string, tableName);
         String column=(String)column_condition.get(0);
         Condition condition=(Condition)column_condition.get(1);
         
-        
-      
-        SelectFrom select_object=new SelectFrom();
         select_object.setColumns(column);
         select_object.setCondition(condition);
         select_object.setTableName(tableName);

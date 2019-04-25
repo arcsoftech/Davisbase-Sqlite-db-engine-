@@ -371,7 +371,12 @@ public class DavidBaseManager {
             int rows=result.getRowsAffected();
             int columns=result.getColumnCount();
             
-            columns=columns/rows;
+            try {
+                columns=rows!=0 ? columns/rows :0;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
             //System.out.println("Get column count:"+columns);
            // System.out.println("Columns:"+result.getColumns());
             
