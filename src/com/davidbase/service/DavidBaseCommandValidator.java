@@ -3,7 +3,6 @@ package com.davidbase.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import com.davidbase.utils.DataType;
@@ -17,16 +16,10 @@ import com.davidbase.model.QueryType.DeleteFrom;
 import com.davidbase.model.QueryType.DropDatabase;
 import com.davidbase.model.QueryType.DropTable;
 import com.davidbase.model.QueryType.InsertInto;
-import com.davidbase.model.QueryType.QueryBase;
-import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.QueryType.SelectFrom;
 import com.davidbase.model.QueryType.UpdateTable;
 import com.davidbase.utils.DavisBaseCatalogHandler;
-import com.davidbase.utils.DavisBaseFileHandler;
 
-//import org.graalvm.compiler.nodes.InliningLog.UpdateScope;
-
-import com.davidbase.utils.DavisBaseCatalogHandler;
 
 import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
 
@@ -295,7 +288,6 @@ public class DavidBaseCommandValidator {
             condition_String = userCommand.substring(index + "where".length()).trim();
 
             List column_condition=parse_condition(condition_String, tableName);
-            String column=(String)column_condition.get(0);
             //System.out.println(column);
             Condition condition=(Condition)column_condition.get(1);
             //System.out.println(condition.getValue());

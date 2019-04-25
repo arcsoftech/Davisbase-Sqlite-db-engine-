@@ -1,15 +1,9 @@
 package com.davidbase.model.QueryType;
 
-import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.PageComponent.InternalColumn;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.utils.DavisBaseCatalogHandler;
-import com.davidbase.utils.DavisBaseFileHandler;
-
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.davidbase.utils.DavisBaseConstants.*;

@@ -1,11 +1,8 @@
 package com.davidbase.utils;
 
 import com.davidbase.model.DavidBaseError;
-import com.davidbase.model.PageComponent.RawRecord;
 import com.davidbase.model.PageComponent.*;
 import com.davidbase.model.QueryType.*;
-
-import exceptions.InternalException;
 import java.util.HashMap;
 import java.util.List;
 import java.io.File;
