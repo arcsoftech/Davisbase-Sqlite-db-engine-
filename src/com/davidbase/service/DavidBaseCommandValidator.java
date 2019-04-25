@@ -327,19 +327,22 @@ public class DavidBaseCommandValidator {
         if(!clauses.contains("=")){
             throw new DavidBaseValidationException("Wrong input value");
         }
+        String[] clause_strings=clauses.split("=");
+        String clause_column=clause_strings[0].trim();
+        String clause_value=clause_strings[1].trim();
 
-        //System.out.println(clauses);
-        // System.out.println(con.getValue());
 
         UpdateTable update_object=new UpdateTable();
         update_object.setColumns(column);
         update_object.setCondition(con);
         update_object.setTableName(tableName);
+        update_object.setClause_column(clause_column);
+        update_object.setClause_value(clause_value);
 
 
         
         
-        return null;
+        return update_object;
     }
 
 
@@ -456,12 +459,13 @@ public class DavidBaseCommandValidator {
         Iterator iterator = dataTypes.keySet().iterator();
         while (iterator.hasNext()){
             String key = (String)iterator.next();
-             temp.add(key);
+            temp.add(key);
 
         }
         index=temp.size()-temp.indexOf(column);
+        //System.out.print("1111111111111   "+index+"   111111");
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
-        
+        //System.out.print("1111111   "+(byte)index+"       dddddddd");
         condition = Condition.CreateCondition((byte)index,cnd, dataTypes.get(column), (Object)value);
 
         List column_condition=new ArrayList();

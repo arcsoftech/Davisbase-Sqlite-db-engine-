@@ -7,6 +7,25 @@ public class UpdateTable implements QueryBase {
     private List values;
     private Condition condition;
     private String tableName;
+    private String clause_column;
+    private String clause_value;
+
+	public String getClause_column() {
+		return this.clause_column;
+	}
+
+	public void setClause_column(String clause_column) {
+		this.clause_column = clause_column;
+	}
+
+	public String getClause_value() {
+		return this.clause_value;
+	}
+
+	public void setClause_value(String clause_value) {
+		this.clause_value = clause_value;
+	}
+
 
 
 	public String getColumns() {

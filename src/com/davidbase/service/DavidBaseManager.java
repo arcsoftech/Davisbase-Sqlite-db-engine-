@@ -398,6 +398,7 @@ public class DavidBaseManager {
     public static void parseUpdate(String userCommand) {
         try{
             UpdateTable update_object=commandValidator.isValidUpdateTable(userCommand);
+            //System.out.println(update_object.getCondition().getValue());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
 
