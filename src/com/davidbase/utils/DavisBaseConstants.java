@@ -26,7 +26,7 @@ public interface DavisBaseConstants {
 	    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_NAME = 2;
 	    public static final byte COLUMNS_TABLE_SCHEMA_DATA_TYPE = 3;
 	    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_KEY = 4;
-	    public static final byte COLUMNS_TABLE_SCHEMA_ORDINAL_POSITION = 5;
+	    public static final byte COLUMNS_TABLE_SCHEMA_PRIMARY_KEY = 5;
 	    public static final byte COLUMNS_TABLE_SCHEMA_IS_NULLABLE = 6;
 	    /*
 	    * Page size for   is 512 bytes by default.
