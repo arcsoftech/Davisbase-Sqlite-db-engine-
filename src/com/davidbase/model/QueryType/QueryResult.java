@@ -21,7 +21,10 @@ public class QueryResult {
     public int getRowsAffected() {
         return rowsAffected;
     }
-    
+    public int getColumnCount()
+    {
+    	return columns.size();    	
+    }
     public List<String> getValues() {
 		return values;
 	}

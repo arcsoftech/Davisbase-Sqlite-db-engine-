@@ -1,4 +1,5 @@
 package com.davidbase.service;
+import java.util.*;
 
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.DavidBaseValidationException;
@@ -368,6 +369,53 @@ public class DavidBaseManager {
             QueryResult result = commandExecutor.executeQuery(queryObject);
            
             System.out.println("Rows affected: " + result.getRowsAffected());
+            int rows=result.getRowsAffected();
+            int columns=result.getColumnCount();
+            
+            columns=columns/rows;
+            //System.out.println("Get column count:"+columns);
+           // System.out.println("Columns:"+result.getColumns());
+            
+            List<String> columnname=result.getColumns();
+            List<String> values=result.getValues();
+           // System.out.println("Columns:"+columnname);
+            //System.out.println("Values:"+values);
+            System.out.println();
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+            //System.out.print("|");
+            System.out.println();
+            
+            //System.out.format("%32s%10d%16s");
+            
+            for(int i=0;i<columns;i++)
+            	System.out.printf("%20s",columnname.get(i));
+            System.out.println();
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+            System.out.println();	
+            //ArrayList[][] table = new ArrayList[10][10];
+            //table[0][0] = new ArrayList(); // add another ArrayList object to [0,0]
+            //table[0][0].add();
+            	int count=0;
+            	//
+            	int rowcount=0;
+            	for(int j=0;j<result.getColumnCount();j++)
+            	{
+            		System.out.printf("%20s", values.get(j));
+            		count++;
+            		
+            		if(count%columns==0)
+            		{
+            			count=0;
+            			
+            			System.out.println();
+            			//System.out.print("|");
+            		}
+            		
+            	}
+            	 System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+          //  }
+            
+            
             //List columns=result.getColumns();
             /*for(int i=0;i<columns.size();i++){
                 System.out.println(columns.get(i));
