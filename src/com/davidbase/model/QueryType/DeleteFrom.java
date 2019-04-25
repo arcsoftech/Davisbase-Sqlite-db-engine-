@@ -4,8 +4,6 @@ import com.davidbase.utils.DavisBaseFileHandler;
 
 import java.util.List;
 
-import static com.davidbase.utils.DavisBaseConstants.DEFAULT_DATA_DIRNAME;
-
 public class DeleteFrom implements QueryBase {
 
     public String databaseName;

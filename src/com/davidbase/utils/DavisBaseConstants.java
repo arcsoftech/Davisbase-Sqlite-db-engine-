@@ -26,14 +26,15 @@ public interface DavisBaseConstants {
 	    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_NAME = 2;
 	    public static final byte COLUMNS_TABLE_SCHEMA_DATA_TYPE = 3;
 	    public static final byte COLUMNS_TABLE_SCHEMA_COLUMN_KEY = 4;
-	    public static final byte COLUMNS_TABLE_SCHEMA_ORDINAL_POSITION = 5;
+	    public static final byte COLUMNS_TABLE_SCHEMA_PRIMARY_KEY = 5;
 	    public static final byte COLUMNS_TABLE_SCHEMA_IS_NULLABLE = 6;
 	    /*
 	    * Page size for   is 512 bytes by default.
 	    */
 	    public static final long PAGE_SIZE = 512;
 
-	    public static final String FILE_EXT = ".tbl";
+			public static final String FILE_EXT = ".tbl";
+			public static final String INDEX_EXT = ".ndx";
 	    public static final byte RIGHT_MOST_LEAF = 0xFFFFFFFF;
 	    public static final byte LEAF_TABLE_PAGE = 0x0D;
 

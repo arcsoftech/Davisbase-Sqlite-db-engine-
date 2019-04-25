@@ -12,7 +12,6 @@ import static com.davidbase.utils.DavisBaseConstants.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class InsertInto implements QueryBase {
     private String databaseName;
@@ -134,11 +133,5 @@ public class InsertInto implements QueryBase {
     private LeafCell prepareRecord() {
         LeafCell recordsToFile = new LeafCell();
         return recordsToFile;
-    }
-
-    private int getNextRowId() {
-        // call Catalog utility to fetch rowid( row count in table + 1)
-        return 1;
-
     }
 }

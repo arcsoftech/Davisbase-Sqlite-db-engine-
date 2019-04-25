@@ -268,8 +268,7 @@ public class DavidBaseManager {
             currentDB=queryObject.databaseName;
             System.out.println(currentDB);
             commandExecutor.executeQuery(queryObject);
-            QueryResult result=commandExecutor.executeQuery(queryObject);
-           // System.out.println("Rows affected: " + );
+        //    System.out.println("Rows affected: " + );
             
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -291,6 +290,8 @@ public class DavidBaseManager {
     private static void parseShowDatabase(String showDB) {
         try {
             boolean isTrue = commandValidator.isValidShowDB(showDB);
+            
+            
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -299,7 +300,11 @@ public class DavidBaseManager {
 
     private static void parseShowTable(String showTable) {
         try {
-            boolean isTrue = commandValidator.isValidShowTable(showTable);
+            ShowTable isTrue = commandValidator.isValidShowTable(showTable);
+            
+            System.out.print(isTrue);   
+            
+            QueryResult result = commandExecutor.executeQuery(isTrue);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
@@ -361,8 +366,7 @@ public class DavidBaseManager {
  
             
             QueryResult result = commandExecutor.executeQuery(queryObject);
-            
-            
+           
             System.out.println("Rows affected: " + result.getRowsAffected());
             int rows=result.getRowsAffected();
             int columns=result.getColumnCount();
@@ -483,9 +487,10 @@ public class DavidBaseManager {
     public static void parseDeleteFrom(String userCommand) {
        try{
             DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
-           QueryResult result = commandExecutor.executeQuery(delete_object);
-           System.out.println("Rows affected: " + result.getRowsAffected());
-        //System.out.println(delete_object.conditions.get(0).getValue());
+            System.out.println(delete_object.tableName);
+            QueryResult result = commandExecutor.executeQuery(delete_object);
+            System.out.println("Rows affected: " + result.getRowsAffected());
+        
        }catch(DavidBaseValidationException e) {
         System.out.println(e.getErrorMsg());
         }
