@@ -217,7 +217,7 @@ public class DavidBaseCommandValidator {
         //System.out.println(columns_substrings.get(1));
 
         List<String> columns=new ArrayList<String>();
-        List<String> values=new ArrayList<String>();
+        List values=new ArrayList();
 
         String columns_string=columns_substrings.get(0).replaceAll("[)]","");
         String values_string=columns_substrings.get(1).replaceAll("[(]","");
@@ -239,9 +239,16 @@ public class DavidBaseCommandValidator {
         }
 
         for(int i=0; i<values_list.size();i++){
-            values.add(values_list.get(i).trim());
+            if(values_list.get(i).contains("\"")){
+            String str= values_list.get(i).trim().replace("\"", "");
+                values.add(str);
+            }else{
+                values.add(Integer.parseInt(values_list.get(i).trim()));
+            }
         }
 
+
+        
         // for(int i=0; i<columns_list.size();i++){
         //     System.out.println(columns_list.get(i).trim());
         // }
