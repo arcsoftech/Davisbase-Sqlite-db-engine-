@@ -8,7 +8,7 @@ public class UpdateTable implements QueryBase {
     private Condition condition;
     private String tableName;
     private String clause_column;
-    private String clause_value;
+    private Object clause_value;
 
 	public String getClause_column() {
 		return this.clause_column;
@@ -18,11 +18,11 @@ public class UpdateTable implements QueryBase {
 		this.clause_column = clause_column;
 	}
 
-	public String getClause_value() {
+	public Object getClause_value() {
 		return this.clause_value;
 	}
 
-	public void setClause_value(String clause_value) {
+	public void setClause_value(Object clause_value) {
 		this.clause_value = clause_value;
 	}
 

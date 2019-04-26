@@ -47,6 +47,7 @@ public class DavidBaseCommandValidator {
      */
     public CreateTable isValidCreateTable(String userCommand, String current_DB) throws DavidBaseValidationException {
         //parse command
+        //System.out.print(userCommand);
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
 
         //check if the second key word is "table"
@@ -69,7 +70,7 @@ public class DavidBaseCommandValidator {
         //table's primary key
         String pri=null;
 
-        String column_indexes = userCommand.toLowerCase();
+        String column_indexes = userCommand;
         int open_bracket_index = column_indexes.indexOf("(");
         int close_bracket_index = column_indexes.indexOf(")");
 
@@ -188,7 +189,7 @@ public class DavidBaseCommandValidator {
         }
 
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
-        boolean isExist=true;
+        boolean isExist=catalog_handler.databaseExists(commandTokens.get(2));
 
         if (isExist==false){
             throw new DavidBaseValidationException("The table does not Exist");
@@ -202,7 +203,9 @@ public class DavidBaseCommandValidator {
 
     public InsertInto isValidInsertInto(String userCommand, String currentDB)throws DavidBaseValidationException{
         //String userCommand_copy=userCommand;
-        if(userCommand.contains("values")==false){
+        //System.out.println(userCommand);
+        String temp=userCommand;
+        if(temp.toLowerCase().contains("values")==false){
             throw new DavidBaseValidationException("Missing keyword Values");
         }
         
@@ -210,15 +213,15 @@ public class DavidBaseCommandValidator {
         
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         boolean isExist=catalog_handler.tableExists(currentDB, commandTokens.get(2));
-        if (isExist==false){
-             throw new DavidBaseValidationException("The table does not Exist");
-        } 
+        // if (isExist==false){
+        //      throw new DavidBaseValidationException("The table does not Exist");
+        // } 
 
         int first_open_bracket_index = userCommand.indexOf("(");
         int last_close_bracket_index = userCommand.lastIndexOf(")");
 
         String string_inside_brackets=userCommand.substring(first_open_bracket_index + 1, last_close_bracket_index).trim();
-        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("values")));
+        ArrayList<String> columns_substrings = new ArrayList<String>(Arrays.asList(string_inside_brackets.split("(?i)values")));
         //System.out.println(columns_substrings.get(0));
         //System.out.println(columns_substrings.get(1));
 
@@ -230,8 +233,8 @@ public class DavidBaseCommandValidator {
         columns_string=columns_string.trim();
         values_string=values_string.trim();
 
-        System.out.println(columns_string);
-        System.out.println(values_string);
+        //System.out.println(columns_string);
+        //System.out.println(values_string);
 
         ArrayList<String> columns_list = new ArrayList<String>(Arrays.asList(columns_string.split(",")));
         ArrayList<String> values_list = new ArrayList<String>(Arrays.asList(values_string.split(",")));
@@ -263,13 +266,13 @@ public class DavidBaseCommandValidator {
             }
         }
 
-        // for(int i=0; i<columns.size();i++){
-        //     System.out.println(columns.get(i).trim());
-        // }
+        for(int i=0; i<columns.size();i++){
+            System.out.println(columns.get(i).trim());
+        }
 
-        // for(int i=0; i<values.size();i++){
-        //     System.out.println(values.get(i));
-        // }
+        for(int i=0; i<values.size();i++){
+            System.out.println(values.get(i));
+        }
 
         InsertInto queryObject=new InsertInto(DavidBaseManager.getCurrentDB(),commandTokens.get(2),columns, values);
         return queryObject;
@@ -278,11 +281,11 @@ public class DavidBaseCommandValidator {
 
 
     public DeleteFrom isValidDeleteFrom(String userCommand) throws DavidBaseValidationException{
-        String[] userParts = userCommand.toLowerCase().split(" ");
-        String[] actualParts = "Delete From".toLowerCase().split(" ");
+        String[] userParts = userCommand.split(" ");
+        String[] actualParts = "Delete From".split(" ");
 
         for(int i=0;i<actualParts.length;i++){
-            if(!actualParts[i].equals(userParts[i])){
+            if(!actualParts[i].toLowerCase().equals(userParts[i].toLowerCase())){
                 throw new DavidBaseValidationException("Unrecongnized query");
 
             }
@@ -290,35 +293,36 @@ public class DavidBaseCommandValidator {
 
 
         String tableName = "";
-            String condition_String = "";
-            int index = userCommand.toLowerCase().indexOf("where");
-             if(index == -1) {
-                 tableName = userCommand.substring("Delete From".length()).trim();
-                 DeleteFrom delete_object=new DeleteFrom("", tableName);
-                 delete_object.setConditions(null);
-                 return delete_object;
+        String condition_String = "";
+        int index = userCommand.toLowerCase().indexOf("where");
+        if (index == -1) {
+            tableName = userCommand.substring("Delete From".length()).trim();
+            DeleteFrom delete_object = new DeleteFrom("", tableName);
+            delete_object.setConditions(null);
+            return delete_object;
 
-             }
+        }
 
-            if(tableName.equals("")) {
-                tableName = userCommand.substring("Delete From".length(), index).trim();
-            }
-            //System.out.println(tableName);
-            condition_String = userCommand.substring(index + "where".length()).trim();
+        if (tableName.equals("")) {
+            tableName = userCommand.substring("Delete From".length(), index).trim();
+        }
+        // System.out.println(tableName);
+        condition_String = userCommand.substring(index + "where".length()).trim();
 
-            List column_condition=parse_condition(condition_String, tableName);
-            //System.out.println(column);
-            Condition condition=(Condition)column_condition.get(1);
-            //System.out.println(condition.getValue());
-            List<Condition> condition_list=new ArrayList<Condition>();
-            condition_list.add(condition);
-            DeleteFrom delete_object= new DeleteFrom(DEFAULT_DATA_DIRNAME, tableName);
-            delete_object.setConditions(condition_list);
-            //System.out.println(delete_object.conditions.get(0).getValue());
+        List column_condition = parse_condition(condition_String, tableName);
+        // System.out.println(column);
+        Condition condition = (Condition) column_condition.get(1);
+        // System.out.println(condition.getValue());
+        List<Condition> condition_list = new ArrayList<Condition>();
+        condition_list.add(condition);
+        DeleteFrom delete_object = new DeleteFrom(DEFAULT_DATA_DIRNAME, tableName);
+        delete_object.setConditions(condition_list);
+        // System.out.println(delete_object.conditions.get(0).getValue());
         return delete_object;
     }
 
     public UpdateTable isValidUpdateTable(String userCommand)throws DavidBaseValidationException{
+        //System.out.println(userCommand);
         String condition = "";
         int setIndex = userCommand.toLowerCase().indexOf("set");
         if(setIndex == -1) {
@@ -347,17 +351,19 @@ public class DavidBaseCommandValidator {
         String clause_column=clause_strings[0].trim();
         String clause_value=clause_strings[1].trim();
 
+        
 
         UpdateTable update_object=new UpdateTable();
         update_object.setColumns(column);
         update_object.setCondition(con);
         update_object.setTableName(tableName);
         update_object.setClause_column(clause_column);
-        update_object.setClause_value(clause_value);
 
-
-        
-        
+        if(clause_value.contains("\"")){
+            update_object.setClause_value(clause_value.trim().replace("\"", ""));
+        }else{
+            update_object.setClause_value(Integer.parseInt(clause_value));
+        }
         return update_object;
     }
 
@@ -505,7 +511,7 @@ public class DavidBaseCommandValidator {
             System.out.print("1111111   "+dataTypes.get(key)+"       dddddddd");
         }
         index=temp.size()-temp.indexOf(column);
-        System.out.print("1111111111111   "+index+"   111111");
+        //System.out.print("1111111111111   "+index+"   111111");
         //DataType type= DataType.getTypeFromText(dataTypes.get(column));
         //System.out.print("1111111   "+dataTypes.get(column)+"       dddddddd");
         // if((is_value_str && dataTypes.get(column).toString()!="TEXT")||(!is_value_str&&dataTypes.get(column).toString()!="INT") ){

@@ -79,7 +79,7 @@ public class DavidBaseManager {
         while(!isExit) {
             System.out.print(PROMPT);
             /* toLowerCase() renders command case insensitive */
-            userCommand = scanner.next().replace("\n", " ").replace("\r", "").trim().toLowerCase();
+            userCommand = scanner.next().replace("\n", " ").replace("\r", "").trim();
             // userCommand = userCommand.replace("\n", "").replace("\r", "");
             parseUserCommand(userCommand);
         }
@@ -177,7 +177,7 @@ public class DavidBaseManager {
          *  This switch handles a very small list of hardcoded commands of known syntax.
          *  You will want to rewrite this method to interpret more complex commands.
          */
-        switch (commandTokens.get(0)) {
+        switch (commandTokens.get(0).toLowerCase()) {
             case "select":
                 System.out.println("CASE: SELECT");
                 selectFrom(userCommand);
@@ -243,8 +243,8 @@ public class DavidBaseManager {
         System.out.println("createTable");
         try {
             CreateTable queryObject = commandValidator.isValidCreateTable(createTableString,currentDB);
-            currentTable=queryObject.getTableName();
-            System.out.println(currentTable);
+            //currentTable=queryObject.getTableName();
+            //System.out.println(currentTable+"  !!  "+queryObject.getPrimaryKey()+"  !!  "+queryObject.getColumns().get(0).getName()+"  !!!  ");
             //int rows=queryObject.getRows();
             
             //System.out.println(queryObject);
@@ -360,12 +360,8 @@ public class DavidBaseManager {
     	System.out.println("STUB: This is the selectFrom method");
     	try {
             SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);
-            System.out.println(queryObject.getTableName());
-            //System.out.println(queryObject.getCondition().getConditionType());
-
-
- 
-            
+            // System.out.println(queryObject.getTableName());
+            // System.out.println(queryObject.getColumns());      
             QueryResult result = commandExecutor.executeQuery(queryObject);
            
             System.out.println("Rows affected: " + result.getRowsAffected());
@@ -431,13 +427,13 @@ public class DavidBaseManager {
         }
     }
     	
-    
+    //??//
     public static void insertInto(String insertIntoString)
     {
     	try {
             InsertInto queryObject = commandValidator.isValidInsertInto(insertIntoString,currentDB);
-            //System.out.println(queryObject.databaseName);
-            //System.out.println(queryObject.tableName);
+            System.out.println(queryObject.getTableName());
+            System.out.println(queryObject.getColumnValues().get(0)+" !! "+queryObject.getColumns().get(0));
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
         }
@@ -459,7 +455,11 @@ public class DavidBaseManager {
     public static void parseUpdate(String userCommand) {
         try{
             UpdateTable update_object=commandValidator.isValidUpdateTable(userCommand);
-            //System.out.println(update_object.getCondition().getValue());
+            // System.out.println(update_object.getTableName());
+            // System.out.println(update_object.getClause_column());
+            // System.out.println(update_object.getClause_value());
+            // System.out.println(update_object.getColumns());
+            // System.out.println(update_object.getCondition().getValue());
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());
 
@@ -493,7 +493,7 @@ public class DavidBaseManager {
     public static void parseDeleteFrom(String userCommand) {
        try{
             DeleteFrom delete_object=commandValidator.isValidDeleteFrom(userCommand);
-            System.out.println(delete_object.tableName);
+            //System.out.println(delete_object.conditions.get(0).getValue()+"       !!!!     ");
             QueryResult result = commandExecutor.executeQuery(delete_object);
             System.out.println("Rows affected: " + result.getRowsAffected());
         
