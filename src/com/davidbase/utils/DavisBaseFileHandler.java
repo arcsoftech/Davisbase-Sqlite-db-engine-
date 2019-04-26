@@ -4,6 +4,8 @@ import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.PageComponent.*;
 import com.davidbase.model.QueryType.Condition;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Map;
 import java.util.HashMap;
@@ -775,36 +777,56 @@ public class DavisBaseFileHandler {
         else
             switch (colType) {
                 case TINYINT:
+                case YEAR:
                     return compare((byte) value1, value2, condition, conditionType);
                 case SMALLINT:
                     return compare((short) value1, value2, condition, conditionType);
                 case INT:
+                case TIME:
                     return compare((int) value1, value2, condition, conditionType);
                 case BIGINT:
                     return compare((long) value1, value2, condition, conditionType);
                 case REAL:
                     return compare((float) value1, value2, condition, conditionType);
                 case DATE:
-                    break;
+                    return compare(DavisBaseUtil.getValidDate((long)value1), (String)value2, condition, conditionType);
                 case DATETIME:
-                    break;
-                case TIME:
-                    break;
-                case YEAR:
-                    break;
+                    return compare(DavisBaseUtil.getValidDateTime((long)value1), (String)value2, condition, conditionType);
                 case TEXT:
-               	 return compare((String)value1,(String) value2, condition, conditionType);
+                    return compare((String)value1,(String) value2, condition, conditionType);
             }
+        return false;
+    }
+
+    private boolean compare(LocalDate validDate, String value2, short condition, DataType conditionType) {
+        switch (conditionType){
+            case DATE:
+                return DavisBaseUtil.conditionCompare(validDate,DavisBaseUtil.getValidDate(value2),condition);
+            case DATETIME:
+                return DavisBaseUtil.conditionCompare(validDate,DavisBaseUtil.getValidDateTime(value2),condition);
+        }
+        return false;
+    }
+
+    private boolean compare(LocalDateTime validDate, String value2, short condition, DataType conditionType) {
+        switch (conditionType){
+            case DATE:
+                return DavisBaseUtil.conditionCompare(validDate,DavisBaseUtil.getValidDate(value2),condition);
+            case DATETIME:
+                return DavisBaseUtil.conditionCompare(validDate,DavisBaseUtil.getValidDateTime(value2),condition);
+        }
         return false;
     }
 
     private boolean compare(Byte value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
+            case YEAR:
                 return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
                 return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
+            case TIME:
                 return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
             case BIGINT:
                 return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
@@ -815,10 +837,12 @@ public class DavisBaseFileHandler {
     private boolean compare(Short value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
+            case YEAR:
                 return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
                 return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
+            case TIME:
                 return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
             case BIGINT:
                 return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
@@ -829,10 +853,12 @@ public class DavisBaseFileHandler {
     private boolean compare(Integer value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
+            case YEAR:
                 return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
                 return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
+            case TIME:
                 return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
             case BIGINT:
                 return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
@@ -843,17 +869,18 @@ public class DavisBaseFileHandler {
     private boolean compare(Long value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case TINYINT:
+            case YEAR:
                 return DavisBaseUtil.conditionCompare(value1, Byte.valueOf(String.valueOf(value2)), condition);
             case SMALLINT:
                 return DavisBaseUtil.conditionCompare(value1, Short.valueOf(String.valueOf(value2)), condition);
             case INT:
+            case TIME:
                 return DavisBaseUtil.conditionCompare(value1, Integer.valueOf(String.valueOf(value2)), condition);
             case BIGINT:
                 return DavisBaseUtil.conditionCompare(value1, Long.valueOf(String.valueOf(value2)), condition);
         }
         return false;
     }
-
     private boolean compare(Float value1, Object value2, short condition, DataType conditionType) {
         switch (conditionType) {
             case REAL:
