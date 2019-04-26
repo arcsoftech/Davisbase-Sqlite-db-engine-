@@ -379,12 +379,82 @@ public class DavidBaseManager {
             
             //System.out.println("Get column count:"+columns);
            // System.out.println("Columns:"+result.getColumns());
-            
+            //System.out.println("command:"+userCommand);
+            if(userCommand.contains("davisbase_columns")||userCommand.contains("DAVISBASE_COLUMNS"))
+            {
+            	
+            }
             List<String> columnname=result.getColumns();
             List<String> values=result.getValues();
-           // System.out.println("Columns:"+columnname);
+          // System.out.println("Columns:"+columnname);
             //System.out.println("Values:"+values);
             System.out.println();
+            if(userCommand.contains("davisbase_columns")||userCommand.contains("DAVISBASE_COLUMNS"))
+            {
+            	 System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+                 //System.out.print("|");
+                 System.out.println();
+                 
+                 //System.out.format("%32s%10d%16s");
+                 
+                 System.out.printf("%20s %20s %20s %20s %20s", "table_name", "column_name", "data_type", "primary/null", "yes/no");
+                 System.out.println();
+                 System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+                 System.out.println();
+                 
+                 
+                 int count=0;
+             	//
+             	int rowcount=0;
+             	for(int j=0;j<result.getColumnCount();j++)
+             	{ 	
+             		//count=count+j;
+             		if(j%columns==0)
+             			{
+             			//System.out.print("j:"+(j+count));
+             			System.out.printf("%20s", values.get(j));
+             			
+             			count++;}
+             		if(j%columns==1)
+         			{
+             			//System.out.print("j:"+(j+count));
+             			System.out.printf("%20s", values.get(j));
+         			
+         			//System.out.print(j+1);
+         			count++;
+         			}
+             			
+             		if(j%columns==2)
+             			{
+             			//System.out.print("j:"+(j+count));
+             			System.out.printf("%20s", values.get(j));
+             			
+             			count++;
+             			}
+             	
+             		if(j%columns==4)
+         			{//System.out.print("j:"+(j+count));
+             			System.out.printf("%20s", values.get(j));
+         			
+         			}
+             		if(j%columns==5)
+         			{//System.out.print("j:"+(j+count));
+             			System.out.printf("%20s%n", values.get(j));
+         			//count++;
+         			//System.out.print("j:"+(j+count));
+         			//System.out.println();
+         			}
+             
+             		
+             	}
+             	
+             	
+             	 System.out.println("-------------------------------------------------------------------------------------------------------------------------");
+           //  }
+             
+            }//if
+            
+            else {
             System.out.println("-------------------------------------------------------------------------------------------------------------------------");
             //System.out.print("|");
             System.out.println();
@@ -419,7 +489,7 @@ public class DavidBaseManager {
             	 System.out.println("-------------------------------------------------------------------------------------------------------------------------");
           //  }
             
-            
+            }//else
             //List columns=result.getColumns();
             /*for(int i=0;i<columns.size();i++){
                 System.out.println(columns.get(i));
