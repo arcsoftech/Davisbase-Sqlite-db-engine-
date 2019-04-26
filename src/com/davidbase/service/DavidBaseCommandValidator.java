@@ -148,7 +148,7 @@ public class DavidBaseCommandValidator {
 
     public ShowTable isValidShowTable(String userCommand)throws DavidBaseValidationException{
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
-        if(commandTokens.size()>3){
+        if(commandTokens.size()>2){
             throw new DavidBaseValidationException("Failed to show tables");
         }
         
