@@ -156,6 +156,12 @@ public class CellPayload {
                     this.data[i++] = valueInBytes;
                 }
                 break;
+                case BIGINT:
+                    for ( byte valueInBytes: longToBytes(Long.valueOf(String.valueOf(colValues.get(k++)))))
+                    {
+                        this.data[i++] = valueInBytes;
+                    }
+                    break;
             case REAL:
                 for ( byte valueInBytes: floatToBytes(Float.valueOf(String.valueOf(colValues.get(k++)))))
                 {
