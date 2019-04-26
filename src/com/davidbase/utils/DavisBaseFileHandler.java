@@ -458,8 +458,13 @@ public class DavisBaseFileHandler {
                             isMatch = true;
                             leafCell = readLeaf(randomAccessFile, page.getPageheader().getPage_number(),
                                     (short) offset, page.getNum_cells());
+
                             
 //                            System.out.print(conditionList.size());
+
+                            if(leafCell == null)
+                                isMatch = false;
+
                             for (int i = 0; i < conditionList.size(); i++) {
                                 isMatch = false;
                                 columnIndex = conditionList.get(i).getIndex();

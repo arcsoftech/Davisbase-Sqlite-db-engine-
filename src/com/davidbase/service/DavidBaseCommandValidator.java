@@ -67,6 +67,7 @@ public class DavidBaseCommandValidator {
 
         //parse and put all columns to a list
         List<InternalColumn> columns_list=new ArrayList<InternalColumn>();
+       // columns_list.add(new InternalColumn("rowid", DataType.INT, true, false));
         //table's primary key
         String pri=null;
 

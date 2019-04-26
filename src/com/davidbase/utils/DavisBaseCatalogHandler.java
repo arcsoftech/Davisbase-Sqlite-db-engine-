@@ -59,7 +59,7 @@ public class DavisBaseCatalogHandler {
                 // columns.add(new InternalColumn("nxt_avl_col_tbl_rowid", DataType.INT, false,
                 // false));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
-                DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, 1, columns);
+                 DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 1, columns);
                 columns.clear();
                 columns.add(new InternalColumn("rowid", DataType.INT, true, false));
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
