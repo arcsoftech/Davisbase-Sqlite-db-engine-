@@ -15,6 +15,7 @@ public class CreateTable implements QueryBase {
 
     private String tableName;
     private List<InternalColumn> columns;
+    
     private String primaryKey;
     private List<String> indexes;
     private int rows;
@@ -54,7 +55,7 @@ public class CreateTable implements QueryBase {
         int lastRowId = catalog.getLastRowId(
                 DEFAULT_CATALOG_DATABASENAME,
                 SYSTEM_COLUMNS_TABLENAME);
-
+        
         catalog.updateSystemColumnsTable(
                 DEFAULT_CATALOG_DATABASENAME,
                 tableName,

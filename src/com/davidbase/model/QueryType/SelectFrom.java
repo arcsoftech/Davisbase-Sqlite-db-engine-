@@ -88,13 +88,14 @@ public class SelectFrom implements QueryBase {
             	for (Object colValue : colValues) {
             		
             		if (valueIndex > 0) {
-            		
+						
             			queryObject.getColumns().add(colNames.get(colIndex));
             			
             			queryObject.getValues().add(String.valueOf(colValue));
-            			
             			colIndex = colIndex + 1;
-            		}
+            			
+					}
+					
             		valueIndex = valueIndex + 1;
 	
             	}

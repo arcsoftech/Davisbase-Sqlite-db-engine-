@@ -394,7 +394,7 @@ public class DavidBaseManager {
                  
                  //System.out.format("%32s%10d%16s");
                  
-                 System.out.printf("%20s %20s %20s %20s %20s", "table_name", "column_name", "data_type", "primary/null", "yes/no");
+                 System.out.printf("%20s %20s %20s %20s %20s %20s", "table_name", "column_name", "data_type", "ordinalPosition", "primary_key", "yes/no");
                  System.out.println();
                  System.out.println("-------------------------------------------------------------------------------------------------------------------------");
                  System.out.println();
@@ -422,6 +422,13 @@ public class DavidBaseManager {
          			}
              			
              		if(j%columns==2)
+             			{
+             			//System.out.print("j:"+(j+count));
+             			System.out.printf("%20s", values.get(j));
+             			
+             			count++;
+                         }
+                         if(j%columns==3)
              			{
              			//System.out.print("j:"+(j+count));
              			System.out.printf("%20s", values.get(j));
