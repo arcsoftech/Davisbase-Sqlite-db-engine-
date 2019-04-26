@@ -358,7 +358,7 @@ public class DavisBaseCatalogHandler {
           Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_PRIMARY_KEY);
           	
           
-         if (((String)dataTypeObject).equals("YES")) {
+         if (((String)dataTypeObject).equals("PRI")) {
         	
         	 primayKeyCol = (String)object;
          }
@@ -401,7 +401,7 @@ public class DavisBaseCatalogHandler {
         
 //        System.out.print(ctlg.fetchAllTableColumns("data", "davisbase_columns"));
        
-       System.out.print(ctlg.getTablePrimaryKey(" ", "utd"));
+       System.out.print(ctlg.getTablePrimaryKey("catalog", "new1"));
         
     }
 }

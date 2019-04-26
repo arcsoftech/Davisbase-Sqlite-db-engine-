@@ -300,11 +300,18 @@ public class DavidBaseManager {
 
     private static void parseShowTable(String showTable) {
         try {
-            ShowTable isTrue = commandValidator.isValidShowTable(showTable);
+            Boolean isTrue = commandValidator.isValidShowTable(showTable);
             
-            System.out.print(isTrue);   
+        	ShowTable showQuery = new ShowTable();
+                  
+            QueryResult result = commandExecutor.executeQuery(showQuery);
             
-            QueryResult result = commandExecutor.executeQuery(isTrue);
+            for (int i = 0 ; i < result.getRowsAffected() ; i++) {
+            	
+           	 System.out.println(result.getColumns().get(i));
+           }
+       
+           //System.out.println(queryObject.databaseName);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getErrorMsg());

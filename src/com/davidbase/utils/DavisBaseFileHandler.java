@@ -558,7 +558,17 @@ public class DavisBaseFileHandler {
                     }
                     List<Object> values = new ArrayList<>();
                     Object object=null;
+                    
+                    
+                    
                     for (byte i = 0; i < numberOfColumns; i++) {
+                    	DataType dataType;
+                    	if (serialTypeCodes[i] > 12) {
+                    		dataType = DataType.TEXT;
+                    	}else {
+                    		dataType = DataType.getTypeFromSerialCode(serialTypeCodes[i]);
+                    	}
+                    	
                         switch (DataType.getTypeFromSerialCode(serialTypeCodes[i])) {
                             // case DataType_TinyInt.nullSerialCode is overridden with DataType_Text
 
@@ -602,9 +612,11 @@ public class DavisBaseFileHandler {
 
                             case TEXT:
                             	object = "";
+//                            	System.out.print(serialTypeCodes[i] + "\n");
                                 char[] text = new char[serialTypeCodes[i] - 12 ];
                                 for (byte k = 0; k < (serialTypeCodes[i] - 12); k++) {
                                     text[k] = (char) randomAccessFile.readByte();
+//                                	System.out.print((char) randomAccessFile.readByte());
                                 }
                                 object = new String(text);
 

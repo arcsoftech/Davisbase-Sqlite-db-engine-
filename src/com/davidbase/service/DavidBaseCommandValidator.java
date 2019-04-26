@@ -16,6 +16,7 @@ import com.davidbase.model.QueryType.DeleteFrom;
 import com.davidbase.model.QueryType.DropDatabase;
 import com.davidbase.model.QueryType.DropTable;
 import com.davidbase.model.QueryType.InsertInto;
+import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.model.QueryType.SelectFrom;
 import com.davidbase.model.QueryType.ShowTable;
 import com.davidbase.model.QueryType.UpdateTable;
@@ -146,20 +147,14 @@ public class DavidBaseCommandValidator {
 
     }
 
-    public ShowTable isValidShowTable(String userCommand)throws DavidBaseValidationException{
+    public Boolean isValidShowTable(String userCommand)throws DavidBaseValidationException{
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
         if(commandTokens.size()>3){
             throw new DavidBaseValidationException("Failed to show tables");
         }
         
-        ShowTable showTable = new ShowTable();
-        showTable.execute();
-        
-        
-        
-        
+       return true;
 
-        return null;
 
     }
 

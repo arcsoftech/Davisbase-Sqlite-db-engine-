@@ -18,16 +18,13 @@ public class ShowTable implements QueryBase {
     	  ArrayList<String> columns = new ArrayList<>();
 
       	List<Condition> conditions = new ArrayList<>();
-////          conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
-//          conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, null,null));
 
     	  List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_TABLES_TABLENAME, conditions, null, false);
     	  
     	  QueryResult queryObject = new QueryResult(records.size());
     	  for (LeafCell record : records) {
     		  
-    		  System.out.print(record.getPayload().getColValues().get(1) + "\n");
-//    		  queryObject.getColumns().add(record.getPayload().getColValues());
+    		  queryObject.getColumns().add((String)record.getPayload().getColValues().get(1));
     		  
     	  }
     	
