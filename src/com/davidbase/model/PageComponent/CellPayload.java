@@ -2,7 +2,13 @@ package com.davidbase.model.PageComponent;
 
 import com.davidbase.model.DavidBaseError;
 import com.davidbase.utils.DataType;
+import com.davidbase.utils.DavisBaseUtil;
 
+import java.nio.ByteBuffer;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 /**
@@ -108,6 +114,12 @@ public class CellPayload {
         };
     }
 
+    private static byte[] longToBytes(long x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(x);
+        return buffer.array();
+    }
+
     private static byte[] floatToBytes(final float data) {
         int intBits =  Float.floatToIntBits(data);
         return new byte[] {
@@ -132,6 +144,7 @@ public class CellPayload {
                 }
                     break;
                 case TINYINT:
+                case YEAR:
                 for ( byte valueInBytes: intToBytes(Byte.valueOf(String.valueOf(colValues.get(k++)))))
                 {
                     this.data[i++] = valueInBytes;
@@ -143,12 +156,37 @@ public class CellPayload {
                     this.data[i++] = valueInBytes;
                 }
                 break;
+                case BIGINT:
+                    for ( byte valueInBytes: longToBytes(Long.valueOf(String.valueOf(colValues.get(k++)))))
+                    {
+                        this.data[i++] = valueInBytes;
+                    }
+                    break;
             case REAL:
                 for ( byte valueInBytes: floatToBytes(Float.valueOf(String.valueOf(colValues.get(k++)))))
                 {
                     this.data[i++] = valueInBytes;
                 }
                 break;
+                case TIME:
+                    for ( byte valueInBytes: intToBytes(Integer.valueOf(String.valueOf(colValues.get(k++)))))
+                    {
+                        this.data[i++] = valueInBytes;
+                    }
+                    break;
+                case DATE:
+                    LocalDate valDate = DavisBaseUtil.getValidDate(String.valueOf(colValues.get(k++)));
+                    for ( byte valueInBytes: longToBytes(valDate.toEpochSecond(LocalTime.MIN,ZoneOffset.UTC)))
+                    {
+                        this.data[i++] = valueInBytes;
+                    }
+                    break;
+                case DATETIME:
+                    LocalDateTime valDateTime = DavisBaseUtil.getValidDateTime(String.valueOf(colValues.get(k++)));
+                    for ( byte valueInBytes: longToBytes(valDateTime.toEpochSecond(ZoneOffset.UTC))) {
+                        this.data[i++] = valueInBytes;
+                    }
+                    break;
                 default:
                 throw new DavidBaseError("Unable to write data type");
             }
