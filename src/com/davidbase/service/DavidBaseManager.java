@@ -315,7 +315,6 @@ public class DavidBaseManager {
     	try {
             SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);    
             QueryResult result = commandExecutor.executeQuery(queryObject);
-           
             System.out.println("Rows affected: " + result.getRowsAffected());
             int rows=result.getRowsAffected();
             int columns=result.getColumnCount();
@@ -363,11 +362,9 @@ public class DavidBaseManager {
     public static void parseUpdate(String userCommand) {
         try{
             UpdateTable update_object=commandValidator.isValidUpdateTable(userCommand);
-            // System.out.println(update_object.getTableName());
-            // System.out.println(update_object.getClause_column());
-            // System.out.println(update_object.getClause_value());
-            // System.out.println(update_object.getColumns());
-            // System.out.println(update_object.getCondition().getValue());
+            QueryResult result = commandExecutor.executeQuery(update_object);
+            System.out.println("Rows affected: " + result.getRowsAffected());
+
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getMessage());
 
@@ -377,7 +374,6 @@ public class DavidBaseManager {
     private static void parseInsert(String insertString) {
         try {
             InsertInto queryObject=commandValidator.isValidInsertInto(insertString, DEFAULT_DATA_DIRNAME);
-            currentTable=queryObject.getTableName();
             QueryResult result = commandExecutor.executeQuery(queryObject);
             System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {

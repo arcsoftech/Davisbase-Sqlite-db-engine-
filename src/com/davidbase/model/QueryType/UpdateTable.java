@@ -1,47 +1,67 @@
 package com.davidbase.model.QueryType;
 
 import java.util.*;
+import com.davidbase.model.PageComponent.*;
+import com.davidbase.utils.DavisBaseCatalogHandler;
+import com.davidbase.utils.DavisBaseFileHandler;
+import com.davidbase.utils.DavisBaseConstants;
 
 public class UpdateTable implements QueryBase {
-    private String columns;
-    private List values;
-    private Condition condition;
-    private String tableName;
-    private String clause_column;
-    private Object clause_value;
+	private String columns;
+	private Condition condition;
+	private String tableName;
+	private ArrayList<String> clause_column;
+	private List clause_value;
+	DavisBaseFileHandler filehandler;
+	DavisBaseCatalogHandler catalog;
 
-	public String getClause_column() {
-		return this.clause_column;
+	/**
+	 * @return the catalog
+	 */
+	public DavisBaseCatalogHandler getCatalog() {
+		return catalog;
 	}
 
-	public void setClause_column(String clause_column) {
+	/**
+	 * @return the clause_column
+	 */
+	public ArrayList<String> getClause_column() {
+		return clause_column;
+	}
+
+	/**
+	 * @return the clause_value
+	 */
+	public List getClause_value() {
+		return clause_value;
+	}
+
+	/**
+	 * @return the columns
+	 */
+	public String getColumns() {
+		return columns;
+	}
+
+	/**
+	 * @param clause_column the clause_column to set
+	 */
+	public void setClause_column(ArrayList<String> clause_column) {
 		this.clause_column = clause_column;
 	}
 
-	public Object getClause_value() {
-		return this.clause_value;
-	}
-
-	public void setClause_value(Object clause_value) {
+	/**
+	 * @param clause_value the clause_value to set
+	 */
+	public void setClause_value(List clause_value) {
 		this.clause_value = clause_value;
 	}
 
-
-
-	public String getColumns() {
-		return this.columns;
-	}
-
+	/**
+	 * @param columns the columns to set
+	 */
 	public void setColumns(String columns) {
 		this.columns = columns;
-	}
-
-	public List getValues() {
-		return this.values;
-	}
-
-	public void setValues(List values) {
-		this.values = values;
 	}
 
 	public Condition getCondition() {
@@ -60,10 +80,15 @@ public class UpdateTable implements QueryBase {
 		this.tableName = tableName;
 	}
 
-
-
-    @Override
-    public QueryResult execute() {
-        return null;
-    }
+	@Override
+	public QueryResult execute() {
+		List<Condition> conditions = new ArrayList<>();
+		conditions.add(condition);
+		List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName, condition,null, false);
+		String primaryKey = catalog.getTablePrimaryKey(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName);
+		for (LeafCell record : dataRecords) {
+			List<Object> recordValue = record.getPayload().getColValues();
+		}
+		return null;
+	}
 }

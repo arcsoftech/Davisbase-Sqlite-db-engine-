@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Iterator;
 import com.davidbase.utils.DataType;
+import java.util.Collections;
 
 import com.davidbase.model.PageComponent.InternalColumn;
 import com.davidbase.model.DavidBaseValidationException;
@@ -312,6 +313,8 @@ public class DavidBaseCommandValidator {
 
     public UpdateTable isValidUpdateTable(String userCommand) throws DavidBaseValidationException {
         String condition = "";
+        ArrayList<String> ColumnList= new ArrayList<>();
+        List ColumnValueList = new ArrayList<>();
         int setIndex = userCommand.toLowerCase().indexOf("set");
         if (setIndex == -1) {
             throw new DavidBaseValidationException("Where is the set key word");
@@ -332,24 +335,32 @@ public class DavidBaseCommandValidator {
         String column = (String) column_condition.get(0);
         Condition con = (Condition) column_condition.get(1);
 
-        if (!clauses.contains("=")) {
-            throw new DavidBaseValidationException("Wrong input value");
+        for (String clause : clauses.split(",")) {
+            System.out.println(clause);
+            if (!clauses.contains("=")) {
+                throw new DavidBaseValidationException("Wrong input value");
+            }
+            String[] clause_strings = clauses.split("=");
+            String clause_column = clause_strings[0].trim();
+            String clause_value = clause_strings[1].trim();
+            if (clause_value.contains("\"")) {
+                ColumnValueList.add(clause_value.trim().replace("\"", ""));
+            } else {
+                ColumnValueList.add(Integer.parseInt(clause_value));
+            }
+            ColumnList.add(clause_column);
         }
-        String[] clause_strings = clauses.split("=");
-        String clause_column = clause_strings[0].trim();
-        String clause_value = clause_strings[1].trim();
+
+      
 
         UpdateTable update_object = new UpdateTable();
         update_object.setColumns(column);
         update_object.setCondition(con);
         update_object.setTableName(tableName);
-        update_object.setClause_column(clause_column);
+        update_object.setClause_column(ColumnList);
+        update_object.setClause_value(ColumnValueList);
 
-        if (clause_value.contains("\"")) {
-            update_object.setClause_value(clause_value.trim().replace("\"", ""));
-        } else {
-            update_object.setClause_value(Integer.parseInt(clause_value));
-        }
+      
         return update_object;
     }
 
@@ -486,8 +497,8 @@ public class DavidBaseCommandValidator {
         while (iterator.hasNext()) {
             String key = (String) iterator.next();
             temp.add(key);
-            System.out.print("1111111   " + dataTypes.get(key) + "       dddddddd");
         }
+        Collections.reverse(temp);
         index = temp.size() - temp.indexOf(column);
         // System.out.print("1111111111111 "+index+" 111111");
         // DataType type= DataType.getTypeFromText(dataTypes.get(column));
@@ -504,7 +515,7 @@ public class DavidBaseCommandValidator {
             condition = Condition.CreateCondition((byte) index, cnd, dataTypes.get(column), (Object) int_value);
             System.out.print(int_value);
         }
-
+        
         List column_condition = new ArrayList();
         column_condition.add(column);
         column_condition.add(condition);
