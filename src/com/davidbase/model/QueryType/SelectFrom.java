@@ -84,10 +84,10 @@ public class SelectFrom implements QueryBase {
            
             for (LeafCell record : records) {
             	
-            	int colIndex = 0;
+            	
             	
             	int valueIndex = 0;
-            	
+				//int colIndex = 0;
             	List<Object> colValues = record.getPayload().getColValues();
             	
             	
@@ -95,8 +95,8 @@ public class SelectFrom implements QueryBase {
             	for (Object colValue : colValues) {
             		
             		if (valueIndex > 0) {
-
-            			String colName = colNames.get(colIndex);
+					
+            			String colName = colNames.get(valueIndex);
             			queryObject.getColumns().add(colName);
 
             			DataType colType = colTypes.get(colName);
@@ -113,8 +113,7 @@ public class SelectFrom implements QueryBase {
 								default:
 									queryObject.getValues().add(String.valueOf(colValue));
 						}
-
-            			colIndex = colIndex + 1;
+						//colIndex = colIndex + 1;
             			
 					}
 					

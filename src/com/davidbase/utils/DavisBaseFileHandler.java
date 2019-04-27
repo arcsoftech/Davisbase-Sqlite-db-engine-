@@ -539,7 +539,7 @@ public class DavisBaseFileHandler {
     public LeafCell readLeaf(RandomAccessFile randomAccessFile, int pageNumber, short offset, int records) {
         {
             try {
-                if (pageNumber >= 0 && offset >= 0 && pageNumber <= records) {
+                if (pageNumber >= 0 && offset >= 0 ) {
                 	
 //<<<<<<< HEAD
 //                    randomAccessFile.seek((PAGE_SIZE * pageNumber) + offset);
