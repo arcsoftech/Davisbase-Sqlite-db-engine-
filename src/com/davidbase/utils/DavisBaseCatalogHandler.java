@@ -53,11 +53,6 @@ public class DavisBaseCatalogHandler {
                 List<InternalColumn> columns = new ArrayList<>();
                 columns.add(new InternalColumn("rowid", DataType.INT, true, false));
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
-                // columns.add(new InternalColumn("record_count", DataType.INT, false, false));
-                // columns.add(new InternalColumn("col_tbl_st_rowid", DataType.INT, false,
-                // false));
-                // columns.add(new InternalColumn("nxt_avl_col_tbl_rowid", DataType.INT, false,
-                // false));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
                  DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 1, columns);
                 columns.clear();
@@ -176,31 +171,6 @@ public class DavisBaseCatalogHandler {
                 colValues.add(tableName);
                 // colValues.add(0);
                 ;
-                // if (lastRecord == null) {
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(1);
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(columnCount + 1);
-                //
-                // } else {
-                //
-                // int startingColumnIndex =
-                // (Integer)lastRecord.getPayload().getColValues().get(DavisBaseConstants.TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID);
-                //
-                // returnValue = startingColumnIndex;
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(returnValue);
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(returnValue + columnCount);
-                //
-                //// record.getColumnValueList().add(new DataType_Int(returnValue));
-                //// record.getColumnValueList().add(new DataType_Int(returnValue +
-                // columnCount));
-                // }
                 newLeaf.getPayload().setColTypes(colTypes);
                 newLeaf.getPayload().setColValues(colValues);
                 newLeaf.initializeLeafForWrite();

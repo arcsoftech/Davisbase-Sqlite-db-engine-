@@ -64,7 +64,6 @@ public class DavisBaseFileHandler {
                         rootPage.setNum_cells((byte) 1);
                         int offset = ((short)((long)(rootPage.getPage_number()+1) * PAGE_SIZE)) - (NonLeafCell.getLinkRecordSize());
                         rootPage.setData_offset((short) offset);
-                        System.out.println("offset " + offset);
                         rootPage.setData_cell_offset((new short[]{(short) offset}));
 
                         splitPage(tablefile,page, rootPage,leafCell,1);
@@ -84,7 +83,6 @@ public class DavisBaseFileHandler {
                             header.setNum_cells((byte) 1);
                             int offset = ((short) PAGE_SIZE) - (leafCell.getPayload().getPayloadSize() + CellHeader.getSize());
                             header.setData_offset((short) offset);
-                            System.out.println("offset " + offset);
                             header.setData_cell_offset((new short[]{(short) offset}));
                             header.setPage_type(PageType.table_leaf);
                             header.setNext_page_pointer(RIGHT_MOST_LEAF);
@@ -99,7 +97,6 @@ public class DavisBaseFileHandler {
                             short[] newOffsets = Arrays.copyOf(page.getPageheader().getData_cell_offset(), length);
                             newOffsets[length - 1] = (short) offset;
                             header.setData_cell_offset(newOffsets);
-                            System.out.println("offset " + offset);
                         }
 
                         dataNode.setPageheader(header);
@@ -137,7 +134,6 @@ public class DavisBaseFileHandler {
                             header.setNum_cells((byte) 1);
                             int offset = ((short) PAGE_SIZE) - (leafCell.getPayload().getPayloadSize() + CellHeader.getSize());
                             header.setData_offset((short) offset);
-                            System.out.println("offset " + offset);
                             header.setData_cell_offset((new short[]{(short) offset}));
                             header.setPage_type(PageType.table_leaf);
                             header.setNext_page_pointer(RIGHT_MOST_LEAF);
@@ -152,7 +148,6 @@ public class DavisBaseFileHandler {
                             short[] newOffsets = Arrays.copyOf(page.getPageheader().getData_cell_offset(), length);
                             newOffsets[length - 1] = (short) offset;
                             header.setData_cell_offset(newOffsets);
-                            System.out.println("offset " + offset);
                         }
 
                         page.setPageheader(header);
@@ -206,7 +201,6 @@ public class DavisBaseFileHandler {
         rightLeafPage.setNum_cells((byte) 1);
         int offset = ((short) ((long)(rightLeafPage.getPage_number()+1) * PAGE_SIZE)) - (leafCell.getPayload().getPayloadSize() + CellHeader.getSize());
         rightLeafPage.setData_offset((short) offset);
-        System.out.println("offset " + offset);
         rightLeafPage.setData_cell_offset((new short[]{(short) offset}));
         rightLeafPage.setNext_page_pointer(RIGHT_MOST_LEAF);
         rightLeafPage.setPage_type(PageType.table_leaf);
@@ -229,7 +223,6 @@ public class DavisBaseFileHandler {
             short[] newOffsets = Arrays.copyOf(rootPage.getPageheader().getData_cell_offset(), length);
             newOffsets[length - 1] = (short) offset;
             header.setData_cell_offset(newOffsets);
-            System.out.println("offset " + offset);
             rootPage.setPageheader(header);
         }
         nonLeafCells.add(nonLeafCell);
