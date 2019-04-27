@@ -167,7 +167,20 @@ public class DavisBaseFileHandler {
         }
         return true;
     }
-
+    public boolean updateLeafCell(String databaseName, String tableName,LeafCell leafCell) {
+        try {
+            RandomAccessFile tablefile = new RandomAccessFile(
+            new File(getDatabasePath(databaseName) + "/" + tableName + FILE_EXT), "rw");
+        List<LeafCell> dataCells = new ArrayList<>();
+        dataCells.add(leafCell);
+        writeLeafCell(tablefile, dataCells, leafCell.getOffset());
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
     private void storeRootInformation(Page rootPage, String tableName) {
         /*Code to store table root page meta data */
         Map<String, String> metadata = new HashMap<>();

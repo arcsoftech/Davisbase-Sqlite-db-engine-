@@ -69,7 +69,7 @@ public class SelectFrom implements QueryBase {
         	DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        	System.out.print(tableName);
         	 filehandler = new DavisBaseFileHandler();
-            List<LeafCell> records = filehandler.findRecord(databaseName, tableName, condition,null, false);
+			 List<LeafCell> records = filehandler.findRecord(databaseName, tableName, condition,null, false);
             
             List<String> colNames = ctlg.fetchAllTableColumns("", tableName);
             Map<String, DataType> colTypes = ctlg.fetchAllTableColumnDataTypes("",tableName);
