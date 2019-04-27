@@ -82,7 +82,6 @@ public class DavisBaseCatalogHandler {
              * database_name TEXT 3 table_name TEXT 4 column_name TEXT 5 data_type TEXT 6
              * column_key TEXT 7 ordinal_position TINYINT 8 is_nullable TEXT
              */
-            // IOManager manager = new IOManager();
             if (columns != null && columns.size() == 0)
                 return false;
             int i = 0;
@@ -166,10 +165,7 @@ public class DavisBaseCatalogHandler {
 
                 List<Object> colValues = new ArrayList<>();
                 colValues.add(newLeaf.getHeader().getRow_id());
-                // colValues.add(databaseName);
-                System.out.println(tableName);
                 colValues.add(tableName);
-                // colValues.add(0);
                 ;
                 newLeaf.getPayload().setColTypes(colTypes);
                 newLeaf.getPayload().setColValues(colValues);

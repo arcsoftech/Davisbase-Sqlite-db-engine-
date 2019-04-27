@@ -55,7 +55,6 @@ public class DavisBaseFileHandler {
                 case 1: // this is the first page to be inserted
                     // insert leaf node with data
                     if(!checkSpaceRequirements(page,leafCell)){
-                        System.out.println("Splitting page");
 
                         //3.  create root page (non leaf)
                         Page<NonLeafCell> rootPage = new Page();
@@ -115,8 +114,6 @@ public class DavisBaseFileHandler {
 //                    int rootPageIndex = Integer.valueOf(metadata.get(tableName));
                 	 int rootPageIndex = 1;
                     if(!checkSpaceRequirements(page,leafCell)) {
-
-                        System.out.println("Splitting page");
                         Page<NonLeafCell> currentRoot = readSinglePage(tablefile,rootPageIndex);
                         currentRoot.setNum_cells((byte) (currentRoot.getNum_cells() + 1));
                         splitPage(tablefile,page, currentRoot,leafCell,page.getPage_number());
