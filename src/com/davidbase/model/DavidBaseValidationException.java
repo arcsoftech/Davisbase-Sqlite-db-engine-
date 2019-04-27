@@ -9,8 +9,8 @@ public class DavidBaseValidationException extends Exception {
         this.error_msg=msg;
     }
     
-    public String getErrorMsg(){
+    @Override
+    public String getMessage() {
         return error_msg;
-
     }
 }

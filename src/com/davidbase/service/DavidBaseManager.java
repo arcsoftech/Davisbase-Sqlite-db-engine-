@@ -1,7 +1,6 @@
 package com.davidbase.service;
 import java.util.*;
 
-import com.davidbase.model.DavidBaseError;
 import com.davidbase.model.DavidBaseValidationException;
 import com.davidbase.model.QueryType.CreateTable;
 import com.davidbase.model.QueryType.QueryResult;
@@ -179,10 +178,7 @@ public class DavidBaseManager {
          */
         switch (commandTokens.get(0).toLowerCase()) {
             case "select":
-                System.out.println("CASE: SELECT");
-                selectFrom(userCommand);
-                
-                //parseQuery(userCommand);
+                parseSelect(userCommand);
                 break;
             case "show":
                 if (commandTokens.get(1).compareToIgnoreCase("database")==0){
@@ -193,7 +189,6 @@ public class DavidBaseManager {
                 }
                 break;
             case "drop":
-                System.out.println("CASE: DROP");
                 if (commandTokens.get(1).compareToIgnoreCase("table")==0){
                     dropTable(userCommand);
                 }
@@ -202,24 +197,20 @@ public class DavidBaseManager {
                 }
                 break;
             case "create":
-                System.out.println("CASE: CREATE");
                 if (commandTokens.get(1).compareToIgnoreCase("table")==0){
                     parseCreateTable(userCommand);
                 }
                 else{
-                    parseCreateDatabase(userCommand);
+                    // parseCreateIndex(userCommand);
                 }
                 break;
             case "delete":
-                System.out.println("CASE: Delete");
                 parseDeleteFrom(userCommand);
                 break;
             case "update":
-                System.out.println("CASE: UPDATE");
                 parseUpdate(userCommand);
                 break;
             case "insert":
-                System.out.println("CASE: INSERT");
                 parseInsert(userCommand);
                 break;
             case "help":
@@ -240,61 +231,20 @@ public class DavidBaseManager {
     }
 
     private static void parseCreateTable(String createTableString) {
-        System.out.println("createTable");
         try {
-            CreateTable queryObject = commandValidator.isValidCreateTable(createTableString,currentDB);
-            //currentTable=queryObject.getTableName();
-            //System.out.println(currentTable+"  !!  "+queryObject.getPrimaryKey()+"  !!  "+queryObject.getColumns().get(0).getName()+"  !!!  ");
-            //int rows=queryObject.getRows();
-            
-            //System.out.println(queryObject);
-            // List<String> columns=queryObject.getColumns();
-            //  for(int i=0; i<columns.size();i++){
-            //      System.out.println(columns.get(i));
-            //  }
-            QueryResult result = commandExecutor.executeQuery(queryObject);
-            System.out.println("Rows affected: " + result.getRowsAffected());
+            CreateTable queryObject = commandValidator.isValidCreateTable(createTableString,DavisBaseConstants.DEFAULT_DATA_DIRNAME);
+            String result = commandExecutor.executeQuery(queryObject).getRowsAffected() ==1 ? "Table created succesfully.":"";
+            System.out.println(result);
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
-            //throw new DavidBaseError("Create table command in not valid.");
-        //}catch(Exception e) {
-            //throw new DavidBaseError("Error while executing command.");
-        }
-    }
-
-    private static void parseCreateDatabase(String createDataBaseString) {
-        try {
-            CreateDatabase queryObject = commandValidator.isValidDatabase(createDataBaseString);
-            currentDB=queryObject.databaseName;
-            System.out.println(currentDB);
-            commandExecutor.executeQuery(queryObject);
-        //    System.out.println("Rows affected: " + );
-            
-        }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
-        }
-    }
-
-    private static void parseUseDatabase(String useDataBaseString) {
-        try {
-            CreateDatabase queryObject = commandValidator.isValidDatabase(useDataBaseString);
-            setCurrentDB(queryObject.databaseName);
-            //currentDB=queryObject.databaseName;
-
-            //System.out.println(currentDB);
-        }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println(e.getMessage());
         }
     }
     
     private static void parseShowDatabase(String showDB) {
         try {
             boolean isTrue = commandValidator.isValidShowDB(showDB);
-            
-            
-            //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -320,7 +270,7 @@ public class DavidBaseManager {
            //System.out.println(queryObject.databaseName);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -332,7 +282,7 @@ public class DavidBaseManager {
             System.out.println(queryObject.databaseName);
             
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println(e.getMessage());
         }
 
 
@@ -354,27 +304,16 @@ public class DavidBaseManager {
             QueryResult resultDel = commandExecutor.executeQuery(queryObject);
             out.println("Rows affected " + resultDel.getRowsAffected());
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println(e.getMessage());
         }
 
 
     }
-	/*
-	 * public static void selectFrom(String userCommand) {
-	 * System.out.println("STUB: This is the selectFrom method"); try { SelectFrom
-	 * queryObject = commandValidator.isValidSelectFrom(userCommand); QueryResult
-	 * result = commandExecutor.executeQuery(queryObject);
-	 * System.out.println(result.getRowsAffected());
-	 * }catch(DavidBaseValidationException e) { System.out.println(e.getErrorMsg());
-	 * }
-	 */
-    public static void selectFrom(String userCommand)
+    public static void parseSelect(String userCommand)
     {
-    	System.out.println("STUB: This is the selectFrom method");
+    	System.out.println("STUB: This is the parseSelect method");
     	try {
-            SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);
-            // System.out.println(queryObject.getTableName());
-            // System.out.println(queryObject.getColumns());      
+            SelectFrom queryObject = commandValidator.isValidSelectFrom(userCommand);    
             QueryResult result = commandExecutor.executeQuery(queryObject);
            
             System.out.println("Rows affected: " + result.getRowsAffected());
@@ -386,33 +325,17 @@ public class DavidBaseManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            //System.out.println("Get column count:"+columns);
-           // System.out.println("Columns:"+result.getColumns());
-            //System.out.println("command:"+userCommand);
           
             List<String> columnname=result.getColumns();
             List<String> values=result.getValues();
-          // System.out.println("Columns:"+columnname);
-            //System.out.println("Values:"+values);
             System.out.println();
-           
-            
-            // else {
             System.out.println("-------------------------------------------------------------------------------------------------------------------------");
-            //System.out.print("|");
             System.out.println();
-            
-            //System.out.format("%32s%10d%16s");
-            
             for(int i=0;i<columns;i++)
             	System.out.printf("%20s",columnname.get(i));
             System.out.println();
             System.out.println("-------------------------------------------------------------------------------------------------------------------------");
             System.out.println();	
-            //ArrayList[][] table = new ArrayList[10][10];
-            //table[0][0] = new ArrayList(); // add another ArrayList object to [0,0]
-            //table[0][0].add();
             	int count=0;
             	//
             	int rowcount=0;
@@ -431,44 +354,12 @@ public class DavidBaseManager {
             		
             	}
             	 System.out.println("-------------------------------------------------------------------------------------------------------------------------");
-          //  }
-            
-            // }//else
-            //List columns=result.getColumns();
-            /*for(int i=0;i<columns.size();i++){
-                System.out.println(columns.get(i));
-            } */
             
         }catch(DavidBaseValidationException e) {
-            System.out.println("Here" +e.getErrorMsg());
+            System.out.println("Here" +e.getMessage());
         }
     }
     	
-    //??//
-    public static void insertInto(String insertIntoString)
-    {
-    	try {
-            InsertInto queryObject = commandValidator.isValidInsertInto(insertIntoString,currentDB);
-            System.out.println(queryObject.getTableName());
-            System.out.println(queryObject.getColumnValues().get(0)+" !! "+queryObject.getColumns().get(0));
-        }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
-        }
-    }
-
-    /**
-     *  Stub method for executing queries
-     *  @param queryString is a String of the user input
-     */
-    public static void parseQuery(String queryString) {
-        System.out.println("STUB: This is the parseQuery method");
-        System.out.println("\tParsing the string:\"" + queryString + "\"");
-    }
-
-    /**
-     *  Stub method for updating records
-     *  @param updateString is a String of the user input
-     */
     public static void parseUpdate(String userCommand) {
         try{
             UpdateTable update_object=commandValidator.isValidUpdateTable(userCommand);
@@ -478,7 +369,7 @@ public class DavidBaseManager {
             // System.out.println(update_object.getColumns());
             // System.out.println(update_object.getCondition().getValue());
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println(e.getMessage());
 
         }
     }
@@ -500,7 +391,7 @@ public class DavidBaseManager {
             QueryResult result = commandExecutor.executeQuery(queryObject);
             System.out.println("Rows affected: " + result.getRowsAffected());
         }catch(DavidBaseValidationException e) {
-            System.out.println(e.getErrorMsg());
+            System.out.println(e.getMessage());
             //throw new DavidBaseError("Create table command in not valid.");
         //}catch(Exception e) {
             //throw new DavidBaseError("Error while executing command.");
@@ -515,7 +406,7 @@ public class DavidBaseManager {
             System.out.println("Rows affected: " + result.getRowsAffected());
         
        }catch(DavidBaseValidationException e) {
-        System.out.println(e.getErrorMsg());
+        System.out.println(e.getMessage());
         }
     }
 

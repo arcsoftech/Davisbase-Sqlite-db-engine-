@@ -66,9 +66,6 @@ public class SelectFrom implements QueryBase {
     @Override
     public QueryResult execute() {
         try {
-        	
-  
-        	
         	DavisBaseCatalogHandler ctlg = new DavisBaseCatalogHandler();
 //        	System.out.print(tableName);
         	 filehandler = new DavisBaseFileHandler();
@@ -114,7 +111,6 @@ public class SelectFrom implements QueryBase {
 									queryObject.getValues().add(String.valueOf(colValue));
 						}
 						//colIndex = colIndex + 1;
-            			
 					}
 					
             		valueIndex = valueIndex + 1;

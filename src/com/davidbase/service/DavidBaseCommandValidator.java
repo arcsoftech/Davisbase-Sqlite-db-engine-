@@ -47,20 +47,16 @@ public class DavidBaseCommandValidator {
      * @return
      */
     public CreateTable isValidCreateTable(String userCommand, String current_DB) throws DavidBaseValidationException {
-        //parse command
-        //System.out.print(userCommand);
+
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
 
         //check if the second key word is "table"
         if(commandTokens.get(1).compareToIgnoreCase("table")!=0){
             throw new DavidBaseValidationException("You are not creating table, command is not recognizable");
         }
-
         if(!userCommand.endsWith(")")){
             throw new DavidBaseValidationException("Missing )");
         }
-
-
         //check if the table has been existed. do not know if need to check column?
         DavisBaseCatalogHandler catalog_handler= new DavisBaseCatalogHandler();
         boolean isExist=catalog_handler.tableExists(current_DB, commandTokens.get(2)); //??figure out database name
@@ -102,12 +98,12 @@ public class DavidBaseCommandValidator {
 
         // checks for tables and columns etc, and returns a valid CreateTable object else throw exception
         //boolean isExist=false;
-        if (isExist!=false){
-            throw new DavidBaseValidationException("The table has been already Existed");
+        if (isExist){
+            throw new DavidBaseValidationException("The table already exist!");
         }
         else{
             CreateTable ctable = new CreateTable();
-            ctable.setTableName(commandTokens.get(2));
+            ctable.setTableName(commandTokens.get(2).toLowerCase());
             ctable.setColumns(columns_list);
             ctable.setPrimaryKey(pri);
             //  for(int i=0; i<columns.size();i++){
