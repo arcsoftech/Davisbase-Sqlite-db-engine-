@@ -4,6 +4,7 @@ import com.davidbase.model.PageComponent.InternalColumn;
 import com.davidbase.model.QueryType.QueryBase;
 import com.davidbase.model.QueryType.QueryResult;
 import com.davidbase.utils.DavisBaseCatalogHandler;
+import com.davidbase.utils.DataType;
 import java.util.List;
 
 import static com.davidbase.utils.DavisBaseConstants.*;
@@ -29,12 +30,10 @@ public class CreateTable implements QueryBase {
     @Override
     public QueryResult execute() {
         // Run any pre-req for the create
-        boolean canCreated = false;
         try {
       catalog.createTable(DEFAULT_DATA_DIRNAME, tableName);
         } catch (Exception e) {
             e.printStackTrace();
-            // throw new DavidBaseError("Error while creating new table");
         }
 
         /*
@@ -47,9 +46,8 @@ public class CreateTable implements QueryBase {
              * Code to insert rows in the davisbase_columns table for each column in the new
              * table i.e. database catalog meta-data
              */
-
+            columns.add(0,new InternalColumn("rowid", DataType.INT, true, false));
             int lastRowId = catalog.getLastRowId(DEFAULT_CATALOG_DATABASENAME, SYSTEM_COLUMNS_TABLENAME);
-
             catalog.updateSystemColumnsTable(DEFAULT_CATALOG_DATABASENAME, tableName, lastRowId, columns);
             return new QueryResult(1);
         
