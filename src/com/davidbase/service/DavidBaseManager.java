@@ -295,11 +295,9 @@ public class DavidBaseManager {
      *  @param dropTableString is a String of the user input
      */
     public static void dropTable(String dropTableString) {
-        System.out.println("STUB: This is the dropTable method.");
-        //System.out.println("\tParsing the string:\"" + dropTableString + "\"");
         try {
             DropTable queryObject = commandValidator.isValidDropTable(dropTableString,currentDB);
-            String result = commandExecutor.executeQuery(queryObject).getRowsAffected() ==1 ? "Drop table succesfull!":"";
+            String result = commandExecutor.executeQuery(queryObject).getRowsAffected() >0 ? "Drop table succesfull!":"";
             System.out.println(result);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getMessage());

@@ -284,7 +284,6 @@ public class DavisBaseCatalogHandler {
     public HashMap<String, DataType> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
     	
     	List<Condition> conditions = new ArrayList<>();
-//        conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
         conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
 
         List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
