@@ -94,7 +94,6 @@ public class InsertInto implements QueryBase {
         LeafCell record = prepareRecord();
         int lastRowId = catalog.getLastRowId(DEFAULT_DATA_DIRNAME, tableName);
         record.getHeader().setRow_id(++lastRowId);
-        
         List<Object> colVal = new ArrayList<>();
         List<DataType> colValTypes = new ArrayList<>();
         HashMap<String,DataType> columnDataTypeMap = catalog.fetchAllTableColumnDataTypes(DEFAULT_DATA_DIRNAME,tableName);

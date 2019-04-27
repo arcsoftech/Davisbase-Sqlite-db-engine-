@@ -319,7 +319,9 @@ public class DavisBaseCatalogHandler {
       conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
 
       List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
-      HashMap<String, String> columDataTypeMapping = new HashMap<>();
+      conditions.clear();
+      List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName,conditions, false);
+      
       
       String primayKeyCol = "";
 
