@@ -299,10 +299,8 @@ public class DavidBaseManager {
         //System.out.println("\tParsing the string:\"" + dropTableString + "\"");
         try {
             DropTable queryObject = commandValidator.isValidDropTable(dropTableString,currentDB);
-            System.out.println(queryObject.databaseName);
-            System.out.println(queryObject.tableName);
-            QueryResult resultDel = commandExecutor.executeQuery(queryObject);
-            out.println("Rows affected " + resultDel.getRowsAffected());
+            String result = commandExecutor.executeQuery(queryObject).getRowsAffected() ==1 ? "Drop table succesfull!":"";
+            System.out.println(result);
         }catch(DavidBaseValidationException e) {
             System.out.println(e.getMessage());
         }

@@ -185,8 +185,9 @@ public class DavidBaseCommandValidator {
             throw new DavidBaseValidationException("Failed to drop tables");
         }
 
+
         DavisBaseCatalogHandler catalog_handler = new DavisBaseCatalogHandler();
-        boolean isExist = catalog_handler.databaseExists(commandTokens.get(2));
+        boolean isExist = catalog_handler.tableExists(DavisBaseConstants.DEFAULT_DATA_DIRNAME,commandTokens.get(2));
 
         if (isExist == false) {
             throw new DavidBaseValidationException("The table does not Exist");
