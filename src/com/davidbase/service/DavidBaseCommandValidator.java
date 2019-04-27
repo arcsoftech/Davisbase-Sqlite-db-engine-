@@ -311,7 +311,6 @@ public class DavidBaseCommandValidator {
     }
 
     public UpdateTable isValidUpdateTable(String userCommand) throws DavidBaseValidationException {
-        // System.out.println(userCommand);
         String condition = "";
         int setIndex = userCommand.toLowerCase().indexOf("set");
         if (setIndex == -1) {
