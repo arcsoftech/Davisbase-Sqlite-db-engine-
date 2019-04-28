@@ -31,12 +31,19 @@ public class  DropTable implements QueryBase {
 
         List<Condition> delConds = new ArrayList<Condition>();
         delConds.add(new Condition(1, Condition.EQUALS, DataType.TEXT,tableName));
-
         deleteQuery.setConditions(delConds);
         int result = deleteQuery.execute().getRowsAffected();
         if(result>0){
-            File file = new File(DavisBaseFileHandler.getDatabasePath(DEFAULT_DATA_DIRNAME) + "/" + tableName + FILE_EXT);
-            file.delete();
+            deleteQuery = new DeleteFrom(DEFAULT_CATALOG_DATABASENAME,SYSTEM_COLUMNS_TABLENAME);
+            delConds = new ArrayList<Condition>();
+            delConds.add(new Condition(1, Condition.EQUALS, DataType.TEXT,tableName));
+            deleteQuery.setConditions(delConds);
+            result += deleteQuery.execute().getRowsAffected();
+            if(result>1)
+            {
+                File file = new File(DavisBaseFileHandler.getDatabasePath(DEFAULT_DATA_DIRNAME) + "/" + tableName + FILE_EXT);
+                file.delete();
+            }
         }
         return new QueryResult(result);
     }

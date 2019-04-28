@@ -111,10 +111,6 @@ public class DavisBaseFileHandler {
                 break;
             default: // for all other cases.
 
-                // page already has a root page at pagenumber ;
-                // int rootPageIndex = 1;
-                System.out.print(tableName);
-                // int rootPageIndex = Integer.valueOf(metadata.get(tableName));
                 int rootPageIndex = 1;
                 if (!checkSpaceRequirements(page, leafCell)) {
                     Page<NonLeafCell> currentRoot = readSinglePage(tablefile, rootPageIndex);
@@ -289,7 +285,6 @@ public class DavisBaseFileHandler {
                             // leafCell = readLeaf(randomAccessFile, page.getPage_number(), offset);
                             if (leafCell == null) {
                                 isMatch = false;
-                                offSetIndex = 0;
                             }
                             for (int i = 0; i < delConditions.size(); i++) {
                                 isMatch = false;
@@ -314,15 +309,15 @@ public class DavisBaseFileHandler {
                             if (isMatch) {
                                 page.setNumberOfCells((byte) (page.getNumberOfCells() - 1));
                                 if (page.getNumberOfCells() == 0) {
-                                    page.setData_offset((short) ((page.getPageheader().getPage_number() * PAGE_SIZE) + PAGE_SIZE - 1));
+                                    page.getPageheader().setData_offset((short) ((page.getPageheader().getPage_number() * PAGE_SIZE) + PAGE_SIZE - 1));
                                 } else {
                                     page.setData_cell_offset(removeOffset(page.getData_cell_offset(), offSetIndex));
-                                    int lengthOffsets = page.getData_cell_offset().length;
-                                    page.setData_offset(page.getData_cell_offset()[lengthOffsets - 1]);
+                                    int lengthOffsets = page.getPageheader().getData_cell_offset().length;
+                                    page.getPageheader().setData_offset(page.getPageheader().getData_cell_offset()[lengthOffsets - 1]);
                                 }
-                                writePageHeader(randomAccessFile, page, page.getPage_number());
+                                writePageHeader(randomAccessFile, page, page.getPageheader().getPage_number());
                                 deletedRecordCount++;
-                                offSetIndex = 0;
+                                //offSetIndex = 0;
                             } else {
                                 offSetIndex++;
                             }
