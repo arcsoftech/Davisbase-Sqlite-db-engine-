@@ -305,12 +305,18 @@ public class DavidBaseManager {
         	ShowTable showQuery = new ShowTable();
                   
             QueryResult result = commandExecutor.executeQuery(showQuery);
-            
+            System.out.println();
+            System.out.println("-----------------------");
+            System.out.printf("%20s%n","Tables in Database");
+            System.out.println("-----------------------");
             for (int i = 0 ; i < result.getRowsAffected() ; i++) {
             	
-           	 System.out.println(result.getColumns().get(i));
-           }
-       
+           	 System.out.printf("%20s%n",result.getColumns().get(i));
+           	 //System.out.printf("%30s%n", "|");
+           	
+           }System.out.println("-----------------------");
+           System.out.println(result.getRowsAffected()+" rows in set");
+           System.out.println();
            //System.out.println(queryObject.databaseName);
             //System.out.println(queryObject.databaseName);
         }catch(DavidBaseValidationException e) {
