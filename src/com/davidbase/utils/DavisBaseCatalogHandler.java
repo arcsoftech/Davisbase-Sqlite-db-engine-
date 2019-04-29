@@ -53,11 +53,6 @@ public class DavisBaseCatalogHandler {
                 List<InternalColumn> columns = new ArrayList<>();
                 columns.add(new InternalColumn("rowid", DataType.INT, true, false));
                 columns.add(new InternalColumn("table_name", DataType.TEXT, false, false));
-                // columns.add(new InternalColumn("record_count", DataType.INT, false, false));
-                // columns.add(new InternalColumn("col_tbl_st_rowid", DataType.INT, false,
-                // false));
-                // columns.add(new InternalColumn("nxt_avl_col_tbl_rowid", DataType.INT, false,
-                // false));
                 this.updateSystemColumnsTable(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME,
                  DavisBaseConstants.SYSTEM_TABLES_TABLENAME, 1, columns);
                 columns.clear();
@@ -87,7 +82,6 @@ public class DavisBaseCatalogHandler {
              * database_name TEXT 3 table_name TEXT 4 column_name TEXT 5 data_type TEXT 6
              * column_key TEXT 7 ordinal_position TINYINT 8 is_nullable TEXT
              */
-            // IOManager manager = new IOManager();
             if (columns != null && columns.size() == 0)
                 return false;
             int i = 0;
@@ -171,36 +165,8 @@ public class DavisBaseCatalogHandler {
 
                 List<Object> colValues = new ArrayList<>();
                 colValues.add(newLeaf.getHeader().getRow_id());
-                // colValues.add(databaseName);
-                System.out.println(tableName);
                 colValues.add(tableName);
-                // colValues.add(0);
                 ;
-                // if (lastRecord == null) {
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(1);
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(columnCount + 1);
-                //
-                // } else {
-                //
-                // int startingColumnIndex =
-                // (Integer)lastRecord.getPayload().getColValues().get(DavisBaseConstants.TABLES_TABLE_SCHEMA_NXT_AVL_COL_TBL_ROWID);
-                //
-                // returnValue = startingColumnIndex;
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(returnValue);
-                //
-                // colTypes.add(DataType.INT);
-                // colValues.add(returnValue + columnCount);
-                //
-                //// record.getColumnValueList().add(new DataType_Int(returnValue));
-                //// record.getColumnValueList().add(new DataType_Int(returnValue +
-                // columnCount));
-                // }
                 newLeaf.getPayload().setColTypes(colTypes);
                 newLeaf.getPayload().setColValues(colValues);
                 newLeaf.initializeLeafForWrite();
@@ -318,7 +284,6 @@ public class DavisBaseCatalogHandler {
     public HashMap<String, DataType> fetchAllTableColumnDataTypes(String databaseName, String tableName) {
     	
     	List<Condition> conditions = new ArrayList<>();
-//        conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
         conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
 
         List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
@@ -349,7 +314,9 @@ public class DavisBaseCatalogHandler {
       conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
 
       List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
-      HashMap<String, String> columDataTypeMapping = new HashMap<>();
+      conditions.clear();
+      List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName,conditions, false);
+      
       
       String primayKeyCol = "";
 

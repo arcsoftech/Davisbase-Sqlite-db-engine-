@@ -43,7 +43,7 @@ public enum DataType {
         return dataTypeName;
     }
 
-    public static DataType getTypeFromSerialCode(byte serialCode) throws DavidBaseValidationException {
+    public static DataType getTypeFromSerialCode(byte serialCode)  {
 
         switch (serialCode){
             case 0x00: return NULL;
