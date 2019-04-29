@@ -201,7 +201,7 @@ public class DavidBaseManager {
                     parseCreateTable(userCommand);
                 }
                 else{
-                    // parseCreateIndex(userCommand);
+                    parseCreateIndex(userCommand);
                 }
                 break;
             case "delete":
@@ -239,7 +239,15 @@ public class DavidBaseManager {
             System.out.println(e.getMessage());
         }
     }
-    
+    private static void parseCreateIndex(String createIndexString){
+        try {
+            // CreateIndex queryObject = commandValidator.isValidCrea(createIndexString,DavisBaseConstants.DEFAULT_DATA_DIRNAME);
+            // String result = commandExecutor.executeQuery(queryObject).getRowsAffected() ==1 ? "Table created succesfully.":"";
+            // System.out.println(result);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
     private static void parseShowDatabase(String showDB) {
         try {
             boolean isTrue = commandValidator.isValidShowDB(showDB);
