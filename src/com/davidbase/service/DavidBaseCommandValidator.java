@@ -142,10 +142,18 @@ public class DavidBaseCommandValidator {
             throw new DavidBaseValidationException("Failed to show databases");
         }
 
-        // ShowTable showTable=new ShowTable();
         return true;
 
     }
+
+    public boolean isValidIndex(String userCommand) throws DavidBaseValidationException{
+        ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
+        if (commandTokens.size() > 4) {
+            throw new DavidBaseValidationException("Failed to create index");
+        }
+        return true;
+    }
+
 
     public Boolean isValidShowTable(String userCommand) throws DavidBaseValidationException {
         ArrayList<String> commandTokens = new ArrayList<String>(Arrays.asList(userCommand.split(" ")));
