@@ -315,7 +315,7 @@ public class DavisBaseCatalogHandler {
 
       List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
       conditions.clear();
-      List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName,conditions, false);
+    //   List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName,conditions, false);
       
       
       String primayKeyCol = "";
@@ -332,6 +332,32 @@ public class DavisBaseCatalogHandler {
 
       }
         return primayKeyCol;
+    }
+
+
+    public ArrayList<String> getTableNullTypeKey(String databaseName, String tableName) {
+    	
+
+    	List<Condition> conditions = new ArrayList<>();
+//      conditions.add(InternalCondition.CreateCondition(CatalogDatabaseHelper.COLUMNS_TABLE_SCHEMA_DATABASE_NAME, InternalCondition.EQUALS, new DataType_Text(databaseName)));
+      conditions.add(Condition.CreateCondition(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_TABLE_NAME, Condition.EQUALS, DataType.TEXT,tableName));
+
+      List<LeafCell> records = filehandler.findRecord(DavisBaseConstants.DEFAULT_CATALOG_DATABASENAME, DavisBaseConstants.SYSTEM_COLUMNS_TABLENAME, conditions, false);
+      conditions.clear();
+    //   List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName,conditions, false);
+      
+      ArrayList<String> nullKeyColumnList= new ArrayList<String>();
+      String nullKeyCol = "";
+
+      for (LeafCell record : records) {
+          Object object = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_COLUMN_NAME);
+          Object dataTypeObject = record.getPayload().getColValues().get(DavisBaseConstants.COLUMNS_TABLE_SCHEMA_IS_NULLABLE);
+         if (((String)dataTypeObject).equals("NO")) {
+            nullKeyCol = (String)object;
+            nullKeyColumnList.add(nullKeyCol);
+         }
+      }
+        return nullKeyColumnList;
     }
 
     public int getTableRecordCount(String databaseName, String tableName) {

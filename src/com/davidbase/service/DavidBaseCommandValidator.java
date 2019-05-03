@@ -257,7 +257,13 @@ public class DavidBaseCommandValidator {
             if (values_list.get(i).contains("\"")) {
                 String str = values_list.get(i).trim().replace("\"", "");
                 values.add(str);
-            } else {
+            }
+           
+            else if(values_list.get(i).trim().equals("null"))
+            {
+                values.add(null);
+            } 
+            else {
                 values.add(Integer.parseInt(values_list.get(i).trim()));
             }
         }
@@ -265,6 +271,14 @@ public class DavidBaseCommandValidator {
         List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME,
                 commandTokens.get(2), conditions, false);
         String primaryKey = catalog_handler.getTablePrimaryKey(DEFAULT_DATA_DIRNAME, commandTokens.get(2));
+        ArrayList<String> nullKeyColumnList = catalog_handler.getTableNullTypeKey(DEFAULT_DATA_DIRNAME, commandTokens.get(2));
+        for (String nullKey : nullKeyColumnList) {
+         if(!nullKey.equals("rowid"))
+         {
+            if (values_list.get(columns_list.indexOf(nullKey)).trim().equals("null"))
+            throw new DavidBaseValidationException(nullKey+ " value should not be null!");
+         }
+        }
         String primaryKeyValue = values_list.get(columns_list.indexOf(primaryKey));
         for (LeafCell record : dataRecords) {
             String existingPrimaryKeyvalue = String
