@@ -244,6 +244,8 @@ public class DavidBaseManager {
             // CreateIndex queryObject = commandValidator.isValidCrea(createIndexString,DavisBaseConstants.DEFAULT_DATA_DIRNAME);
             // String result = commandExecutor.executeQuery(queryObject).getRowsAffected() ==1 ? "Table created succesfully.":"";
             // System.out.println(result);
+           System.out.println("Index Created Succesfully!");
+              
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
