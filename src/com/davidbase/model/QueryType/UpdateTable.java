@@ -81,12 +81,34 @@ public class UpdateTable implements QueryBase {
 		List<LeafCell> dataRecords = filehandler.findRecord(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName,
 				condition, null, false);
 		int clause_index_primary_key = 0;
+		int clause_index_null_key = 0;
 		List<String> colNames = catalog.fetchAllTableColumns("", tableName);
 		String primaryKey = catalog.getTablePrimaryKey(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName);
+		ArrayList<String> nullKeyColumnList = catalog.getTableNullTypeKey(DavisBaseConstants.DEFAULT_DATA_DIRNAME, tableName);
+    
 		for (String col : clause_column) {
 			if (col.equals(primaryKey)) {
 				clause_index_primary_key = clause_column.indexOf(col);
 			}
+			for (String nullKey : nullKeyColumnList) {
+				if (col.equals(nullKey)) {
+					clause_index_null_key = clause_column.indexOf(col);
+				}
+			}
+		}
+		
+		if(clause_index_null_key !=0)
+		{
+			for (String nullKey : nullKeyColumnList) {
+				if(!nullKey.equals("rowid"))
+				{
+					   if (clause_value.get(clause_index_null_key).equals("null"))
+					   {
+						   System.out.println(nullKey+ " value should not be null!");
+						   return new QueryResult(0);
+					   }
+				}
+			   }
 		}
 		if(clause_index_primary_key !=0)
 		{
@@ -102,7 +124,6 @@ public class UpdateTable implements QueryBase {
 			}
 		}
 		
-	
 		for (LeafCell record : dataRecords) {
 			recordValue= record.getPayload().getColValues();
 			byte[] dataType= record.getPayload().getData_type();
